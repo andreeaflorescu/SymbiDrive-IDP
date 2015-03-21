@@ -1,0 +1,105 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:weightSum="4"
+    android:orientation="vertical"
+    android:background="#ffffff"
+    tools:context="com.timteam.symbidrive.symbidrive.LoginActivity$PlaceholderFragment">
+
+    <ImageView
+        android:layout_weight="2"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:src="@drawable/symbi_car"/>
+
+    <LinearLayout
+        android:layout_weight="2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="20dp"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:password="true"/>
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:background="#009E26"/>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="3"
+            android:layout_marginBottom="5dp">
+
+            <View
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="20dp"/>
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="or login with"
+                android:gravity="center"
+                />
+            <View
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="20dp"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="2"
+                android:layout_gravity="center"
+                >
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Facebook"
+                    android:layout_weight="1"
+                    android:background="#3b5998"
+                    android:layout_marginRight="5dp"
+
+                    />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Google+"
+                    android:layout_marginLeft="5dp"
+                    android:background="#dd4b39"/>
+                </LinearLayout>
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:layout_gravity="center"
+            android:text="New to SymbiDrive? Register here..."/>
+</LinearLayout>

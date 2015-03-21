@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">SymbiDrive</string>
+
+    <string name="title_profile">Profile</string>
+    <string name="title_pools">Pools</string>
+    <string name="title_register_route">Register Route</string>
+    <string name="title_logout">Logout</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+</resources>
