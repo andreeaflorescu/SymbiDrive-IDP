@@ -1,5 +1,6 @@
 package com.timteam.symbidrive.symbidrive;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.widget.Button;
 
 
 public class LoginActivity extends ActionBarActivity {
@@ -60,7 +62,21 @@ public class LoginActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_login, container, false);
+
+            Button loginButton = (Button)rootView.findViewById(R.id.loginButton);
+            loginButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    openMainPage();
+                }
+            });
+
             return rootView;
+        }
+
+        public void openMainPage(){
+            Intent mainPageIntent = new Intent(getActivity(), MainActivity.class);
+            startActivity(mainPageIntent);
         }
     }
 }

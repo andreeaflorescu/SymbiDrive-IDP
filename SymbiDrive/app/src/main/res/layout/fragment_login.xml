@@ -41,7 +41,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Login"
-            android:background="#009E26"/>
+            android:background="#009E26"
+            android:id="@+id/loginButton"/>
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
