@@ -67,6 +67,7 @@ public class MainActivity extends ActionBarActivity
         }
         fragmentManager.beginTransaction()
                 .replace(R.id.container, fragment)
+                .addToBackStack(null)
                 .commit();
 
     }
@@ -132,10 +133,10 @@ public class MainActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        //Do not allow back button press
-    }
+//    @Override
+//    public void onBackPressed() {
+//        //Do not allow back button press
+//    }
 
     /**
      * A placeholder fragment containing a simple view.
