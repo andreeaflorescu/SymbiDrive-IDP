@@ -64,6 +64,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         fragmentManager.beginTransaction()
                 .replace(R.id.container, newFragment)
+                .addToBackStack(null)
                 .commit();
     }
 }

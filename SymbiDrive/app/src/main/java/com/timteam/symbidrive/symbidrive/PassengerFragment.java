@@ -45,6 +45,7 @@ public class PassengerFragment extends Fragment implements View.OnClickListener{
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.container, matchingPoolsFragment)
+                    .addToBackStack(null)
                     .commit();
         }
     }
