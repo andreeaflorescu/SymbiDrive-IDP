@@ -11,23 +11,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Source Location"
+        android:textColor="@android:color/holo_blue_light"
         android:textSize="20dp"/>
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:weightSum="5"
         android:orientation="horizontal">
         <EditText
-            android:id="@+id/passengerSourceLocationText"
-            android:layout_width="0dp"
+            android:id="@+id/et_source_location"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
             android:hint="Search"/>
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Map"/>
+
     </LinearLayout>
 
     <Space
@@ -38,24 +33,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Destination Location"
+        android:textColor="@android:color/holo_blue_light"
         android:textSize="20dp"/>
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="5"
-        android:orientation="horizontal">
+
         <EditText
-            android:id="@+id/passengerDestinationLocationText"
-            android:layout_width="0dp"
+            android:id="@+id/et_destination_location"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
             android:hint="Search"/>
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Map"/>
-    </LinearLayout>
     <Space
         android:layout_width="wrap_content"
         android:layout_height="10dp" />
@@ -67,11 +52,19 @@
         android:weightSum="2">
 
         <TextView
-            android:id="@+id/DatePicker"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Date"
+            android:textColor="@android:color/holo_blue_light"
+            android:textSize="20dp"
+            />
+        <TextView
+            android:id="@+id/tv_date_picker"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
             android:textSize="20dp"
             android:onClick="showDatePickerDialog"/>
     </LinearLayout>
@@ -86,12 +79,21 @@
         android:weightSum="2">
 
         <TextView
-            android:id="@+id/TimePicker"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Hour"
+            android:textColor="@android:color/holo_blue_light"
             android:textSize="20dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_time_picker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="20dp"
+            android:clickable="true"
             android:onClick="showTimePickerDialog"/>/>
 
     </LinearLayout>
@@ -108,7 +110,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginBottom="20dp"
-            android:text="Find Pool" />
+            android:text="Find Pool"
+            android:textColor="#ffffff"
+            android:onClick="findMatchingPools"
+            android:background="@android:color/holo_green_dark"/>
 
     </LinearLayout>
 

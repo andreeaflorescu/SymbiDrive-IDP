@@ -26,5 +26,6 @@
     <string name="title_activity_register">Register</string>
     <string name="title_activity_create_pool">Create Pool</string>
     <string name="title_activity_find_pool">Find Pool</string>
+    <string name="title_activity_matching_pools">MatchingPools</string>
 
 </resources>

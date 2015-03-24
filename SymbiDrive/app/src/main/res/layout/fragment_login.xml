@@ -9,7 +9,7 @@
     android:weightSum="4"
     android:orientation="vertical"
     android:background="#ffffff"
-    tools:context="com.timteam.symbidrive.symbidrive.LoginActivity$PlaceholderFragment">
+    tools:context="com.timteam.symbidrive.symbidrive.activities.LoginActivity$PlaceholderFragment">
 
     <ImageView
         android:layout_weight="1"

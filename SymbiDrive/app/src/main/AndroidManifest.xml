@@ -33,7 +33,7 @@
             android:value="AIzaSyDiiyJlH_CMVNYg8KW1VXwqJkq3zpxIvkE" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -43,7 +43,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateVisible" >
@@ -54,16 +54,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RegisterActivity"
+            android:name=".activities.RegisterActivity"
             android:label="@string/title_activity_register" >
         </activity>
         <activity
-            android:name=".CreatePoolActivity"
+            android:name=".activities.CreatePoolActivity"
             android:label="@string/title_activity_create_pool" >
         </activity>
         <activity
-            android:name=".FindPoolActivity"
+            android:name=".activities.FindPoolActivity"
             android:label="@string/title_activity_find_pool" >
+        </activity>
+        <activity
+            android:name=".activities.MatchingPoolsActivity"
+            android:label="@string/title_activity_matching_pools" >
         </activity>
     </application>
 

@@ -3,5 +3,5 @@
     android:id="@+id/container_create_pool"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.timteam.symbidrive.symbidrive.LoginActivity"
+    tools:context="com.timteam.symbidrive.symbidrive.activities.LoginActivity"
     tools:ignore="MergeRootFrame" />

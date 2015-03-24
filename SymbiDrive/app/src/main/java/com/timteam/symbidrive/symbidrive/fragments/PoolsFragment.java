@@ -1,4 +1,4 @@
-package com.timteam.symbidrive.symbidrive;
+package com.timteam.symbidrive.symbidrive.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,6 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
+import com.timteam.symbidrive.symbidrive.activities.MainActivity;
+import com.timteam.symbidrive.symbidrive.adapters.PoolsArrayAdapter;
+import com.timteam.symbidrive.symbidrive.R;
 
 /**
  * Created by zombie on 3/22/15.
