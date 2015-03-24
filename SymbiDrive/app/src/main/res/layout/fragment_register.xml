@@ -50,10 +50,17 @@
                 android:id="@+id/et_password"
                 android:password="true"/>
 
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Confirm Password"
+                android:id="@+id/et_confirm_password"
+                android:password="true"/>
+
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Login"
+                android:text="Sign Up"
                 android:background="#009E26"
                 android:textColor="#ffffff"
                 android:onClick="openMainPage"
@@ -76,7 +83,7 @@
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="or login with"
+                    android:text="or sign up with"
                     android:gravity="center"
                     />
                 <View
@@ -95,7 +102,7 @@
                 android:layout_gravity="center"
                 >
                 <Button
-                    android:id="@+id/btn_facebook_login"
+                    android:id="@+id/btn_facebook_signup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Facebook"
@@ -106,7 +113,7 @@
                     android:layout_marginRight="5dp"
                     />
                 <Button
-                    android:id="@+id/btn_google_login"
+                    android:id="@+id/btn_google_signup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -117,21 +124,8 @@
                     android:background="#dd4b39"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent">
-                <TextView
-                    android:id="@+id/lnk_register"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:autoLink="all"
-                    android:clickable="true"
-                    android:layout_gravity="bottom"
-                    android:gravity="center"
-                    android:onClick="openRegisterPage"
-                    android:text="New to SymbiDrive? Register here..."/>
-            </LinearLayout>
+
         </LinearLayout>
-        </ScrollView>
+    </ScrollView>
 
 </LinearLayout>

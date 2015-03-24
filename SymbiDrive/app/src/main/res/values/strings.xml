@@ -25,5 +25,6 @@
     <integer name="profile_section_id">3</integer>
     <integer name="driver_section_id">4</integer>
     <integer name="passenger_section_id">5</integer>
+    <string name="title_activity_register">Register</string>
 
 </resources>
