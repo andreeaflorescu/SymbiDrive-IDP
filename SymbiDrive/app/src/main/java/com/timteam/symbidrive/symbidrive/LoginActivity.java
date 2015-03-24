@@ -63,7 +63,7 @@ public class LoginActivity extends ActionBarActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
-            Button loginButton = (Button)rootView.findViewById(R.id.loginButton);
+            Button loginButton = (Button)rootView.findViewById(R.id.btn_login);
             loginButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
