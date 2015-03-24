@@ -67,17 +67,13 @@
         android:weightSum="2">
 
         <TextView
+            android:id="@+id/DatePicker"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Date"
-            android:textSize="20dp"/>
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Date Picker"/>
+            android:textSize="20dp"
+            android:onClick="showDatePickerDialog"/>
     </LinearLayout>
     <Space
         android:layout_width="wrap_content"
@@ -90,17 +86,14 @@
         android:weightSum="2">
 
         <TextView
+            android:id="@+id/TimePicker"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Hour"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            android:onClick="showTimePickerDialog"/>/>
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Time Picker"/>
     </LinearLayout>
 
     <LinearLayout
