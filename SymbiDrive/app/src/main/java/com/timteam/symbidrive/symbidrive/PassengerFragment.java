@@ -32,13 +32,6 @@ public class PassengerFragment extends Fragment implements View.OnClickListener{
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        ((MainActivity) activity).onSectionAttached(getResources().
-                getInteger(R.integer.passenger_section_id));
-    }
-
-    @Override
     public void onClick(View v) {
         if(v.getId() == R.id.btn_findPools){
             Fragment matchingPoolsFragment = new MatchingPoolsFragment();

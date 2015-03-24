@@ -1,23 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SymbiDrive</string>
 
+    <string name="app_name">SymbiDrive</string>
     <string name="title_profile">Profile</string>
     <string name="title_pools">Pools</string>
     <string name="title_register_route">Register Route</string>
     <string name="title_home">Home</string>
     <string name="title_driver">Create Pool</string>
     <string name="title_passenger">Find Pool</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-
-    <string name="welcome_message">
-        Welcome to SymbiDrive! We highly recommend you to sign in with
-        your social profile so we can find the best matches for you!
-    </string>
+    <string name="welcome_message">        Welcome to SymbiDrive! We highly recommend you to sign in with
+        your social profile so we can find the best matches for you!</string>
 
     <integer name="home_section_id">0</integer>
     <integer name="pools_section_id">1</integer>
@@ -25,7 +22,9 @@
     <integer name="profile_section_id">3</integer>
     <integer name="driver_section_id">4</integer>
     <integer name="passenger_section_id">5</integer>
+
     <string name="title_activity_register">Register</string>
     <string name="title_activity_create_pool">Create Pool</string>
+    <string name="title_activity_find_pool">Find Pool</string>
 
 </resources>

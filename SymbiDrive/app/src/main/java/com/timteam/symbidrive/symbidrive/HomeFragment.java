@@ -53,19 +53,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
-        Fragment newFragment = null;
-        FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
-
         if(v.getId() == R.id.driverButton){
             Intent intent = new Intent(getActivity(), CreatePoolActivity.class);
             startActivity(intent);
         }
         if(v.getId() == R.id.passengerButton){
-            newFragment = new PassengerFragment();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, newFragment)
-                    .addToBackStack(null)
-                    .commit();
+            Intent intent = new Intent(getActivity(), FindPoolActivity.class);
+            startActivity(intent);
         }
 
 
