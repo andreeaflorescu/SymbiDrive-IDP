@@ -110,7 +110,7 @@
         android:gravity="center|bottom">
 
         <Button
-            style="?android:attr/buttonStyleSmall"
+            android:id="@+id/btn_findPools"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
