@@ -1,18 +1,18 @@
-package com.timteam.symbidrive.symbidrive;
+package com.timteam.symbidrive.symbidrive.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Debug;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
+
+import com.timteam.symbidrive.symbidrive.activities.CreatePoolActivity;
+import com.timteam.symbidrive.symbidrive.activities.FindPoolActivity;
+import com.timteam.symbidrive.symbidrive.activities.MainActivity;
+import com.timteam.symbidrive.symbidrive.R;
 
 /**
  * Created by zombie on 3/24/15.

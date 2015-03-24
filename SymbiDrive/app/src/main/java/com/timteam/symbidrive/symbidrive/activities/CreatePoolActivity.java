@@ -1,9 +1,10 @@
-package com.timteam.symbidrive.symbidrive;
+package com.timteam.symbidrive.symbidrive.activities;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+
+import com.timteam.symbidrive.symbidrive.R;
+import com.timteam.symbidrive.symbidrive.fragments.DriverFragment;
 
 
 public class CreatePoolActivity extends ActionBarActivity {

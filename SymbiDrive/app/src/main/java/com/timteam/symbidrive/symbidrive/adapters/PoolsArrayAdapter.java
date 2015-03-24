@@ -1,4 +1,4 @@
-package com.timteam.symbidrive.symbidrive;
+package com.timteam.symbidrive.symbidrive.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.timteam.symbidrive.symbidrive.R;
 
 /**
  * Created by zombie on 3/24/15.
