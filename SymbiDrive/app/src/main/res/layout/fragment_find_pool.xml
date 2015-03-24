@@ -112,6 +112,7 @@
             android:layout_marginBottom="20dp"
             android:text="Find Pool"
             android:textColor="#ffffff"
+            android:onClick="findMatchingPools"
             android:background="@android:color/holo_green_dark"/>
 
     </LinearLayout>

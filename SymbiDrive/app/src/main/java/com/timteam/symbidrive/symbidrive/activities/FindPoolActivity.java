@@ -1,5 +1,6 @@
 package com.timteam.symbidrive.symbidrive.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
@@ -35,4 +36,8 @@ public class FindPoolActivity extends ActionBarActivity {
         newFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
+    public void findMatchingPools(View view) {
+        Intent intent = new Intent(this, MatchingPoolsActivity.class);
+        startActivity(intent);
+    }
 }
