@@ -8,18 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Created by zombie on 3/22/15.
+ * Created by zombie on 3/24/15.
  */
-public class ProfileFragment extends Fragment {
+public class DriverFragment extends Fragment {
 
-    public ProfileFragment(){
+    public DriverFragment(){
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_navigation_profile, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_driver, container, false);
         return rootView;
     }
 
@@ -27,7 +27,7 @@ public class ProfileFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         ((MainActivity) activity).onSectionAttached(getResources().
-                getInteger(R.integer.profile_section_id));
+                getInteger(R.integer.driver_section_id));
     }
 
 }

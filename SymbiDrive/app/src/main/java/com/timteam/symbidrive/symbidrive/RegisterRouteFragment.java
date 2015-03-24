@@ -28,6 +28,7 @@ public class RegisterRouteFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        ((MainActivity) activity).onSectionAttached(3);
+        ((MainActivity) activity).onSectionAttached(getResources().
+                getInteger(R.integer.register_route_section_id));
     }
 }

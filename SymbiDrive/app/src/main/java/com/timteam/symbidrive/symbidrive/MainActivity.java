@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,17 +45,14 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
-        Fragment fragment = PlaceholderFragment.newInstance(position + 1);
+
+        Fragment fragment;
         FragmentManager fragmentManager = getSupportFragmentManager();
-//        fragmentManager.beginTransaction()
-//                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-//                .commit();
 
         switch(position) {
             default:
             case 0:
-                fragment = new ProfileFragment();
+                fragment = new HomeFragment();
                 break;
             case 1:
                 fragment = new PoolsFragment();
@@ -63,8 +61,9 @@ public class MainActivity extends ActionBarActivity
                 fragment = new RegisterRouteFragment();
                 break;
             case 3:
-                fragment = new LogoutFragment();
+                fragment = new ProfileFragment();
                 break;
+
         }
         fragmentManager.beginTransaction()
                 .replace(R.id.container, fragment)
@@ -74,17 +73,25 @@ public class MainActivity extends ActionBarActivity
 
     public void onSectionAttached(int number) {
         switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_profile);
+            case 0:
+                mTitle = getString(R.string.title_home);
                 break;
-            case 2:
+            case 1:
                 mTitle = getString(R.string.title_pools);
                 break;
-            case 3:
+            case 2:
                 mTitle = getString(R.string.title_register_route);
                 break;
+            case 3:
+                mTitle = getString(R.string.title_profile);
+                break;
             case 4:
-                mTitle = getString(R.string.title_logout);
+                mTitle = getString(R.string.title_driver);
+                restoreActionBar();
+                break;
+            case 5:
+                mTitle = getString(R.string.title_passenger);
+                restoreActionBar();
                 break;
         }
     }
@@ -123,6 +130,11 @@ public class MainActivity extends ActionBarActivity
 //        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        //Do not allow back button press
     }
 
     /**

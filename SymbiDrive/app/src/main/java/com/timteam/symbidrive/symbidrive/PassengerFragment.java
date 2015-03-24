@@ -8,25 +8,25 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Created by zombie on 3/22/15.
+ * Created by zombie on 3/24/15.
  */
-public class LogoutFragment extends Fragment {
+public class PassengerFragment extends Fragment {
 
-    public LogoutFragment(){
+    public PassengerFragment(){
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_navigation_logout, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_passenger, container, false);
         return rootView;
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        ((MainActivity) activity).onSectionAttached(4);
+        ((MainActivity) activity).onSectionAttached(getResources().
+                getInteger(R.integer.passenger_section_id));
     }
-
 }

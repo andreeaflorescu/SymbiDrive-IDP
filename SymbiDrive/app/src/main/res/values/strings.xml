@@ -4,11 +4,21 @@
     <string name="title_profile">Profile</string>
     <string name="title_pools">Pools</string>
     <string name="title_register_route">Register Route</string>
-    <string name="title_logout">Logout</string>
+    <string name="title_home">Home</string>
+    <string name="title_driver">Create Pool</string>
+    <string name="title_passenger">Find Pool</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <integer name="home_section_id">0</integer>
+    <integer name="pools_section_id">1</integer>
+    <integer name="register_route_section_id">2</integer>
+    <integer name="profile_section_id">3</integer>
+    <integer name="driver_section_id">4</integer>
+    <integer name="passenger_section_id">5</integer>
+
 </resources>
