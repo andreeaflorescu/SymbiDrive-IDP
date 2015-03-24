@@ -31,7 +31,7 @@ public class TimePickerFragment extends DialogFragment
     }
 
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        ((TextView)getActivity().findViewById(R.id.TimePicker))
+        ((TextView)getActivity().findViewById(R.id.tv_time_picker))
                 .setText(hourOfDay + ":" + minute);
     }
 }

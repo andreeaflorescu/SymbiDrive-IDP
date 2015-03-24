@@ -1,8 +1,8 @@
 package com.timteam.symbidrive.symbidrive.activities;
 
+import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.view.View;
 
 import com.timteam.symbidrive.symbidrive.R;
@@ -12,7 +12,7 @@ import com.timteam.symbidrive.symbidrive.fragments.TimePickerFragment;
 
 
 public class FindPoolActivity extends ActionBarActivity {
-    DatePickerFragment newFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +25,7 @@ public class FindPoolActivity extends ActionBarActivity {
     }
 
     public void showDatePickerDialog(View v) {
+        DatePickerFragment newFragment;
         newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }

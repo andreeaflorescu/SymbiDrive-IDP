@@ -65,6 +65,10 @@
             android:name=".activities.FindPoolActivity"
             android:label="@string/title_activity_find_pool" >
         </activity>
+        <activity
+            android:name=".activities.MatchingPoolsActivity"
+            android:label="@string/title_activity_matching_pools" >
+        </activity>
     </application>
 
 </manifest>

@@ -60,7 +60,7 @@
             android:textSize="20dp"
             />
         <TextView
-            android:id="@+id/DatePicker"
+            android:id="@+id/tv_date_picker"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
             />
 
         <TextView
-            android:id="@+id/TimePicker"
+            android:id="@+id/tv_time_picker"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
