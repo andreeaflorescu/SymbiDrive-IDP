@@ -53,7 +53,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
 
         Fragment newFragment = null;
-        FragmentManager transaction = mainActivity.getSupportFragmentManager();
+        FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
 
         if(v.getId() == R.id.driverButton){
             newFragment = new DriverFragment();
@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             newFragment = new PassengerFragment();
         }
 
-        transaction.beginTransaction()
+        fragmentManager.beginTransaction()
                 .replace(R.id.container, newFragment)
                 .commit();
     }
