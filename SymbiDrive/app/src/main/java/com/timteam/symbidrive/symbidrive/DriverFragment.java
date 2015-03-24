@@ -23,11 +23,11 @@ public class DriverFragment extends Fragment {
         return rootView;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        ((MainActivity) activity).onSectionAttached(getResources().
-                getInteger(R.integer.driver_section_id));
-    }
+//    @Override
+//    public void onAttach(Activity activity) {
+//        super.onAttach(activity);
+//        ((MainActivity) activity).onSectionAttached(getResources().
+//                getInteger(R.integer.driver_section_id));
+//    }
 
 }

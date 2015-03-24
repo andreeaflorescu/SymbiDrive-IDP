@@ -1,6 +1,7 @@
 package com.timteam.symbidrive.symbidrive;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Debug;
 import android.support.v4.app.Fragment;
@@ -56,15 +57,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
 
         if(v.getId() == R.id.driverButton){
-            newFragment = new DriverFragment();
+            Intent intent = new Intent(getActivity(), CreatePoolActivity.class);
+            startActivity(intent);
         }
         if(v.getId() == R.id.passengerButton){
             newFragment = new PassengerFragment();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, newFragment)
+                    .addToBackStack(null)
+                    .commit();
         }
 
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, newFragment)
-                .addToBackStack(null)
-                .commit();
+
     }
 }
