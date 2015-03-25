@@ -21,7 +21,8 @@
             android:id="@+id/et_source_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Search"/>
+            android:hint="Search"
+            />
 
     </LinearLayout>
 
@@ -36,7 +37,7 @@
         android:textColor="@android:color/holo_blue_light"
         android:textSize="20dp"/>
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/et_destination_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

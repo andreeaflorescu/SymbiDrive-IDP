@@ -2,28 +2,35 @@ package com.timteam.symbidrive.symbidrive.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.timteam.symbidrive.symbidrive.R;
+import com.timteam.symbidrive.symbidrive.adapters.PlacesAutoCompleteAdapter;
 
 import java.util.Calendar;
 
 /**
  * Created by zombie on 3/24/15.
  */
-public class DriverFragment extends Fragment {
+public class FindPoolFragment extends Fragment {
 
-    public DriverFragment(){
+    public FindPoolFragment(){
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_driver, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_find_pool, container, false);
         initInterfaceElements(rootView);
         return rootView;
     }
@@ -48,6 +55,21 @@ public class DriverFragment extends Fragment {
     }
 
     private void initInterfaceElements(View rootView) {
+
+        AutoCompleteTextView sourceLocation = (AutoCompleteTextView) rootView.
+                findViewById(R.id.et_source_location);
+        if (sourceLocation != null) {
+            sourceLocation.setAdapter(new PlacesAutoCompleteAdapter(getActivity(),
+                    R.layout.autocomplete_list_view));
+        }
+
+        AutoCompleteTextView destinationLocation = (AutoCompleteTextView) rootView.
+                findViewById(R.id.et_destination_location);
+        if (destinationLocation != null) {
+            destinationLocation.setAdapter(new PlacesAutoCompleteAdapter(getActivity(),
+                    R.layout.autocomplete_list_view));
+        }
+
         setTimePickerView(rootView);
         setDatePickerView(rootView);
     }
