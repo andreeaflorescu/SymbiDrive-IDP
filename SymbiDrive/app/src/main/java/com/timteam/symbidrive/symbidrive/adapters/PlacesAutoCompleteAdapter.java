@@ -29,7 +29,7 @@ public class PlacesAutoCompleteAdapter extends ArrayAdapter<String> implements F
     private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
     private static final String OUT_JSON = "/json";
 
-    private static final String API_KEY = "AIzaSyDiiyJlH_CMVNYg8KW1VXwqJkq3zpxIvkE";
+    private static final String API_KEY = "AIzaSyB6Y3qgZLrH_GdPaCb26WC5GFKtydsrVik";
 
     private ArrayList<String> autocomplete(String input) {
         ArrayList<String> resultList = null;
@@ -39,7 +39,7 @@ public class PlacesAutoCompleteAdapter extends ArrayAdapter<String> implements F
         try {
             StringBuilder sb = new StringBuilder(PLACES_API_BASE + TYPE_AUTOCOMPLETE + OUT_JSON);
             sb.append("?key=" + API_KEY);
-            sb.append("&components=country:uk");
+            sb.append("&components=country:ro");
             sb.append("&input=" + URLEncoder.encode(input, "UTF8"));
 
             URL url = new URL(sb.toString());
