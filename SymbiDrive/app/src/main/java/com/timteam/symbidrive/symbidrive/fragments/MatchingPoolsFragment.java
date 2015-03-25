@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.timteam.symbidrive.symbidrive.adapters.MatchPoolAdapter;
 import com.timteam.symbidrive.symbidrive.R;
+import com.timteam.symbidrive.symbidrive.adapters.MatchPoolAdapter;
 
 /**
  * Created by zombie on 3/24/15.

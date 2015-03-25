@@ -7,8 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.timteam.symbidrive.symbidrive.activities.MainActivity;
 import com.timteam.symbidrive.symbidrive.R;
+import com.timteam.symbidrive.symbidrive.activities.MainActivity;
 
 /**
  * Created by zombie on 3/22/15.

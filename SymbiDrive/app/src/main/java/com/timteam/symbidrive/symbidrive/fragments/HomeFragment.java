@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.timteam.symbidrive.symbidrive.R;
 import com.timteam.symbidrive.symbidrive.activities.CreatePoolActivity;
 import com.timteam.symbidrive.symbidrive.activities.FindPoolActivity;
 import com.timteam.symbidrive.symbidrive.activities.MainActivity;
-import com.timteam.symbidrive.symbidrive.R;
 
 /**
  * Created by zombie on 3/24/15.

@@ -8,9 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.timteam.symbidrive.symbidrive.R;
 import com.timteam.symbidrive.symbidrive.activities.MainActivity;
 import com.timteam.symbidrive.symbidrive.adapters.PoolsArrayAdapter;
-import com.timteam.symbidrive.symbidrive.R;
 
 /**
  * Created by zombie on 3/22/15.
