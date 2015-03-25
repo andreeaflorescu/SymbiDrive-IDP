@@ -17,7 +17,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/et_source_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
