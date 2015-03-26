@@ -37,15 +37,20 @@
             android:gravity="center"
             android:layout_marginBottom="20dp"/>
 
-        <Button
-            android:id="@+id/btn_facebook_login"
+        <!--<Button-->
+            <!--android:id="@+id/btn_facebook_login"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Facebook"-->
+            <!--android:background="#3b5998"-->
+            <!--android:onClick="openMainPage"-->
+            <!--android:textColor="#ffffff"-->
+            <!--android:layout_marginBottom="20dp"-->
+            <!--/>-->
+
+        <com.facebook.login.widget.LoginButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Facebook"
-            android:background="#3b5998"
-            android:onClick="openMainPage"
-            android:textColor="#ffffff"
-            android:layout_marginBottom="20dp"
             />
 
         <com.google.android.gms.common.SignInButton
