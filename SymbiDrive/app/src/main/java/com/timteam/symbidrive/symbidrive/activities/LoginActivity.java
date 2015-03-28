@@ -9,11 +9,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 import com.timteam.symbidrive.symbidrive.R;
+import com.timteam.symbidrive.symbidrive.listeners.FacebookLoginCallback;
+
+import java.util.Arrays;
 
 
 public class LoginActivity extends ActionBarActivity implements
@@ -31,15 +37,11 @@ public class LoginActivity extends ActionBarActivity implements
     private boolean mIntentInProgress;
     private ConnectionResult mConnectionResult;
     private boolean mSignInClicked;
+    private CallbackManager callbackManager;
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    private void initializeSocialNetworks() {
         FacebookSdk.sdkInitialize(getApplicationContext());
-        setContentView(R.layout.activity_login);
 
-        findViewById(R.id.btn_google_login).setOnClickListener(this);
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -48,9 +50,25 @@ public class LoginActivity extends ActionBarActivity implements
                 .build();
     }
 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        initializeSocialNetworks();
+
+        setContentView(R.layout.activity_login);
+        findViewById(R.id.btn_google_login).setOnClickListener(this);
+
+        callbackManager = CallbackManager.Factory.create();
+        LoginButton loginButton = (LoginButton) findViewById(R.id.btn_facebook_login);
+        loginButton.registerCallback(callbackManager, new FacebookLoginCallback(this));
+    }
+
     protected void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
+        // check if user is logged in
     }
 
     protected void onStop() {
@@ -104,10 +122,15 @@ public class LoginActivity extends ActionBarActivity implements
     }
 
     public void onClick(View view) {
+
         if (view.getId() == R.id.btn_google_login
                 && !mGoogleApiClient.isConnecting()) {
             mSignInClicked = true;
             resolveSignInError();
+        }
+
+        if (view.getId() == R.id.btn_facebook_login) {
+            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
         }
     }
 
@@ -133,6 +156,8 @@ public class LoginActivity extends ActionBarActivity implements
                 mGoogleApiClient.connect();
             }
         }
+
+        callbackManager.onActivityResult(requestCode, responseCode, intent);
 
     }
 
