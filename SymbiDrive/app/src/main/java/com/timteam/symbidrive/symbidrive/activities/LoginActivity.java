@@ -3,12 +3,15 @@ package com.timteam.symbidrive.symbidrive.activities;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
@@ -38,9 +41,17 @@ public class LoginActivity extends ActionBarActivity implements
     private ConnectionResult mConnectionResult;
     private boolean mSignInClicked;
     private CallbackManager callbackManager;
+    private AccessTokenTracker accessTokenTracker;
 
     private void initializeSocialNetworks() {
+
         FacebookSdk.sdkInitialize(getApplicationContext());
+        accessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {
+                updateWithToken(newAccessToken);
+            }
+        };
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -56,12 +67,14 @@ public class LoginActivity extends ActionBarActivity implements
         super.onCreate(savedInstanceState);
 
         initializeSocialNetworks();
+        updateWithToken(AccessToken.getCurrentAccessToken());
 
         setContentView(R.layout.activity_login);
         findViewById(R.id.btn_google_login).setOnClickListener(this);
 
         callbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = (LoginButton) findViewById(R.id.btn_facebook_login);
+        loginButton.setOnClickListener(this);
         loginButton.registerCallback(callbackManager, new FacebookLoginCallback(this));
     }
 
@@ -130,7 +143,8 @@ public class LoginActivity extends ActionBarActivity implements
         }
 
         if (view.getId() == R.id.btn_facebook_login) {
-            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
+            LoginManager.getInstance().logInWithReadPermissions(this,
+                    Arrays.asList("public_profile", "user_friends"));
         }
     }
 
@@ -178,6 +192,13 @@ public class LoginActivity extends ActionBarActivity implements
                 mIntentInProgress = false;
                 mGoogleApiClient.connect();
             }
+        }
+    }
+
+    private void updateWithToken(AccessToken currentAccessToken) {
+
+        if (currentAccessToken != null) {
+            openMainPage();
         }
     }
 
