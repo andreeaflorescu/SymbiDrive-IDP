@@ -20,13 +20,16 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 import com.timteam.symbidrive.symbidrive.R;
+import com.timteam.symbidrive.symbidrive.SocialNetworkManager;
 import com.timteam.symbidrive.symbidrive.listeners.FacebookLoginCallback;
 
 import java.util.Arrays;
 
 
 public class LoginActivity extends ActionBarActivity implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        View.OnClickListener {
 
     /* Request code used to invoke sign in user interactions. */
     private static final int RC_SIGN_IN = 0;
@@ -42,13 +45,15 @@ public class LoginActivity extends ActionBarActivity implements
     private boolean mSignInClicked;
     private CallbackManager callbackManager;
     private AccessTokenTracker accessTokenTracker;
+    private SocialNetworkManager socialNetworkManager;
 
     private void initializeSocialNetworks() {
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         accessTokenTracker = new AccessTokenTracker() {
             @Override
-            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken,
+                                                       AccessToken newAccessToken) {
                 updateWithToken(newAccessToken);
             }
         };
@@ -76,6 +81,8 @@ public class LoginActivity extends ActionBarActivity implements
         LoginButton loginButton = (LoginButton) findViewById(R.id.btn_facebook_login);
         loginButton.setOnClickListener(this);
         loginButton.registerCallback(callbackManager, new FacebookLoginCallback(this));
+
+        socialNetworkManager = SocialNetworkManager.getInstance();
     }
 
     protected void onStart() {
@@ -114,7 +121,8 @@ public class LoginActivity extends ActionBarActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    public void openMainPage(){
+    public void openMainPage(String socialNetworkID){
+        socialNetworkManager.setSocialNetworkID(socialNetworkID);
         Intent mainPageIntent = new Intent(this, MainActivity.class);
         startActivity(mainPageIntent);
     }
@@ -153,7 +161,8 @@ public class LoginActivity extends ActionBarActivity implements
         // access Google APIs on behalf of the user.
         mSignInClicked = false;
         Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
-        openMainPage();
+        socialNetworkManager.setmGoogleApiClient(mGoogleApiClient);
+        openMainPage(getResources().getString(R.string.google_profile));
 
     }
 
@@ -196,9 +205,8 @@ public class LoginActivity extends ActionBarActivity implements
     }
 
     private void updateWithToken(AccessToken currentAccessToken) {
-
         if (currentAccessToken != null) {
-            openMainPage();
+            openMainPage(getResources().getString(R.string.facebook_profile));
         }
     }
 

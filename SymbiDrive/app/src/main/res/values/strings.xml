@@ -28,4 +28,7 @@
     <string name="title_activity_find_pool">Find Pool</string>
     <string name="title_activity_matching_pools">MatchingPools</string>
 
+    <string name="facebook_profile">facebook</string>
+    <string name="google_profile">google</string>
+
 </resources>
