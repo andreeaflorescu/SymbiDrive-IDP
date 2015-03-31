@@ -13,7 +13,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.plus.Plus;
 import com.timteam.symbidrive.symbidrive.R;
-import com.timteam.symbidrive.symbidrive.SocialNetworkManager;
+import com.timteam.symbidrive.symbidrive.helpers.SocialNetworkManager;
 import com.timteam.symbidrive.symbidrive.activities.MainActivity;
 import com.facebook.login.LoginManager;
 

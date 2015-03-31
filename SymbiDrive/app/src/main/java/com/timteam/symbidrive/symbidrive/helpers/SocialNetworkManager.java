@@ -1,4 +1,4 @@
-package com.timteam.symbidrive.symbidrive;
+package com.timteam.symbidrive.symbidrive.helpers;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 

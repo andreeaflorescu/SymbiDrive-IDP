@@ -6,7 +6,7 @@ import android.content.Intent;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
-import com.timteam.symbidrive.symbidrive.SocialNetworkManager;
+import com.timteam.symbidrive.symbidrive.helpers.SocialNetworkManager;
 import com.timteam.symbidrive.symbidrive.activities.MainActivity;
 import com.timteam.symbidrive.symbidrive.R;
 
