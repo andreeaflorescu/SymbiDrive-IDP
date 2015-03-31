@@ -31,8 +31,8 @@ public class PoolsArrayAdapter extends ArrayAdapter<String> {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.pool_list_adapter, parent, false);
 
-        TextView textView = (TextView)rowView.findViewById(R.id.adapterItemText);
-        textView.setText(values[position]);
+//        TextView textView = (TextView)rowView.findViewById(R.id.adapterItemText);
+//        textView.setText(values[position]);
 
         return rowView;
     }

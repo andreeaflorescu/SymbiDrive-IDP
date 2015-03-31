@@ -6,22 +6,62 @@
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
     android:layout_marginTop="10dp">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Source Location"
-        android:textColor="@android:color/holo_blue_light"
-        android:textSize="20dp"/>
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@drawable/layout_border"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Source Location"
+            android:textColor="@android:color/holo_blue_light"
+            android:textSize="20dp"/>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <AutoCompleteTextView
+                android:id="@+id/et_source_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search"/>
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Destination Location"
+            android:textColor="@android:color/holo_blue_light"
+            android:textSize="20dp"/>
+
         <AutoCompleteTextView
-            android:id="@+id/et_source_location"
+            android:id="@+id/et_destination_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Search"/>
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="10dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select from saved routes"
+            android:layout_gravity="center_horizontal"
+            android:onClick="selectSavedRoute"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:background="@android:color/holo_orange_dark"
+            android:textColor="@android:color/white"/>
 
     </LinearLayout>
 
@@ -29,105 +69,101 @@
         android:layout_width="wrap_content"
         android:layout_height="10dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Destination Location"
-        android:textColor="@android:color/holo_blue_light"
-        android:textSize="20dp"/>
-
-    <AutoCompleteTextView
-        android:id="@+id/et_destination_location"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Search"/>
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="10dp" />
+        android:orientation="vertical"
+        android:background="@drawable/layout_border"
+        android:padding="10dp">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
-
-        <TextView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Date"
-            android:textColor="@android:color/holo_blue_light"
-            android:textSize="20dp"
-            />
-        <TextView
-            android:id="@+id/tv_date_picker"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:textSize="20dp"
-            android:onClick="showDatePickerDialog"/>
-    </LinearLayout>
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="10dp" />
+            android:orientation="horizontal"
+            android:weightSum="2">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Available Seats"
+                android:textColor="@android:color/holo_blue_light"
+                android:textSize="20dp"
+                android:layout_gravity="bottom"
+                />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Hour"
-            android:textColor="@android:color/holo_blue_light"
-            android:textSize="20dp"
+            <EditText
+                android:id="@+id/tv_available_seats"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:inputType="number"/>
             />
 
-        <TextView
-            android:id="@+id/tv_time_picker"
-            android:layout_width="0dp"
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="20dp"
-            android:clickable="true"
-            android:onClick="showTimePickerDialog"/>/>
+            android:orientation="horizontal"
+            android:weightSum="2">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Date"
+                android:textColor="@android:color/holo_blue_light"
+                android:textSize="20dp"
+                />
+            <TextView
+                android:id="@+id/tv_date_picker"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:textSize="20dp"
+                android:onClick="showDatePickerDialog"/>
+        </LinearLayout>
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="10dp" />
 
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="10dp" />
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
-
-        <TextView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Available Seats"
-            android:textColor="@android:color/holo_blue_light"
-            android:textSize="20dp"
-            android:layout_gravity="bottom"
-            />
+            android:orientation="horizontal"
+            android:weightSum="2">
 
-        <EditText
-            android:id="@+id/tv_available_seats"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:inputType="number"/>
-        />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Hour"
+                android:textColor="@android:color/holo_blue_light"
+                android:textSize="20dp"
+                />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/tv_time_picker"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="20dp"
+                android:clickable="true"
+                android:onClick="showTimePickerDialog"/>/>
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="10dp" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="10dp" />
+
+        </LinearLayout>
+
 
 
 
@@ -138,14 +174,15 @@
         android:gravity="center|bottom">
 
         <Button
-            android:id="@+id/btn_findPools"
+            android:id="@+id/btn_createPool"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginBottom="20dp"
-            android:text="Find Pool"
+            android:text="Create pool"
+            android:onClick="createPool"
             android:textColor="#ffffff"
-            android:background="@android:color/holo_green_dark"/>
+            android:background="@android:color/holo_blue_dark"/>
 
     </LinearLayout>
 

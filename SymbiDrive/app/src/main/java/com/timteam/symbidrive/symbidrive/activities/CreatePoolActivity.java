@@ -1,5 +1,6 @@
 package com.timteam.symbidrive.symbidrive.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
@@ -33,6 +34,16 @@ public class CreatePoolActivity extends ActionBarActivity {
     public void showTimePickerDialog(View v) {
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getSupportFragmentManager(), "timePicker");
+    }
+
+    public void selectSavedRoute(View v){
+
+    }
+
+    public void createPool(View v){
+        Intent openPoolsActivity = new Intent(this, MainActivity.class);
+        openPoolsActivity.putExtra("section", 1);
+        startActivity(openPoolsActivity);
     }
 
 }

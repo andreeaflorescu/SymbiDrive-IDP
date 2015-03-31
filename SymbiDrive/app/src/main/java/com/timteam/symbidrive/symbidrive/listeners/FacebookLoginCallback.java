@@ -20,13 +20,10 @@ public class FacebookLoginCallback implements FacebookCallback<LoginResult> {
         this.loginActivity = activity;
     }
 
-    private SocialNetworkManager socialNetworkManager;
-
     @Override
     public void onSuccess(LoginResult loginResult) {
 
-        socialNetworkManager = SocialNetworkManager.getInstance();
-        socialNetworkManager.setSocialNetworkID(
+        SocialNetworkManager.getInstance().setSocialNetworkID(
                 loginActivity.getResources().getString(R.string.facebook_profile));
 
         Intent intent = new Intent(loginActivity.getApplicationContext(), MainActivity.class);
