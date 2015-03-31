@@ -45,7 +45,6 @@ public class LoginActivity extends ActionBarActivity implements
     private boolean mSignInClicked;
     private CallbackManager callbackManager;
     private AccessTokenTracker accessTokenTracker;
-    private SocialNetworkManager socialNetworkManager;
 
     private void initializeSocialNetworks() {
 
@@ -81,8 +80,6 @@ public class LoginActivity extends ActionBarActivity implements
         LoginButton loginButton = (LoginButton) findViewById(R.id.btn_facebook_login);
         loginButton.setOnClickListener(this);
         loginButton.registerCallback(callbackManager, new FacebookLoginCallback(this));
-
-        socialNetworkManager = SocialNetworkManager.getInstance();
     }
 
     protected void onStart() {
@@ -122,7 +119,7 @@ public class LoginActivity extends ActionBarActivity implements
     }
 
     public void openMainPage(String socialNetworkID){
-        socialNetworkManager.setSocialNetworkID(socialNetworkID);
+        SocialNetworkManager.getInstance().setSocialNetworkID(socialNetworkID);
         Intent mainPageIntent = new Intent(this, MainActivity.class);
         startActivity(mainPageIntent);
     }
@@ -161,7 +158,7 @@ public class LoginActivity extends ActionBarActivity implements
         // access Google APIs on behalf of the user.
         mSignInClicked = false;
         Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
-        socialNetworkManager.setmGoogleApiClient(mGoogleApiClient);
+        SocialNetworkManager.getInstance().setmGoogleApiClient(mGoogleApiClient);
         openMainPage(getResources().getString(R.string.google_profile));
 
     }
