@@ -1,13 +1,18 @@
 package com.timteam.symbidrive.symbidrive.activities;
 
+import android.content.Context;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.timteam.symbidrive.symbidrive.R;
 import com.timteam.symbidrive.symbidrive.fragments.HomeFragment;
@@ -15,6 +20,7 @@ import com.timteam.symbidrive.symbidrive.fragments.NavigationDrawerFragment;
 import com.timteam.symbidrive.symbidrive.fragments.PoolsFragment;
 import com.timteam.symbidrive.symbidrive.fragments.ProfileFragment;
 import com.timteam.symbidrive.symbidrive.fragments.RegisterRouteFragment;
+import com.timteam.symbidrive.symbidrive.listeners.SaveCoordinatesListener;
 
 
 public class MainActivity extends ActionBarActivity
@@ -29,6 +35,9 @@ public class MainActivity extends ActionBarActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+
+    private LocationManager locationManager;
+    private SaveCoordinatesListener saveCoordinatesListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,5 +134,40 @@ public class MainActivity extends ActionBarActivity
     public void onBackPressed() {
 
         //Do not allow back button press
+    }
+
+    private void disableButton(Button button) {
+        button.setAlpha((float) 0.4);
+        button.setEnabled(false);
+    }
+
+    private void enableButton(Button button) {
+        button.setAlpha((float) 1);
+        button.setEnabled(true);
+    }
+
+
+    public void startGPSTracking(View view) {
+        saveCoordinatesListener = new SaveCoordinatesListener();
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, saveCoordinatesListener);
+
+        Button startTrackingButton = (Button) findViewById(R.id.btn_start_gps_tracking);
+        Button stopTrackingButton = (Button) findViewById(R.id.btn_stop_gps_tracking);
+        disableButton(startTrackingButton);
+        enableButton(stopTrackingButton);
+    }
+
+    public void stopGPSTracking(View view) {
+        Log.v("SymbiDrive", "User clicked on Stop GPS tracking");
+        if (saveCoordinatesListener != null) {
+            Log.v("SymbiDrive", saveCoordinatesListener.getLocations().toString());
+            locationManager.removeUpdates(saveCoordinatesListener);
+        }
+
+        Button startTrackingButton = (Button) findViewById(R.id.btn_start_gps_tracking);
+        Button stopTrackingButton = (Button) findViewById(R.id.btn_stop_gps_tracking);
+        disableButton(stopTrackingButton);
+        enableButton(startTrackingButton);
     }
 }
