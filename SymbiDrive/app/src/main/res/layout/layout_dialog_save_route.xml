@@ -13,8 +13,7 @@
         android:text="@string/save_route_message"
         android:gravity="center"
         android:textColor="@android:color/black"
-        android:textSize="20dp"
-        />
+        android:textSize="20dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
