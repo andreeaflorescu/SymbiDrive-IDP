@@ -180,27 +180,24 @@ public class MainActivity extends ActionBarActivity
     }
 
     public void createCustomDialog() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getBaseContext());
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
         View view = findViewById(R.id.layout_dialog_save_route);
         // set title
-        alertDialogBuilder.setTitle("Your Title");
         alertDialogBuilder.setView(getLayoutInflater().inflate(R.layout.layout_dialog_save_route, null));
 
         // set dialog message
         alertDialogBuilder
-                .setMessage("Save Route")
+                .setTitle("Save Route")
                 .setCancelable(false)
                 .setPositiveButton("Save",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int id) {
-                        // if this button is clicked, close
-                        // current activity
+
+                        // TODO if save -> save to database the route;
                         dialog.cancel();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // if this button is clicked, just close
-                        // the dialog box and do nothing
                         dialog.cancel();
                     }
                 });
