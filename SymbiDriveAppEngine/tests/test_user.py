@@ -124,14 +124,13 @@ class TestUser(unittest.TestCase):
             
     def create_users(self):
         User(deviceID=["12345"], 
-             socialProfile=[SocialIdentifier(socialID="32412", profile=constants.SocialProfile.FACEBOOK)],
+             socialProfile=SocialIdentifier(socialID="32412", profile=constants.SocialProfile.FACEBOOK),
              username="Andreea").put()
         User(deviceID=["12325"], 
-             socialProfile=[SocialIdentifier(socialID="32143", profile=constants.SocialProfile.GOOGLE)], 
+             socialProfile=SocialIdentifier(socialID="32143", profile=constants.SocialProfile.GOOGLE), 
              username="Ion").put()
         User(deviceID=["13245"], 
-             socialProfile=[SocialIdentifier(socialID="31412", profile=constants.SocialProfile.FACEBOOK),
-                            SocialIdentifier(socialID="11412", profile=constants.SocialProfile.GOOGLE)], 
+             socialProfile=SocialIdentifier(socialID="11412", profile=constants.SocialProfile.FACEBOOK),
              username="Maria").put()
             
     def test_find_user_by_deviceID(self):
