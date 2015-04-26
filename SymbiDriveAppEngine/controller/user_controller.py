@@ -28,7 +28,7 @@ def register_user(p_deviceID, p_socialID, p_profile, p_username):
             return constants.ExitCode.USER_REGISTER_ON_OTHER_DEVICE
         else:
             # create a new user and save it
-            User(deviceID= p_deviceID, username= p_username,
+            User(deviceID= [p_deviceID], username= p_username,
                  socialProfile= SocialIdentifier(socialID= p_socialID, profile= p_profile)
                  ).put()
             return constants.ExitCode.USER_CREATED
@@ -43,7 +43,8 @@ def get_user_info(p_socialID):
         res['isSmoker'] = user[0].isSmoker
         res['listenToMusic'] = user[0].listenToMusic
         res['car'] = user[0].car
-        res['rating'] = user[0].rating.average
+        res['rating'] = None if user[0].rating is None else user[0].rating.average
+        res['feedback'] = user[0].feedback
     
     return res
 
@@ -68,7 +69,7 @@ def add_rating(p_socialID, p_rating):
     p_socialID -- string value for the social_ID of the user you want to rate
     p_rating -- integer value between 1 and 5
     '''
-    user = User.query(User.socialProfile.socialID == p_socialID)
+    user = User.query(User.socialProfile.socialID == p_socialID).fetch()
     
     if (len(user) == 1):
         try: 
@@ -87,15 +88,12 @@ def add_feedback(p_socialID, p_feedback):
     p_feedback -- feedback string
     '''
     
-    user = User.query(User.socialProfile.socialID == p_socialID)
+    user = User.query(User.socialProfile.socialID == p_socialID).fetch(1)
     
     if (len(user) == 1):
-        try: 
-            user[0].add_feedback(p_feedback)
-            user[0].put()
-            return constants.ExitCode.FEEDBACK_ADDED
-        except ValueError:
-            return constants.ExitCode.INVALID_FEEDBACK
+        user[0].add_feedback(p_feedback)
+        user[0].put()
+        return constants.ExitCode.FEEDBACK_ADDED
     else:
         return constants.ExitCode.INVALID_USER
     
