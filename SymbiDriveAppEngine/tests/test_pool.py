@@ -27,7 +27,7 @@ class TestPool(unittest.TestCase):
 
 
     def test_create_pool(self):
-        Pool(driver=1, source_point=ndb.GeoPt(-34, -54),
+        Pool(driver_socialID="1", source_point=ndb.GeoPt(-34, -54),
                     destination_point=ndb.GeoPt(-32.0, 43.9),
                     date=datetime.datetime.now(), 
                     seats=2).put()

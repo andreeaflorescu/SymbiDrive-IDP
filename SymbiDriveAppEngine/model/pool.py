@@ -12,13 +12,19 @@ class Pool(ndb.Model):
     '''
     
     ''' Might need to change driver and passengers list to match the social ID'''
-    driver = ndb.IntegerProperty(required=True)
+    driver_socialID = ndb.StringProperty(required=True)
     passengers = ndb.IntegerProperty(repeated=True)
     source_point = ndb.GeoPtProperty(required=True)
     destination_point = ndb.GeoPtProperty(required=True)
     date = ndb.DateTimeProperty(required=True)
     seats = ndb.IntegerProperty(required=True)
     is_weekly = ndb.BooleanProperty(default=False)
+    
+    def add_passenger(self, userID):
+        if (self.passengers is None):
+            self.passengers = [userID]
+        else:
+            self.passengers.append(userID)
     
     
     

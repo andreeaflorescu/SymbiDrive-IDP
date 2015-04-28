@@ -10,5 +10,5 @@ class GPSRoute(ndb.Model):
     classdocs
     '''
     pool_id = ndb.IntegerProperty(required=True)
-    user_id = ndb.IntegerProperty(required=True)
+    driver_socialID = ndb.StringProperty(required=True)
     route_points = ndb.GeoPtProperty(repeated=True)    
