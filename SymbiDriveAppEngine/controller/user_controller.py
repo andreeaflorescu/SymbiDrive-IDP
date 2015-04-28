@@ -5,8 +5,18 @@ Created on Apr 23, 2015
 '''
 from model.user import User, SocialIdentifier
 from utils import constants
+from model.deleted_user import DeletedUser
+from google.appengine.ext import ndb
 
 def register_user(p_deviceID, p_socialID, p_profile, p_username):
+    
+    # check if user was deleted because of negative rating
+    user = DeletedUser.query(ndb.OR(DeletedUser.deviceID == p_deviceID,
+                             DeletedUser.socialProfile.socialID == p_socialID)).fetch(1)
+    
+    if (len(user) == 1):
+        return constants.ExitCode.DELETED_USER
+    
     user = User.query(User.deviceID == p_deviceID).fetch(1)
     # check if user has already register on the current device
     if (len(user) == 1):
@@ -96,4 +106,7 @@ def add_feedback(p_socialID, p_feedback):
         return constants.ExitCode.FEEDBACK_ADDED
     else:
         return constants.ExitCode.INVALID_USER
+
+    
+    
     
