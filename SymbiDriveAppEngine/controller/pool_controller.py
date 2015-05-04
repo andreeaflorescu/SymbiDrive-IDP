@@ -46,6 +46,8 @@ def add_passenger_to_pool(pool_id, passenger_id):
     pool.add_passenger(passenger_id)
     pool.put()
 
+    return constants.ExitCode.PASSENGER_ADDED_TO_POOL
+
 def delete_pool(pool_id):
     pool = Pool.get_by_id(pool_id)
     
