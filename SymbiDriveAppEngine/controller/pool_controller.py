@@ -5,6 +5,7 @@ Created on Apr 28, 2015
 '''
 from model.pool import Pool
 from google.appengine.ext import ndb
+from google.appengine.api import search
 from model.user import User
 from utils import constants
 
@@ -30,10 +31,18 @@ def create_pool(p_driverID, p_source_point, p_destination_point, p_date, p_seats
         return constants.ExitCode.INVALID_USER
     
     
-    Pool(driver_socialID = p_driverID, source_point = p_source_point,
+    key = Pool(driver_socialID = p_driverID, source_point = p_source_point,
                     destination_point = p_destination_point,
                     date = p_date,
                     seats=p_seats).put()
+
+    source_point = search.GeoPoint(p_source_point.lat, p_source_point.lon)
+    destination_point = search.GeoPoint(p_destination_point.lat, p_destination_point.lon)
+    index = search.Index(constants.IndexName.LOCATION_INDEX)
+    doc = search.Document(fields=[search.TextField(name='key', value=key.urlsafe()),
+                                  search.GeoField(name='s_point', value=source_point),
+                                  search.GeoField(name='d_point', value=destination_point)])
+    index.put(doc)
     
     return constants.ExitCode.POOL_ADDED
 
@@ -72,8 +81,31 @@ def delete_passenger_from_pool(pool_id, passenger_id):
 '''
     start_point and end_point are GeoPt
     date is datetime.datetime
+    delta is time interval around date in which to search
 '''
-def find_pool(start_point, end_point, date, meters=1000):
-    Pool.query(ndb.AND())
+def find_pool(start_point, end_point, date, delta, walking_distance=1000):
+    index = search.Index(constants.IndexName.LOCATION_INDEX)
+    query = "distance(s_point, geopoint(%f,%f)) < %f AND distance(d_point, geopoint(%f,%f)) < %f" % (
+                start_point.lat, start_point.lon, walking_distance,
+                end_point.lat, end_point.lon, walking_distance)
+    expr = "distance(s_point, geopoint(%f,%f)) + distance(d_point, geopoint(%f,%f))" %(
+                start_point.lat, start_point.lon,
+                end_point.lat, end_point.lon)
+    sortexpr = search.SortExpression(
+                expression=expr,
+                direction=search.SortExpression.ASCENDING, default_value=2*walking_distance+1)
+    search_query = search.Query(
+                query_string=query,
+                options=search.QueryOptions(
+                    sort_options=search.SortOptions(expressions=[sortexpr])))
 
-    
+    results = index.search(search_query)
+    keys = [ndb.Key(urlsafe=r.field('key').value) for r in results]
+
+    entities = ndb.get_multi(keys)
+    ret = []
+    for entity in entities:
+        if entity.date < date + delta and entity.date > date - delta:
+            ret.append(entity)
+
+    return ret

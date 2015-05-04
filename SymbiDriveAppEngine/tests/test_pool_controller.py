@@ -7,7 +7,7 @@ import unittest
 from model.user import User, SocialIdentifier
 from utils import constants
 from controller.pool_controller import create_pool, delete_pool,\
-    delete_passenger_from_pool
+    delete_passenger_from_pool, find_pool
 from google.appengine.ext import ndb, testbed
 import datetime
 from model.pool import Pool
@@ -23,7 +23,7 @@ class Test(unittest.TestCase):
         # Next, declare which service stubs you want to use.
         self.testbed.init_datastore_v3_stub()
         self.testbed.init_memcache_stub()
-
+        self.testbed.init_search_stub()
 
     def tearDown(self):
         self.testbed.deactivate()
@@ -84,7 +84,33 @@ class Test(unittest.TestCase):
         res = delete_passenger_from_pool(pool.key.id(), "11412")
         self.assertEqual(res, constants.ExitCode.PASSENGER_DELETED_FROM_POOL, "Invalid exit code")
         
-       
+    def test_find_pool(self):
+        User(
+             deviceID=["12345"],
+             socialProfile=SocialIdentifier(socialID="32412", profile=constants.SocialProfile.FACEBOOK),
+             username="Andreea").put()
+
+        User(deviceID=["13245"],
+             socialProfile=SocialIdentifier(socialID="11412", profile=constants.SocialProfile.FACEBOOK),
+             username="Maria").put()
+
+        date = datetime.datetime.now()
+        # p_driverID, p_source_point, p_destination_point, p_date, p_seats, p_is_weekly=False
+        create_pool("32412",
+                  ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12),
+                  date,
+                  2)
+        create_pool("11412",
+                  ndb.GeoPt(-21, 32), ndb.GeoPt(31, 12),
+                  date,
+                  2)
+        create_pool("32412",
+                  ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12),
+                  date + datetime.timedelta(hours=7),
+                  2)
+
+        res = find_pool(ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12), date, datetime.timedelta(hours=6), 1000)
+        self.assertEqual(len(res), 1, "Expected 1 returned value, got %d" % (len(res)))
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.test_add_pool_simple']
