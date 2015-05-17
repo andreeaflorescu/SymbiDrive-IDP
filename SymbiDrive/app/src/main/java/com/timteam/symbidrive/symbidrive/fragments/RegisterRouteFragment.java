@@ -23,6 +23,9 @@ public class RegisterRouteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
+        if(savedInstanceState == null){
+
+        }
         View rootView = inflater.inflate(R.layout.fragment_navigation_register_route,
                 container,
                 false);
