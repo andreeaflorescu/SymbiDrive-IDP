@@ -24,7 +24,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 import com.timteam.symbidrive.symbidrive.GetGoogleInfoTask;
 import com.timteam.symbidrive.symbidrive.R;
-import com.timteam.symbidrive.symbidrive.SocialNetworkManager;
+
+import com.timteam.symbidrive.symbidrive.helpers.SocialNetworkManager;
 import com.timteam.symbidrive.symbidrive.listeners.FacebookLoginCallback;
 
 import java.io.IOException;

@@ -1,6 +1,8 @@
 package com.timteam.symbidrive.symbidrive.activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,6 +22,7 @@ import com.timteam.symbidrive.symbidrive.fragments.NavigationDrawerFragment;
 import com.timteam.symbidrive.symbidrive.fragments.PoolsFragment;
 import com.timteam.symbidrive.symbidrive.fragments.ProfileFragment;
 import com.timteam.symbidrive.symbidrive.fragments.RegisterRouteFragment;
+import com.timteam.symbidrive.symbidrive.fragments.SaveRouteDialogFragment;
 import com.timteam.symbidrive.symbidrive.listeners.SaveCoordinatesListener;
 
 
@@ -172,5 +175,37 @@ public class MainActivity extends ActionBarActivity
         Button stopTrackingButton = (Button) findViewById(R.id.btn_stop_gps_tracking);
         disableButton(stopTrackingButton);
         enableButton(startTrackingButton);
+
+        createCustomDialog();
+    }
+
+    public void createCustomDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+        View view = findViewById(R.id.layout_dialog_save_route);
+        // set title
+        alertDialogBuilder.setView(getLayoutInflater().inflate(R.layout.layout_dialog_save_route, null));
+
+        // set dialog message
+        alertDialogBuilder
+                .setTitle("Save Route")
+                .setCancelable(false)
+                .setPositiveButton("Save",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+
+                        // TODO if save -> save to database the route;
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
     }
 }

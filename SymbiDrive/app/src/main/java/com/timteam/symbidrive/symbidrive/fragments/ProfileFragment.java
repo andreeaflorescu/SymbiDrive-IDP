@@ -14,8 +14,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.plus.Plus;
 import com.timteam.symbidrive.symbidrive.R;
-import com.timteam.symbidrive.symbidrive.SocialNetworkManager;
-import com.timteam.symbidrive.symbidrive.activities.LoginActivity;
+import com.timteam.symbidrive.symbidrive.helpers.SocialNetworkManager;
 import com.timteam.symbidrive.symbidrive.activities.MainActivity;
 import com.facebook.login.LoginManager;
 
@@ -46,7 +45,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 getResources().getString(R.string.google_profile)){
 
             mGoogleApiClient = socialNetworkManager.getmGoogleApiClient();
-            SocialNetworkManager.getInstance().setIsLoggedIn(true);
             mGoogleApiClient.connect();
             btn_logout.setText("Log out from " + socialNetworkManager.getSocialNetworkID());
         }
@@ -82,8 +80,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                     .setResultCallback(new ResultCallback<Status>() {
                         @Override
                         public void onResult(Status status) {
-                            openLoginPage();
-                            SocialNetworkManager.getInstance().setIsLoggedIn(false);
+                            btn_logout.setText("Login");
                         }
                 });
             }
@@ -91,13 +88,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
             if(socialNetworkManager.getSocialNetworkID() ==
                     getResources().getString(R.string.facebook_profile)){
                 LoginManager.getInstance().logOut();
-                openLoginPage();
+                btn_logout.setText("Login");
             }
         }
-    }
-
-    private void openLoginPage(){
-        Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
-        getActivity().startActivity(intent);
     }
 }

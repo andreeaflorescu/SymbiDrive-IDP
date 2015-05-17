@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.SupportMapFragment;
 import com.timteam.symbidrive.symbidrive.R;
 import com.timteam.symbidrive.symbidrive.activities.MainActivity;
 
@@ -36,5 +37,24 @@ public class RegisterRouteFragment extends Fragment {
         super.onAttach(activity);
         ((MainActivity) activity).onSectionAttached(getResources().
                 getInteger(R.integer.register_route_section_id));
+    }
+
+    @Override
+    public void onDestroyView() {
+
+        SupportMapFragment f = (SupportMapFragment) getFragmentManager()
+                .findFragmentById(R.id.map_view_pool);
+
+        if (f != null) {
+            try {
+                getFragmentManager().beginTransaction().remove(f).commit();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        super.onDestroyView();
     }
 }

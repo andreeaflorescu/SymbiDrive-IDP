@@ -1,0 +1,19 @@
+application: bustling-bay-88919
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /_ah/spi/.*
+  script: symbidrive_api.APPLICATION
+
+libraries:
+- name: jinja2
+  version: "2.6"
+- name: markupsafe
+  version: "0.15"
+- name: pycrypto
+  version: latest
+- name: endpoints
+  version: 1.0
