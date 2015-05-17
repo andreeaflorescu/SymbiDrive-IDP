@@ -3,7 +3,7 @@
     werkzeug._internal
     ~~~~~~~~~~~~~~~~~~
 
-    This module provides internally used helpers and constants.
+    This module provides internally used helpers and symbidrive_api.
 
     :copyright: (c) 2013 by the Werkzeug Team, see AUTHORS for more details.
     :license: BSD, see LICENSE for more details.
