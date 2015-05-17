@@ -2,6 +2,7 @@ package com.timteam.symbidrive.symbidrive.activities;
 
 import android.content.Intent;
 import android.content.IntentSender;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -16,14 +17,19 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
+import com.timteam.symbidrive.symbidrive.GetGoogleInfoTask;
 import com.timteam.symbidrive.symbidrive.R;
 import com.timteam.symbidrive.symbidrive.SocialNetworkManager;
 import com.timteam.symbidrive.symbidrive.listeners.FacebookLoginCallback;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 
 
 public class LoginActivity extends ActionBarActivity implements
@@ -46,6 +52,8 @@ public class LoginActivity extends ActionBarActivity implements
     private CallbackManager callbackManager;
     private AccessTokenTracker accessTokenTracker;
 
+
+
     private void initializeSocialNetworks() {
 
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -62,6 +70,7 @@ public class LoginActivity extends ActionBarActivity implements
                 .addOnConnectionFailedListener(this)
                 .addApi(Plus.API)
                 .addScope(Plus.SCOPE_PLUS_LOGIN)
+                .addScope(Plus.SCOPE_PLUS_PROFILE)
                 .build();
     }
 
@@ -149,7 +158,10 @@ public class LoginActivity extends ActionBarActivity implements
 
         if (view.getId() == R.id.btn_facebook_login) {
             LoginManager.getInstance().logInWithReadPermissions(this,
-                    Arrays.asList("public_profile", "user_friends"));
+                    Arrays.asList("basic_info",
+                            "user_friends",
+                            "user_likes",
+                            "user_birthday"));
         }
     }
 
@@ -157,10 +169,19 @@ public class LoginActivity extends ActionBarActivity implements
         // We've resolved any connection errors.  mGoogleApiClient can be used to
         // access Google APIs on behalf of the user.
         mSignInClicked = false;
-        Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
         SocialNetworkManager.getInstance().setmGoogleApiClient(mGoogleApiClient);
-        openMainPage(getResources().getString(R.string.google_profile));
 
+        if(SocialNetworkManager.getInstance().getIsLoggedIn() == null ||
+                !SocialNetworkManager.getInstance().getIsLoggedIn()){
+
+            Object[] params = new Object[2];
+            params[0] = this;
+            params[1] = Plus.AccountApi.getAccountName(mGoogleApiClient);
+            new GetGoogleInfoTask().execute(params);
+
+            openMainPage(getResources().getString(R.string.google_profile));
+        }
     }
 
     protected void onActivityResult(int requestCode, int responseCode, Intent intent) {

@@ -2,6 +2,7 @@ package com.timteam.symbidrive.symbidrive.listeners;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -22,6 +23,9 @@ public class FacebookLoginCallback implements FacebookCallback<LoginResult> {
 
     @Override
     public void onSuccess(LoginResult loginResult) {
+
+        String userID = loginResult.getAccessToken().getUserId();
+        Log.d("facebook userID", userID);
 
         SocialNetworkManager.getInstance().setSocialNetworkID(
                 loginActivity.getResources().getString(R.string.facebook_profile));

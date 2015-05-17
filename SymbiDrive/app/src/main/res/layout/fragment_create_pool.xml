@@ -102,70 +102,56 @@
             />
 
         </LinearLayout>
-
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="10dp" />
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:weightSum="8">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="16dp"
+                android:layout_weight="1"
+                android:baselineAlignBottom="true"
+                android:clickable="true"
+                android:onClick="showDatePickerDialog"
+                android:src="@drawable/calendar_128"/>
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Date"
-                android:textColor="@android:color/holo_blue_light"
-                android:textSize="20dp"
-                />
-            <TextView
                 android:id="@+id/tv_date_picker"
-                android:layout_weight="1"
+                android:layout_weight="3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:textSize="20dp"
                 android:onClick="showDatePickerDialog"/>
-        </LinearLayout>
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="10dp" />
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <TextView
+            <ImageView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="18dp"
                 android:layout_weight="1"
-                android:text="Hour"
-                android:textColor="@android:color/holo_blue_light"
-                android:textSize="20dp"
-                />
-
+                android:baselineAlignBottom="true"
+                android:clickable="true"
+                android:onClick="showTimePickerDialog"
+                android:src="@drawable/clock_128"/>
             <TextView
                 android:id="@+id/tv_time_picker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="3"
                 android:textSize="20dp"
                 android:clickable="true"
                 android:onClick="showTimePickerDialog"/>/>
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="10dp" />
-        </LinearLayout>
 
+        </LinearLayout>
         <Space
             android:layout_width="wrap_content"
             android:layout_height="10dp" />
 
-        </LinearLayout>
-
-
-
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

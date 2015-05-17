@@ -13,6 +13,8 @@ public class SocialNetworkManager {
 
     private GoogleApiClient mGoogleApiClient;
 
+    private Boolean isLoggedIn;
+
     public SocialNetworkManager(){}
 
     public static SocialNetworkManager getInstance(){
@@ -38,4 +40,11 @@ public class SocialNetworkManager {
         this.mGoogleApiClient = mGoogleApiClient;
     }
 
+    public Boolean getIsLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void setIsLoggedIn(Boolean isLoggedIn) {
+        this.isLoggedIn = isLoggedIn;
+    }
 }
