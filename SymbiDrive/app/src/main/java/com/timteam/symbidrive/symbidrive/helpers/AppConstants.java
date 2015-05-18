@@ -33,6 +33,7 @@ public class AppConstants {
      */
     public static Symbidrive getApiServiceHandle() {
         // Use a builder to help formulate the API request.
+
         Symbidrive.Builder symbidrive = new Symbidrive.Builder(AppConstants.HTTP_TRANSPORT,
                 AppConstants.JSON_FACTORY, null);
 

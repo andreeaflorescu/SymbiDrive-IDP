@@ -6,11 +6,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.appspot.bustling_bay_88919.symbidrive.Symbidrive;
+import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveRegisterUserRequest;
+import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveUserResponse;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -25,6 +29,7 @@ import com.google.android.gms.plus.Plus;
 import com.timteam.symbidrive.symbidrive.GetGoogleInfoTask;
 import com.timteam.symbidrive.symbidrive.R;
 
+import com.timteam.symbidrive.symbidrive.helpers.AppConstants;
 import com.timteam.symbidrive.symbidrive.helpers.SocialNetworkManager;
 import com.timteam.symbidrive.symbidrive.listeners.FacebookLoginCallback;
 
@@ -223,8 +228,51 @@ public class LoginActivity extends ActionBarActivity implements
         }
     }
 
-    private void updateWithToken(AccessToken currentAccessToken) {
+    private void updateWithToken(final AccessToken currentAccessToken) {
         if (currentAccessToken != null) {
+            AsyncTask<Integer, Void, SymbidriveUserResponse> getAndDisplayGreeting =
+                    new AsyncTask<Integer, Void, SymbidriveUserResponse> () {
+                        @Override
+                        protected SymbidriveUserResponse doInBackground(Integer... integers) {
+                            // Retrieve service handle.
+                            Symbidrive apiServiceHandle = AppConstants.getApiServiceHandle();
+
+                            try {
+
+                                SymbidriveRegisterUserRequest registerUserRequest = new SymbidriveRegisterUserRequest();
+                                registerUserRequest.setDeviceID("13455");
+                                registerUserRequest.setProfile("Facebook");
+                                registerUserRequest.setSocialID(currentAccessToken.getToken());
+                                registerUserRequest.setUsername("extraordinar");
+                                apiServiceHandle.registerUser(registerUserRequest).execute();
+
+
+                            } catch (IOException e) {
+                                Log.e("muie", "Exception during API call", e);
+                            }
+                            return null;
+                        }
+
+                        @Override
+                        protected void onProgressUpdate(Void... values) {
+                            Log.v("muie", values.toString());
+                            super.onProgressUpdate(values);
+                        }
+
+                        @Override
+                        protected void onPostExecute(SymbidriveUserResponse greeting) {
+                            if (greeting!=null) {
+                                Log.v("muie", greeting.toString());
+                            } else {
+                                Log.v("muie", "No greetings were returned by the API.");
+                            }
+                        }
+
+
+                    };
+
+            getAndDisplayGreeting.execute(1);
+
             openMainPage(getResources().getString(R.string.facebook_profile));
         }
     }
