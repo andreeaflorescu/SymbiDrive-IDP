@@ -245,26 +245,27 @@ public class LoginActivity extends ActionBarActivity implements
                                 registerUserRequest.setSocialID(currentAccessToken.getToken());
                                 registerUserRequest.setUsername("extraordinar");
                                 apiServiceHandle.registerUser(registerUserRequest).execute();
+//                                apiServiceHandle.registerUser(new SymbidriveRegisterUserRequest());
 
 
                             } catch (IOException e) {
-                                Log.e("muie", "Exception during API call", e);
+                                Log.e("symbi", "Exception during API call", e);
                             }
                             return null;
                         }
 
                         @Override
                         protected void onProgressUpdate(Void... values) {
-                            Log.v("muie", values.toString());
+                            Log.v("symbi", values.toString());
                             super.onProgressUpdate(values);
                         }
 
                         @Override
                         protected void onPostExecute(SymbidriveUserResponse greeting) {
                             if (greeting!=null) {
-                                Log.v("muie", greeting.toString());
+                                Log.v("symbi", greeting.toString());
                             } else {
-                                Log.v("muie", "No greetings were returned by the API.");
+                                Log.v("symbi", "No greetings were returned by the API.");
                             }
                         }
 

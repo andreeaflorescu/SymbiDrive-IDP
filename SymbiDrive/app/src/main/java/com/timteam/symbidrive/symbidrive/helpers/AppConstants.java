@@ -9,9 +9,13 @@ import android.content.Context;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
+import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
+import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.appspot.bustling_bay_88919.symbidrive.Symbidrive;
+
+import java.io.IOException;
 
 import javax.annotation.Nullable;
 
@@ -35,7 +39,13 @@ public class AppConstants {
         // Use a builder to help formulate the API request.
 
         Symbidrive.Builder symbidrive = new Symbidrive.Builder(AppConstants.HTTP_TRANSPORT,
-                AppConstants.JSON_FACTORY, null);
+                AppConstants.JSON_FACTORY, null).setRootUrl("https://bustling-bay-88919.appspot.com/_ah/api/").setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
+            @Override
+            public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
+                abstractGoogleClientRequest.setDisableGZipContent(true);
+            }
+        });
+        ;
 
         return symbidrive.build();
     }
