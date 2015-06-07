@@ -81,6 +81,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                         @Override
                         public void onResult(Status status) {
                             btn_logout.setText("Login");
+                            //TODO
+                            //redirect to login
                         }
                 });
             }
@@ -89,6 +91,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                     getResources().getString(R.string.facebook_profile)){
                 LoginManager.getInstance().logOut();
                 btn_logout.setText("Login");
+                //TODO
+                //redirect to login
             }
         }
     }

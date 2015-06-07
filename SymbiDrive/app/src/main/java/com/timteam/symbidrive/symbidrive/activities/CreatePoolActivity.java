@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.appspot.bustling_bay_88919.symbidrive.Symbidrive;
@@ -23,6 +24,7 @@ import com.timteam.symbidrive.symbidrive.fragments.TimePickerFragment;
 import com.timteam.symbidrive.symbidrive.helpers.AppConstants;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -41,14 +43,13 @@ public class CreatePoolActivity extends ActionBarActivity {
     }
 
     public void showDatePickerDialog(View v) {
-        DatePickerFragment newFragment;
-        newFragment = new DatePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "datePicker");
+        DatePickerFragment datePickerFragment = new DatePickerFragment();
+        datePickerFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
     public void showTimePickerDialog(View v) {
-        DialogFragment newFragment = new TimePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "timePicker");
+        TimePickerFragment timePickerFragment = new TimePickerFragment();
+        timePickerFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
     public void selectSavedRoute(View v){
@@ -56,29 +57,76 @@ public class CreatePoolActivity extends ActionBarActivity {
     }
 
     public void createPool(View v){
-        View view = getWindow().getDecorView();
-        String source = ((EditText)view.findViewById(R.id.et_source_location))
-                .getText().toString();
-        String destination = ((EditText)view.findViewById(R.id.et_destination_location))
-                .getText().toString();
 
-        if(source.isEmpty() || destination.isEmpty()){
+        View view = getWindow().getDecorView();
+        String source = ((EditText)view.findViewById(R.id.et_source_location)).
+                getText().toString();
+        String destination = ((EditText)view.findViewById(R.id.et_destination_location)).
+                getText().toString();
+        String seats = ((EditText)view.findViewById(R.id.et_available_seats)).
+                getText().toString();
+
+        if(source.isEmpty() || destination.isEmpty() || seats.isEmpty()){
             Toast.makeText(this, "Please complete all fields", Toast.LENGTH_SHORT).show();
         }
         else {
             try {
-                double[] sourceCoordinates = getCoordinates(source);
-                double[] destinationCoordinates = getCoordinates(destination);
-                long seats = 2;
-                postPool(sourceCoordinates,
-                        destinationCoordinates,
-                        new DateTime(new Date()),
-                        seats);
+                Log.v("post pool", getCoordinates(source).toString());
+                Log.v("post pool", getCoordinates(destination).toString());
+                Log.v("post pool", getDateTime(view).toString());
+                Log.v("post pool", Long.parseLong(seats) + "");
+                //Long time = 1233435l;
+                //DateTime dateTime = new DateTime(time);
+                postPool(getCoordinates(source),
+                        getCoordinates(destination),
+                        getDateTime(view),
+                        Long.parseLong(seats));
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
+    }
+
+    public DateTime getDateTime(View v){
+
+        String dateTimeValue = "";
+
+        String[] date = ((TextView)v.findViewById(R.id.tv_date_picker)).
+                getText().toString().split("/");
+        String[] time = ((TextView)v.findViewById(R.id.tv_time_picker)).
+                getText().toString().split(":");
+
+        dateTimeValue += date[2] + "-";
+        if(date[1].length() == 1){
+            dateTimeValue += "0" + date[1] + "-";
+        }
+        else {
+            dateTimeValue += date[1] + "-";
+        }
+        if(date[0].length() == 1){
+            dateTimeValue += "0" + date[0] + "T";
+        }
+        else {
+            dateTimeValue += date[0] + "T";
+        }
+
+        if(time[0].length() == 1){
+            dateTimeValue += "0" + time[0] + ":";
+        }
+        else {
+            dateTimeValue += time[0] + ":";
+        }
+
+        if(time[1].length() == 1){
+            dateTimeValue += "0" + time[1];
+        }
+        else {
+            dateTimeValue += time[1] + ":00Z";
+        }
+
+        return new DateTime(dateTimeValue);
     }
 
     public double[] getCoordinates(String address) throws IOException {
@@ -101,21 +149,23 @@ public class CreatePoolActivity extends ActionBarActivity {
                          final DateTime dateTime,
                          final long seats){
 
-        AsyncTask<Void, Void, SymbidrivePoolResponse> getAndDisplayGreeting =
+        AsyncTask<Void, Void, SymbidrivePoolResponse> postPoolInfo =
                 new AsyncTask<Void, Void, SymbidrivePoolResponse> () {
 
                     @Override
                     protected SymbidrivePoolResponse doInBackground(Void... integers) {
-                        // Retrieve service handle.
+
                         Symbidrive apiServiceHandle = AppConstants.getApiServiceHandle();
 
                         try {
 
                             SymbidriveCreatePoolRequest createPoolRequest =
                                     new SymbidriveCreatePoolRequest();
+
                             createPoolRequest.setDate(dateTime);
                             createPoolRequest.setDriverId("1234");
                             createPoolRequest.setSeats(seats);
+                            createPoolRequest.setIsWeekly(false);
                             createPoolRequest.setSourcePointLat(sourceCoordinates[0]);
                             createPoolRequest.setSourcePointLon(sourceCoordinates[1]);
                             createPoolRequest.setDestinationPointLat(destinationCoordinates[0]);
@@ -125,6 +175,7 @@ public class CreatePoolActivity extends ActionBarActivity {
 
                         } catch (IOException e) {
                             Log.e("symbi", "Exception during API call", e);
+
                         }
                         return null;
                     }
@@ -142,7 +193,7 @@ public class CreatePoolActivity extends ActionBarActivity {
 
                 };
 
-        getAndDisplayGreeting.execute((Void)null);
+        postPoolInfo.execute((Void) null);
     }
 
     public void openPoolsActivity(){

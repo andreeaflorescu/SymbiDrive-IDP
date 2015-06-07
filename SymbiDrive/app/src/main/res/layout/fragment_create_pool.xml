@@ -93,7 +93,7 @@
                 />
 
             <EditText
-                android:id="@+id/tv_available_seats"
+                android:id="@+id/et_available_seats"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
