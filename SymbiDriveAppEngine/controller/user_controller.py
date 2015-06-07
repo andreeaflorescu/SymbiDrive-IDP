@@ -48,7 +48,7 @@ def get_user_info(p_socialID):
     # check if user exists
     res = {}
     if (len(user) == 1):
-        res['username'] = user[0].username
+        res['username'] = "" if user[0].username is None else user[0].username
         res['telephone'] = user[0].telephone
         res['isSmoker'] = user[0].isSmoker
         res['listenToMusic'] = user[0].listenToMusic
