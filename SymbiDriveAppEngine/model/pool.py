@@ -23,8 +23,10 @@ class Pool(ndb.Model):
     def add_passenger(self, userID):
         if (self.passengers is None):
             self.passengers = [userID]
+            self.seats = self.seats - 1
         else:
             self.passengers.append(userID)
+            self.seats = self.seats - 1
     
     
     

@@ -109,7 +109,8 @@ class Test(unittest.TestCase):
                   date + datetime.timedelta(hours=7),
                   2)
 
-        res = find_pool(ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12), date, datetime.timedelta(hours=6), 1000)
+        res = find_pool("32412", ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12), date, datetime.timedelta(hours=6), 1000)
+#         print res[0].key.id()
         self.assertEqual(len(res), 1, "Expected 1 returned value, got %d" % (len(res)))
 
 if __name__ == "__main__":
