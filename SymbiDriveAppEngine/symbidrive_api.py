@@ -156,7 +156,7 @@ class Pool_endpoint(remote.Service):
                       path='create_pool', http_method='POST')
     def create_pool(self, request):
         source_point = ndb.GeoPt(request.source_point_lat, request.source_point_lon)
-        destination_point = ndb.GeoPt(request.destination_point_lat. request.destination_point_lon)
+        destination_point = ndb.GeoPt(request.destination_point_lat, request.destination_point_lon)
         date = message_types.DateTimeField().value_from_message(request.date)
         if request.is_weekly is None:
             is_weekly = False
