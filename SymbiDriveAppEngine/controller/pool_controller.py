@@ -83,7 +83,11 @@ def delete_passenger_from_pool(pool_id, passenger_id):
     date is datetime.datetime
     delta is time interval around date in which to search
 '''
-def find_pool(start_point, end_point, date, delta, walking_distance=1000):
+def find_pool(socialID, start_point, end_point, date, delta, walking_distance=1000):
+    
+    # TODO: Cristina do some turkish delight with the socialID
+    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    
     index = search.Index(constants.IndexName.LOCATION_INDEX)
     query = "distance(s_point, geopoint(%f,%f)) < %f AND distance(d_point, geopoint(%f,%f)) < %f" % (
                 start_point.lat, start_point.lon, walking_distance,
