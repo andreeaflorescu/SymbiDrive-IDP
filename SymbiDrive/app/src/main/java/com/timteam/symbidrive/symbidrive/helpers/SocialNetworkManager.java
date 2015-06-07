@@ -11,6 +11,8 @@ public class SocialNetworkManager {
 
     private String socialNetworkID;
 
+    private String socialDeviceID;
+
     private GoogleApiClient mGoogleApiClient;
 
     private Boolean isLoggedIn;
@@ -22,6 +24,14 @@ public class SocialNetworkManager {
             instance = new SocialNetworkManager();
         }
         return instance;
+    }
+
+    public String getSocialDeviceID() {
+        return socialDeviceID;
+    }
+
+    public void setSocialDeviceID(String socialDeviceID) {
+        this.socialDeviceID = socialDeviceID;
     }
 
     public void setSocialNetworkID(String id){
