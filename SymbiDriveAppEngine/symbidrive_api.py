@@ -1,7 +1,7 @@
 '''
 Created on May 15, 2015
 
-@author: alex
+@author: andreea
 '''
 
 import endpoints
@@ -15,7 +15,7 @@ from google.appengine.ext import ndb
 import datetime
 
 
-symbidrive_api = endpoints.api(name='symbidrive', version='v1')
+symbidrive_api = endpoints.api(name='symbidrive', version='v1.1')
 
 package = 'Symbidrive'
 
@@ -43,10 +43,11 @@ class UserInfoResponse(messages.Message):
     
 class UpdateUserInfoRequest(messages.Message):
     socialID = messages.StringField(1, required=True)
-    telephone = messages.StringField(2, required=True)
-    isSmoker = messages.BooleanField(3, required=True)
-    listenToMusic = messages.BooleanField(4, required=True)
-    car = messages.StringField(5, required=True)
+    username = messages.StringField(2, required=True)
+    telephone = messages.StringField(3, required=True)
+    isSmoker = messages.BooleanField(4, required=True)
+    listenToMusic = messages.BooleanField(5, required=True)
+    car = messages.StringField(6, required=True)
 
 class AddRatingRequest(messages.Message):
     socialID = messages.StringField(1, required=True)
@@ -127,13 +128,14 @@ class PoolResponse(messages.Message):
     ret = messages.StringField(1, required=True)
     
 class FindPoolRequest(messages.Message):
-    start_point_lat = messages.FloatField(1, required=True)
-    start_pointsource_point_lon = messages.FloatField(2, required=True)
-    end_point_lat = messages.FloatField(3, required=True)
-    end_point_lon = messages.FloatField(4, required=True)
-    date = message_types.DateTimeField(5, required=True)
-    delta = message_types.DateTimeField(6, required=True)
-    walking_distance = messages.FloatField(7, required=False)
+    socialID = messages.StringField(1, required=True)
+    start_point_lat = messages.FloatField(2, required=True)
+    start_point_lon = messages.FloatField(3, required=True)
+    end_point_lat = messages.FloatField(4, required=True)
+    end_point_lon = messages.FloatField(5, required=True)
+    date = message_types.DateTimeField(6, required=True)
+    delta = message_types.DateTimeField(7, required=True)
+    walking_distance = messages.FloatField(8, required=False)
    
 class SinglePoolResponse(messages.Message):
     driver_id = messages.StringField(1, required=True)
@@ -157,11 +159,11 @@ class Pool_endpoint(remote.Service):
     def create_pool(self, request):
         source_point = ndb.GeoPt(request.source_point_lat, request.source_point_lon)
         destination_point = ndb.GeoPt(request.destination_point_lat, request.destination_point_lon)
-        date = request.date
+        date = request.date.replace(tzinfo=None)
         if request.is_weekly is None:
             is_weekly = False
         else:
-            is_weekly = True
+            is_weekly = request.is_weekly
 
         return PoolResponse(ret=pool_controller.create_pool(request.driver_id,
                                                             source_point,
@@ -190,26 +192,27 @@ class Pool_endpoint(remote.Service):
     @endpoints.method(FindPoolRequest, FindPoolResponse,
                       path='find_pool', http_method='POST')
     def find_pool(self, request):
+        socialID = request.socialID
         start_point = ndb.GeoPt(request.start_point_lat, request.start_point_lon)
-        end_point = ndb.GeoPt(request.end_point_lat. request.end_point_lon)
-        date = message_types.DateTimeField().value_from_message(request.date)
-        delta_ = message_types.DateTimeField().value_from_message(request.delta)
-        delta = datetime.timedelta(hours=delta_.hours, minutes=delta_.minutes)
+        end_point = ndb.GeoPt(request.end_point_lat, request.end_point_lon)
+        date = request.date.replace(tzinfo=None)
+        delta_ = request.delta
+        delta = datetime.timedelta(hours=delta_.hour, minutes=delta_.minute)
         if request.walking_distance is None:
             walking_distance = 1000
         else:
             walking_distance = request.walking_distance
 
-        pools_ = pool_controller.find_pool(start_point, end_point, date, delta, walking_distance)
+        pools_ = pool_controller.find_pool(socialID, start_point, end_point, date, delta, walking_distance)
         
         pools = []
         for pool_ in pools_:
-            pool = SinglePoolResponse(driver_id=pool_.driver_id,
+            pool = SinglePoolResponse(driver_id=pool_.driver_socialID,
                                       source_point_lat=pool_.source_point.lat,
                                       source_point_lon=pool_.source_point.lon,
                                       destination_point_lat=pool_.destination_point.lat,
                                       destination_point_lon=pool_.destination_point.lon,
-                                      date=message_types.DateTimeField().value_to_message(pool_.date),
+                                      date=pool_.date,
                                       seats=pool_.seats)
             pools.append(pool)
         
