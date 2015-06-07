@@ -244,9 +244,7 @@ public class LoginActivity extends ActionBarActivity implements
                                 registerUserRequest.setProfile("Facebook");
                                 registerUserRequest.setSocialID(currentAccessToken.getToken());
                                 registerUserRequest.setUsername("extraordinar");
-                                apiServiceHandle.registerUser(registerUserRequest).execute();
-//                                apiServiceHandle.registerUser(new SymbidriveRegisterUserRequest());
-
+                                return apiServiceHandle.registerUser(registerUserRequest).execute();
 
                             } catch (IOException e) {
                                 Log.e("symbi", "Exception during API call", e);
@@ -261,9 +259,9 @@ public class LoginActivity extends ActionBarActivity implements
                         }
 
                         @Override
-                        protected void onPostExecute(SymbidriveUserResponse greeting) {
-                            if (greeting!=null) {
-                                Log.v("symbi", greeting.toString());
+                        protected void onPostExecute(SymbidriveUserResponse response) {
+                            if (response != null) {
+                                Log.v("symbi", response.getRet());
                             } else {
                                 Log.v("symbi", "No greetings were returned by the API.");
                             }
