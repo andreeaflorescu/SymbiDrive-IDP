@@ -230,7 +230,7 @@ public class LoginActivity extends ActionBarActivity implements
 
     private void updateWithToken(final AccessToken currentAccessToken) {
         if (currentAccessToken != null) {
-            AsyncTask<Integer, Void, SymbidriveUserResponse> getAndDisplayGreeting =
+            AsyncTask<Integer, Void, SymbidriveUserResponse> loginRequest =
                     new AsyncTask<Integer, Void, SymbidriveUserResponse> () {
                         @Override
                         protected SymbidriveUserResponse doInBackground(Integer... integers) {
@@ -253,12 +253,6 @@ public class LoginActivity extends ActionBarActivity implements
                         }
 
                         @Override
-                        protected void onProgressUpdate(Void... values) {
-                            Log.v("symbi", values.toString());
-                            super.onProgressUpdate(values);
-                        }
-
-                        @Override
                         protected void onPostExecute(SymbidriveUserResponse response) {
                             if (response != null) {
                                 Log.v("symbi", response.getRet());
@@ -270,7 +264,7 @@ public class LoginActivity extends ActionBarActivity implements
 
                     };
 
-            getAndDisplayGreeting.execute(1);
+            loginRequest.execute(1);
 
             openMainPage(getResources().getString(R.string.facebook_profile));
         }
