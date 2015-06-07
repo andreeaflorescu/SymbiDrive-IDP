@@ -9,12 +9,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:text="Matching pool 1"/>
+        android:text="Matching pool 1"
+        android:id="@+id/tv_driver_id"/>
 
     <Button
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Join"/>
+        android:text="Join"
+        android:id="@+id/btn_join_pool"/>
 
 </LinearLayout>

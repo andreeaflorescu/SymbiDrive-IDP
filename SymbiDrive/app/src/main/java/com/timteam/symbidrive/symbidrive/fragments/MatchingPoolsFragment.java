@@ -45,7 +45,7 @@ public class MatchingPoolsFragment extends Fragment{
         String[] values = new String[] { "Android", "iPhone", "Android", "iPhone",
                 "Android", "iPhone" };
         MatchPoolAdapter adapter = new MatchPoolAdapter(getActivity().getApplicationContext(),
-                values);
+                R.layout.match_pool_adapter, getPools());
 
         ListView matchingPools = (ListView)rootView.findViewById(R.id.matchingPoolsList);
         matchingPools.setAdapter(adapter);
