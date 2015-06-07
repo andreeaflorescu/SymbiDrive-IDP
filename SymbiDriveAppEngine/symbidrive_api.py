@@ -145,6 +145,7 @@ class SinglePoolResponse(messages.Message):
     destination_point_lon = messages.FloatField(5, required=True)
     date = message_types.DateTimeField(6, required=True)
     seats = messages.IntegerField(7, required=True)
+    pool_id = messages.IntegerField(8, required=True)
 
 class FindPoolResponse(messages.Message):
     pools = messages.MessageField(SinglePoolResponse, 1, repeated=True)
@@ -213,7 +214,8 @@ class Pool_endpoint(remote.Service):
                                       destination_point_lat=pool_.destination_point.lat,
                                       destination_point_lon=pool_.destination_point.lon,
                                       date=pool_.date,
-                                      seats=pool_.seats)
+                                      seats=pool_.seats,
+                                      pool_id=pool_.key.id())
             pools.append(pool)
         
         return FindPoolResponse(pools=pools)
