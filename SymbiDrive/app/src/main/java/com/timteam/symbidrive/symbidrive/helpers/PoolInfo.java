@@ -25,6 +25,8 @@ public class PoolInfo implements Serializable {
     private long poolID;
     private String driverID;
 
+    private String driverUserName;
+
     public DateTime getDate() {
         return date;
     }
@@ -89,6 +91,14 @@ public class PoolInfo implements Serializable {
         this.driverID = driverID;
     }
 
+    public String getDriverUserName() {
+        return driverUserName;
+    }
+
+    public void setDriverUserName(String driverUserName) {
+        this.driverUserName = driverUserName;
+    }
+
     public PoolInfo(DateTime dateTime,
                     double destinationPointLat,
                     double destinationPointLon,
@@ -106,6 +116,8 @@ public class PoolInfo implements Serializable {
         this.seats = seats;
         this.poolID = poolID;
         this.driverID = driverID;
+        getUserName();
+
     }
 
     private void getUserName(){
@@ -134,8 +146,8 @@ public class PoolInfo implements Serializable {
                     @Override
                     protected void onPostExecute(SymbidriveUserInfoResponse response) {
                         if (response != null) {
-                            Log.v("symbi", response.toString());
-                            setDriverID(response.getUsername());
+                            Log.v("symbi", response.getUsername());
+                            setDriverUserName(response.getUsername());
                         } else {
                             Log.v("symbi", "No greetings were returned by the API.");
                         }
