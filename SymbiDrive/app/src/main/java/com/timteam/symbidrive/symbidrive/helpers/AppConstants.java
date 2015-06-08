@@ -39,9 +39,13 @@ public class AppConstants {
         // Use a builder to help formulate the API request.
 
         Symbidrive.Builder symbidrive = new Symbidrive.Builder(AppConstants.HTTP_TRANSPORT,
-                AppConstants.JSON_FACTORY, null).setRootUrl("https://bustling-bay-88919.appspot.com/_ah/api/").setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-            @Override
-            public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
+                AppConstants.JSON_FACTORY, null)
+                .setRootUrl("https://bustling-bay-88919.appspot.com/_ah/api/")
+                .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
+
+                    @Override
+            public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest)
+                            throws IOException {
                 abstractGoogleClientRequest.setDisableGZipContent(true);
             }
         });

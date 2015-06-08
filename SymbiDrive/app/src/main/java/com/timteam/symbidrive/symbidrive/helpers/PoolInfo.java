@@ -1,0 +1,148 @@
+package com.timteam.symbidrive.symbidrive.helpers;
+
+import android.os.AsyncTask;
+import android.util.Log;
+
+import com.appspot.bustling_bay_88919.symbidrive.Symbidrive;
+import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveUserInfoRequest;
+import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveUserInfoResponse;
+import com.google.api.client.util.DateTime;
+
+import java.io.IOException;
+import java.io.Serializable;
+
+/**
+ * Created by zombie on 6/7/15.
+ */
+public class PoolInfo implements Serializable {
+
+    private DateTime date;
+    private double destinationPointLat;
+    private double destinationPointLon;
+    private double sourcePointLat;
+    private double sourcePointLon;
+    private long seats;
+    private long poolID;
+    private String driverID;
+
+    public DateTime getDate() {
+        return date;
+    }
+
+    public void setDate(DateTime date) {
+        this.date = date;
+    }
+
+    public double getDestinationPointLat() {
+        return destinationPointLat;
+    }
+
+    public void setDestinationPointLat(double destinationPointLat) {
+        this.destinationPointLat = destinationPointLat;
+    }
+
+    public double getDestinationPointLon() {
+        return destinationPointLon;
+    }
+
+    public void setDestinationPointLon(double destinationPointLon) {
+        this.destinationPointLon = destinationPointLon;
+    }
+
+    public double getSourcePointLat() {
+        return sourcePointLat;
+    }
+
+    public void setSourcePointLat(double sourcePointLat) {
+        this.sourcePointLat = sourcePointLat;
+    }
+
+    public double getSourcePointLon() {
+        return sourcePointLon;
+    }
+
+    public void setSourcePointLon(double sourcePointLon) {
+        this.sourcePointLon = sourcePointLon;
+    }
+
+    public long getSeats() {
+        return seats;
+    }
+
+    public void setSeats(long seats) {
+        this.seats = seats;
+    }
+
+    public long getPoolID() {
+        return poolID;
+    }
+
+    public void setPoolID(long poolID) {
+        this.poolID = poolID;
+    }
+
+    public String getDriverID() {
+        return driverID;
+    }
+
+    public void setDriverID(String driverID) {
+        this.driverID = driverID;
+    }
+
+    public PoolInfo(DateTime dateTime,
+                    double destinationPointLat,
+                    double destinationPointLon,
+                    double sourcePointLat,
+                    double sourcePointLon,
+                    long seats,
+                    long poolID,
+                    String driverID){
+
+        this.date = dateTime;
+        this.destinationPointLat = destinationPointLat;
+        this.destinationPointLon = destinationPointLon;
+        this.sourcePointLat = sourcePointLat;
+        this.sourcePointLon = sourcePointLon;
+        this.seats = seats;
+        this.poolID = poolID;
+        this.driverID = driverID;
+    }
+
+    private void getUserName(){
+
+        AsyncTask<Void, Void, SymbidriveUserInfoResponse> getUserInfo =
+                new AsyncTask<Void, Void, SymbidriveUserInfoResponse> () {
+
+                    @Override
+                    protected SymbidriveUserInfoResponse doInBackground(Void... params) {
+
+                        try {
+                            Symbidrive apiServiceHandle = AppConstants.getApiServiceHandle();
+                            SymbidriveUserInfoRequest userInfoRequest =
+                                    new SymbidriveUserInfoRequest();
+
+                            userInfoRequest.setSocialID(getDriverID());
+
+                            return apiServiceHandle.getUserInfo(userInfoRequest).execute();
+
+                        } catch (IOException e) {
+                            Log.e("symbi", "Exception during API call", e);
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(SymbidriveUserInfoResponse response) {
+                        if (response != null) {
+                            Log.v("symbi", response.toString());
+                            setDriverID(response.getUsername());
+                        } else {
+                            Log.v("symbi", "No greetings were returned by the API.");
+                        }
+                    }
+                };
+
+        getUserInfo.execute((Void) null);
+
+    }
+}

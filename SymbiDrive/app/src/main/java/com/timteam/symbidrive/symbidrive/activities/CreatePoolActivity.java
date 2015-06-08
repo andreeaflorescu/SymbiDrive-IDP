@@ -22,6 +22,8 @@ import com.timteam.symbidrive.symbidrive.fragments.CreatePoolFragment;
 import com.timteam.symbidrive.symbidrive.fragments.DatePickerFragment;
 import com.timteam.symbidrive.symbidrive.fragments.TimePickerFragment;
 import com.timteam.symbidrive.symbidrive.helpers.AppConstants;
+import com.timteam.symbidrive.symbidrive.helpers.DataManager;
+import com.timteam.symbidrive.symbidrive.helpers.SocialNetworkManager;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -59,11 +61,15 @@ public class CreatePoolActivity extends ActionBarActivity {
     public void createPool(View v){
 
         View view = getWindow().getDecorView();
-        String source = ((EditText)view.findViewById(R.id.et_source_location)).
-                getText().toString();
+        String source = ((EditText)view.findViewById(R.id.et_source_location))
+                .getText().toString();
         String destination = ((EditText)view.findViewById(R.id.et_destination_location)).
                 getText().toString();
         String seats = ((EditText)view.findViewById(R.id.et_available_seats)).
+                getText().toString();
+        String dateValue = ((TextView)view.findViewById(R.id.tv_date_picker)).
+                getText().toString();
+        String timeValue = ((TextView)view.findViewById(R.id.tv_time_picker)).
                 getText().toString();
 
         if(source.isEmpty() || destination.isEmpty() || seats.isEmpty()){
@@ -71,77 +77,15 @@ public class CreatePoolActivity extends ActionBarActivity {
         }
         else {
             try {
-                Log.v("post pool", getCoordinates(source).toString());
-                Log.v("post pool", getCoordinates(destination).toString());
-                Log.v("post pool", getDateTime(view).toString());
-                Log.v("post pool", Long.parseLong(seats) + "");
-                //Long time = 1233435l;
-                //DateTime dateTime = new DateTime(time);
-                postPool(getCoordinates(source),
-                        getCoordinates(destination),
-                        getDateTime(view),
+                postPool(DataManager.getCoordinates(source, this.getApplicationContext()),
+                        DataManager.getCoordinates(destination, this.getApplicationContext()),
+                        DataManager.getDateTime(dateValue, timeValue),
                         Long.parseLong(seats));
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-    }
-
-    public DateTime getDateTime(View v){
-
-        String dateTimeValue = "";
-
-        String[] date = ((TextView)v.findViewById(R.id.tv_date_picker)).
-                getText().toString().split("/");
-        String[] time = ((TextView)v.findViewById(R.id.tv_time_picker)).
-                getText().toString().split(":");
-
-        dateTimeValue += date[2] + "-";
-        if(date[1].length() == 1){
-            dateTimeValue += "0" + date[1] + "-";
-        }
-        else {
-            dateTimeValue += date[1] + "-";
-        }
-        if(date[0].length() == 1){
-            dateTimeValue += "0" + date[0] + "T";
-        }
-        else {
-            dateTimeValue += date[0] + "T";
-        }
-
-        if(time[0].length() == 1){
-            dateTimeValue += "0" + time[0] + ":";
-        }
-        else {
-            dateTimeValue += time[0] + ":";
-        }
-
-        if(time[1].length() == 1){
-            dateTimeValue += "0" + time[1];
-        }
-        else {
-            dateTimeValue += time[1] + ":00Z";
-        }
-
-        return new DateTime(dateTimeValue);
-    }
-
-    public double[] getCoordinates(String address) throws IOException {
-
-        double[] coordinates = new double[2];
-
-        Geocoder geocoder = new Geocoder(this.getApplicationContext());
-        List<Address> addresses;
-        addresses = geocoder.getFromLocationName(address, 1);
-        if(addresses.size() > 0) {
-            coordinates[0] = addresses.get(0).getLatitude();
-            coordinates[1] = addresses.get(0).getLongitude();
-        }
-
-        return coordinates;
     }
 
     public void postPool(final double[] sourceCoordinates,
@@ -163,9 +107,10 @@ public class CreatePoolActivity extends ActionBarActivity {
                                     new SymbidriveCreatePoolRequest();
 
                             createPoolRequest.setDate(dateTime);
-                            createPoolRequest.setDriverId("1234");
+                            createPoolRequest.setDriverId(SocialNetworkManager
+                                    .getInstance()
+                                    .getSocialDeviceID());
                             createPoolRequest.setSeats(seats);
-                            createPoolRequest.setIsWeekly(false);
                             createPoolRequest.setSourcePointLat(sourceCoordinates[0]);
                             createPoolRequest.setSourcePointLon(sourceCoordinates[1]);
                             createPoolRequest.setDestinationPointLat(destinationCoordinates[0]);
@@ -189,8 +134,6 @@ public class CreatePoolActivity extends ActionBarActivity {
                             Log.v("symbi", "No greetings were returned by the API.");
                         }
                     }
-
-
                 };
 
         postPoolInfo.execute((Void) null);

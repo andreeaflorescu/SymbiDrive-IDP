@@ -1,46 +1,38 @@
 package com.timteam.symbidrive.symbidrive.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.timteam.symbidrive.symbidrive.R;
 import com.timteam.symbidrive.symbidrive.fragments.MatchingPoolsFragment;
+import com.timteam.symbidrive.symbidrive.helpers.PoolInfo;
+
+import java.util.ArrayList;
 
 public class MatchingPoolsActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        ArrayList<PoolInfo> pools = (ArrayList<PoolInfo>)intent.getSerializableExtra("pools");
+
         setContentView(R.layout.activity_matching_pools);
+
+        MatchingPoolsFragment matchingPools = new MatchingPoolsFragment();
+        matchingPools.setPools(pools);
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container_find_pool, new MatchingPoolsFragment())
+                    .add(R.id.container_find_pool, matchingPools)
                     .commit();
         }
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_matching_pools, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }

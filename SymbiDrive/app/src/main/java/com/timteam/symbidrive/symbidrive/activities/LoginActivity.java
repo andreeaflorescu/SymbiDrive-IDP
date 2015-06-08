@@ -35,7 +35,7 @@ import com.timteam.symbidrive.symbidrive.listeners.FacebookLoginCallback;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Objects;
+import android.provider.Settings.Secure;
 
 
 public class LoginActivity extends ActionBarActivity implements
@@ -230,6 +230,11 @@ public class LoginActivity extends ActionBarActivity implements
 
     private void updateWithToken(final AccessToken currentAccessToken) {
         if (currentAccessToken != null) {
+
+            SocialNetworkManager.getInstance().setSocialDeviceID(currentAccessToken.getToken());
+            final String android_id = Secure.getString(this.getContentResolver(),
+                    Secure.ANDROID_ID);
+
             AsyncTask<Integer, Void, SymbidriveUserResponse> loginRequest =
                     new AsyncTask<Integer, Void, SymbidriveUserResponse> () {
                         @Override
@@ -239,8 +244,9 @@ public class LoginActivity extends ActionBarActivity implements
 
                             try {
 
-                                SymbidriveRegisterUserRequest registerUserRequest = new SymbidriveRegisterUserRequest();
-                                registerUserRequest.setDeviceID("13455");
+                                SymbidriveRegisterUserRequest registerUserRequest =
+                                        new SymbidriveRegisterUserRequest();
+                                registerUserRequest.setDeviceID(android_id);
                                 registerUserRequest.setProfile("Facebook");
                                 registerUserRequest.setSocialID(currentAccessToken.getToken());
                                 registerUserRequest.setUsername("extraordinar");
