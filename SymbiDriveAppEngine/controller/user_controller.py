@@ -49,11 +49,11 @@ def get_user_info(p_socialID):
     res = {}
     if (len(user) == 1):
         res['username'] = "" if user[0].username is None else user[0].username
-        res['telephone'] = user[0].telephone
+        res['telephone'] = "" if user[0].telephone is None else user[0].telephone
         res['isSmoker'] = user[0].isSmoker
         res['listenToMusic'] = user[0].listenToMusic
-        res['car'] = user[0].car
-        res['rating'] = None if user[0].rating is None else user[0].rating.average
+        res['car'] = "" if user[0].car is None else user[0].car
+        res['rating'] = -1.0 if user[0].rating is None else user[0].rating.average
         res['feedback'] = user[0].feedback
     
     return res
