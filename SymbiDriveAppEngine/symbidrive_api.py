@@ -28,17 +28,13 @@ class RegisterUserRequest(messages.Message):
 class UserInfoRequest(messages.Message):
     socialID = messages.StringField(1, required=True)
     
-class Rating(messages.Message):
-    average = messages.FloatField(1, required=True)
-    number = messages.IntegerField(2, required=True)
-    
 class UserInfoResponse(messages.Message):
     username = messages.StringField(1, required=True)
     telephone = messages.StringField(2, required=True)
     isSmoker = messages.BooleanField(3, required=True)
     listenToMusic = messages.BooleanField(4, required=True)
     car = messages.StringField(5, required=True)
-    rating = messages.MessageField(Rating, 6, required=True)
+    rating = messages.FloatField(6, required=True)
     feedback = messages.StringField(7, repeated=True)
     
 class UpdateUserInfoRequest(messages.Message):
@@ -82,8 +78,7 @@ class User_endpoint(remote.Service):
                                 isSmoker=info['isSmoker'],
                                 listenToMusic=info['listenToMusic'],
                                 car=info['car'],
-                                rating=Rating(average=info['rating'].average,
-                                              number=info['rating'].number),
+                                rating=info['rating'],
                                 feedback=info['feedback'])
 
     @endpoints.method(UpdateUserInfoRequest, UserResponse,
