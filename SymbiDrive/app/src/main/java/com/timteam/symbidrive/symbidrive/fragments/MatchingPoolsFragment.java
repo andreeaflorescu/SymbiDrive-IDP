@@ -20,9 +20,7 @@ public class MatchingPoolsFragment extends Fragment{
 
     private ArrayList<PoolInfo> pools;
 
-    public MatchingPoolsFragment(){
-
-    }
+    public MatchingPoolsFragment(){}
 
     public ArrayList<PoolInfo> getPools() {
         return pools;
@@ -42,8 +40,6 @@ public class MatchingPoolsFragment extends Fragment{
 
     private void initInterfaceElements(View rootView){
 
-        String[] values = new String[] { "Android", "iPhone", "Android", "iPhone",
-                "Android", "iPhone" };
         MatchPoolAdapter adapter = new MatchPoolAdapter(getActivity().getApplicationContext(),
                 R.layout.match_pool_adapter, getPools());
 

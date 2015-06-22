@@ -118,7 +118,6 @@ public class FindPoolActivity extends ActionBarActivity{
                     if (response != null) {
                         Log.v("symbi", response.toString());
                         openMatchingPoolsActivity(response);
-
                     } else {
                         Log.v("symbi", "No greetings were returned by the API.");
                     }
