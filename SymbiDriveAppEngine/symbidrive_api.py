@@ -117,7 +117,7 @@ class DeletePoolRequest(messages.Message):
     
 class ManagePassangerRequest(messages.Message):
     pool_id = messages.IntegerField(1, required=True)
-    passanger_id = messages.StringField(2, required=True)
+    passenger_id = messages.StringField(2, required=True)
     
 class PoolResponse(messages.Message):
     ret = messages.StringField(1, required=True)

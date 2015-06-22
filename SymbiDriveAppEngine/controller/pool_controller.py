@@ -46,13 +46,13 @@ def create_pool(p_driverID, p_source_point, p_destination_point, p_date, p_seats
     
     return constants.ExitCode.POOL_ADDED
 
-def add_passenger_to_pool(pool_id, passenger_id):
+def add_passenger_to_pool(pool_id, passenger_socialId):
     
     pool = Pool.get_by_id(pool_id)
     if (pool is None):
         return constants.ExitCode.INVALID_POOL
     
-    pool.add_passenger(passenger_id)
+    pool.add_passenger(passenger_socialId)
     pool.put()
 
     return constants.ExitCode.PASSENGER_ADDED_TO_POOL

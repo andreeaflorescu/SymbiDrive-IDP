@@ -13,7 +13,7 @@ class Pool(ndb.Model):
     
     ''' Might need to change driver and passengers list to match the social ID'''
     driver_socialID = ndb.StringProperty(required=True)
-    passengers = ndb.IntegerProperty(repeated=True)
+    passengers = ndb.StringProperty(repeated=True)
     source_point = ndb.GeoPtProperty(required=True)
     destination_point = ndb.GeoPtProperty(required=True)
     date = ndb.DateTimeProperty(required=True)
