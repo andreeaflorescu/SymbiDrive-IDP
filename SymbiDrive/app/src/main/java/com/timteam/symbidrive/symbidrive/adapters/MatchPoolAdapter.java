@@ -1,6 +1,9 @@
 package com.timteam.symbidrive.symbidrive.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.util.Pools;
 import android.util.Log;
@@ -18,6 +21,7 @@ import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveManagePassanger
 import com.appspot.bustling_bay_88919.symbidrive.model.SymbidrivePoolResponse;
 import com.google.api.client.util.DateTime;
 import com.timteam.symbidrive.symbidrive.R;
+import com.timteam.symbidrive.symbidrive.activities.MainActivity;
 import com.timteam.symbidrive.symbidrive.helpers.AppConstants;
 import com.timteam.symbidrive.symbidrive.helpers.PoolInfo;
 import com.timteam.symbidrive.symbidrive.helpers.SocialNetworkManager;
@@ -31,10 +35,19 @@ import java.util.ArrayList;
 public class MatchPoolAdapter extends ArrayAdapter<PoolInfo> {
 
     private ArrayList<PoolInfo> pools;
+    private Context context;
 
     public MatchPoolAdapter(Context context, int textViewResourceId, ArrayList<PoolInfo> objects) {
         super(context, textViewResourceId, objects);
         this.pools = objects;
+        this.context = context;
+    }
+
+    public void openPoolsActivity(){
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("section", 1);
+        context.startActivity(intent);
     }
 
     @Override
@@ -98,7 +111,11 @@ public class MatchPoolAdapter extends ArrayAdapter<PoolInfo> {
             protected void onPostExecute(SymbidrivePoolResponse response){
                 if (response != null) {
                     Log.v("symbi", response.toString());
-                    //openMatchingPoolsActivity(response);
+//                    if (response.getRet() == "PASSENGER_ADDED_TO_POOL") {
+                        openPoolsActivity();
+//                    } else {
+                        // TODO display warning message as dialog for pool not found
+//                    }
 
                 } else {
                     Log.v("symbi", "No greetings were returned by the API.");
