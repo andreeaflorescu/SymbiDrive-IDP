@@ -88,28 +88,6 @@ def find_pool(socialID, start_point, end_point, date, delta, walking_distance=10
     # TODO: Cristina do some turkish delight with the socialID
     # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     
-    index = search.Index(constants.IndexName.LOCATION_INDEX)
-    query = "distance(s_point, geopoint(%f,%f)) < %f AND distance(d_point, geopoint(%f,%f)) < %f" % (
-                start_point.lat, start_point.lon, walking_distance,
-                end_point.lat, end_point.lon, walking_distance)
-    expr = "distance(s_point, geopoint(%f,%f)) + distance(d_point, geopoint(%f,%f))" %(
-                start_point.lat, start_point.lon,
-                end_point.lat, end_point.lon)
-    sortexpr = search.SortExpression(
-                expression=expr,
-                direction=search.SortExpression.ASCENDING, default_value=2*walking_distance+1)
-    search_query = search.Query(
-                query_string=query,
-                options=search.QueryOptions(
-                    sort_options=search.SortOptions(expressions=[sortexpr])))
-
-    results = index.search(search_query)
-    keys = [ndb.Key(urlsafe=r.field('key').value) for r in results]
-
-    entities = ndb.get_multi(keys)
-    ret = []
-    for entity in entities:
-        if entity.date < date + delta and entity.date > date - delta:
-            ret.append(entity)
-
-    return ret
+    res =   Pool.query(ndb.AND(Pool.source_point == start_point, Pool.destination_point == end_point)).fetch()
+    return res
+                       
