@@ -127,25 +127,28 @@ public class FindPoolActivity extends ActionBarActivity{
         findPoolTask.execute((Void) null);
     }
 
-    private void openMatchingPoolsActivity(SymbidriveFindPoolResponse response){
+    private void openMatchingPoolsActivity(SymbidriveFindPoolResponse response) {
 
+        if (response.getPools() == null) {
+            Log.e("Symbidrive", "response e null");
+        } else {
+            List<SymbidriveSinglePoolResponse> pools = response.getPools();
+            ArrayList<PoolInfo> poolsInfo = new ArrayList<PoolInfo>(pools.size());
+            for (int i = 0; i < pools.size(); i++) {
+                SymbidriveSinglePoolResponse pool = pools.get(i);
+                poolsInfo.add(new PoolInfo(pool.getDate(),
+                        pool.getDestinationPointLat(),
+                        pool.getDestinationPointLon(),
+                        pool.getSourcePointLat(),
+                        pool.getSourcePointLon(),
+                        pool.getSeats(),
+                        pool.getPoolId(),
+                        pool.getDriverId()));
+            }
 
-        List<SymbidriveSinglePoolResponse> pools = response.getPools();
-        ArrayList<PoolInfo> poolsInfo = new ArrayList<PoolInfo>(pools.size());
-        for(int i = 0; i < pools.size(); i++){
-            SymbidriveSinglePoolResponse pool = pools.get(i);
-            poolsInfo.add(new PoolInfo(pool.getDate(),
-                    pool.getDestinationPointLat(),
-                    pool.getDestinationPointLon(),
-                    pool.getSourcePointLat(),
-                    pool.getSourcePointLon(),
-                    pool.getSeats(),
-                    pool.getPoolId(),
-                    pool.getDriverId()));
+            Intent intent = new Intent(this, MatchingPoolsActivity.class);
+            intent.putExtra("pools", poolsInfo);
+            startActivity(intent);
         }
-
-        Intent intent = new Intent(this, MatchingPoolsActivity.class);
-        intent.putExtra("pools", poolsInfo);
-        startActivity(intent);
     }
 }
