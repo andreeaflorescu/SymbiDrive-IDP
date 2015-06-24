@@ -16,6 +16,7 @@ class Pool(ndb.Model):
     passengers = ndb.StringProperty(repeated=True)
     source_point = ndb.GeoPtProperty(required=True)
     destination_point = ndb.GeoPtProperty(required=True)
+    route_id = ndb.IntegerProperty(default=-1)
     date = ndb.DateTimeProperty(required=True)
     seats = ndb.IntegerProperty(required=True)
     is_weekly = ndb.BooleanProperty(default=False)

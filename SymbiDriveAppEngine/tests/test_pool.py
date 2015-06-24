@@ -8,6 +8,7 @@ from google.appengine.ext import testbed
 from model.pool import Pool
 from google.appengine.ext import ndb
 import datetime
+from controller.pool_controller import find_pool
 
 class TestPool(unittest.TestCase):
 
@@ -33,7 +34,15 @@ class TestPool(unittest.TestCase):
                     seats=2).put()
         print Pool.query().fetch(1)[0]
         pass
-
+    
+    def test_pool(self):
+        res = Pool(driver_socialID="1", source_point=ndb.GeoPt(-34, -54),
+            destination_point=ndb.GeoPt(-32.0, 43.9),
+            date=datetime.datetime.now(), 
+            seats=2).put()
+        
+        res = find_pool("12532", ndb.GeoPt(-34, -54), ndb.GeoPt(-32.0, 43.9), datetime.datetime.now(), "")  
+        print res
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

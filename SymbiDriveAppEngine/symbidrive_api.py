@@ -56,6 +56,12 @@ class AddFeedbackRequest(messages.Message):
 class UserResponse(messages.Message):
     ret = messages.StringField(1, required=True)
 
+class CreateRouteRequest(messages.Message):
+#     p_name, p_driver_socialID, p_route_points
+    name = messages.StringField(1, required=True)
+    driver_socialID = messages.StringField(2, required=True)
+    # TODO add points one way or another
+
 @symbidrive_api.api_class(path='user')
 class User_endpoint(remote.Service):
     '''
@@ -104,13 +110,14 @@ class User_endpoint(remote.Service):
         
 class CreatePoolRequest(messages.Message):
     driver_id = messages.StringField(1, required=True)
-    source_point_lat = messages.FloatField(2, required=True)
-    source_point_lon = messages.FloatField(3, required=True)
-    destination_point_lat = messages.FloatField(4, required=True)
-    destination_point_lon = messages.FloatField(5, required=True)
-    date = message_types.DateTimeField(6, required=True)
-    seats = messages.IntegerField(7, required=True)
-    is_weekly = messages.BooleanField(8, required=False)
+    source_point_lat = messages.FloatField(2, required=False)
+    source_point_lon = messages.FloatField(3, required=False)
+    route_id = messages.IntegerField(4, required=False)
+    destination_point_lat = messages.FloatField(5, required=True)
+    destination_point_lon = messages.FloatField(6, required=True)
+    date = message_types.DateTimeField(7, required=True)
+    seats = messages.IntegerField(8, required=True)
+    is_weekly = messages.BooleanField(9, required=False)
     
 class DeletePoolRequest(messages.Message):
     pool_id = messages.IntegerField(1, required=True)
@@ -136,14 +143,17 @@ class SinglePoolResponse(messages.Message):
     driver_id = messages.StringField(1, required=True)
     source_point_lat = messages.FloatField(2, required=True)
     source_point_lon = messages.FloatField(3, required=True)
-    destination_point_lat = messages.FloatField(4, required=True)
-    destination_point_lon = messages.FloatField(5, required=True)
-    date = message_types.DateTimeField(6, required=True)
-    seats = messages.IntegerField(7, required=True)
-    pool_id = messages.IntegerField(8, required=True)
+    destination_point_lat = messages.FloatField(4, required=False)
+    destination_point_lon = messages.FloatField(5, required=False)
+    route_id = messages.IntegerField(6, required = False)
+    date = message_types.DateTimeField(7, required=True)
+    seats = messages.IntegerField(8, required=True)
+    pool_id = messages.IntegerField(9, required=True)
 
 class FindPoolResponse(messages.Message):
     pools = messages.MessageField(SinglePoolResponse, 1, repeated=True)
+
+
 
 @symbidrive_api.api_class(path='pool')
 class Pool_endpoint(remote.Service):
@@ -153,17 +163,30 @@ class Pool_endpoint(remote.Service):
     @endpoints.method(CreatePoolRequest, PoolResponse,
                       path='create_pool', http_method='POST')
     def create_pool(self, request):
-        source_point = ndb.GeoPt(request.source_point_lat, request.source_point_lon)
-        destination_point = ndb.GeoPt(request.destination_point_lat, request.destination_point_lon)
-        date = request.date.replace(tzinfo=None)
         if request.is_weekly is None:
             is_weekly = False
         else:
             is_weekly = request.is_weekly
-
-        return PoolResponse(ret=pool_controller.create_pool(request.driver_id,
+        date = request.date.replace(tzinfo=None)
+            
+        if request.source_point_lat is None or \
+           request.source_point_lon is None or \
+           request.destination_point_lat is None or \
+           request.destination_point_lon is None:
+            return PoolResponse(ret=pool_controller.create_pool(request.driver_id,
+                                                            None,
+                                                            None,
+                                                            request.route_id,
+                                                            date,
+                                                            request.seats,
+                                                            is_weekly))
+        else:
+            source_point = ndb.GeoPt(request.source_point_lat, request.source_point_lon)
+            destination_point = ndb.GeoPt(request.destination_point_lat, request.destination_point_lon)
+            return PoolResponse(ret=pool_controller.create_pool(request.driver_id,
                                                             source_point,
                                                             destination_point,
+                                                            None,
                                                             date,
                                                             request.seats,
                                                             is_weekly))
@@ -202,12 +225,17 @@ class Pool_endpoint(remote.Service):
         pools_ = pool_controller.find_pool(socialID, start_point, end_point, date, delta, walking_distance)
         
         pools = []
+        
+        if pools_ is None:
+            return FindPoolResponse(pools=[])
+        
         for pool_ in pools_:
             pool = SinglePoolResponse(driver_id=pool_.driver_socialID,
                                       source_point_lat=pool_.source_point.lat,
                                       source_point_lon=pool_.source_point.lon,
                                       destination_point_lat=pool_.destination_point.lat,
                                       destination_point_lon=pool_.destination_point.lon,
+                                      route_id= pool_.route_id,
                                       date=pool_.date,
                                       seats=pool_.seats,
                                       pool_id=pool_.key.id())
