@@ -4,13 +4,11 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.appspot.bustling_bay_88919.symbidrive.Symbidrive;
 import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveRegisterUserRequest;
@@ -21,8 +19,6 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.LoginButton;
-import com.google.android.gms.auth.GoogleAuthException;
-import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
@@ -231,7 +227,7 @@ public class LoginActivity extends ActionBarActivity implements
     private void updateWithToken(final AccessToken currentAccessToken) {
         if (currentAccessToken != null) {
 
-            SocialNetworkManager.getInstance().setSocialDeviceID(currentAccessToken.getToken());
+            SocialNetworkManager.getInstance().setSocialTokenID(currentAccessToken.getToken());
             final String android_id = Secure.getString(this.getContentResolver(),
                     Secure.ANDROID_ID);
 

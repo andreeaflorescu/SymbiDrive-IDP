@@ -3,6 +3,7 @@ package com.timteam.symbidrive.symbidrive.activities;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.timteam.symbidrive.symbidrive.R;
 import com.timteam.symbidrive.symbidrive.fragments.HomeFragment;
@@ -23,7 +25,11 @@ import com.timteam.symbidrive.symbidrive.fragments.PoolsFragment;
 import com.timteam.symbidrive.symbidrive.fragments.ProfileFragment;
 import com.timteam.symbidrive.symbidrive.fragments.RegisterRouteFragment;
 import com.timteam.symbidrive.symbidrive.fragments.SaveRouteDialogFragment;
+import com.timteam.symbidrive.symbidrive.helpers.CreateRouteTask;
+import com.timteam.symbidrive.symbidrive.helpers.SocialNetworkManager;
 import com.timteam.symbidrive.symbidrive.listeners.SaveCoordinatesListener;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity
@@ -180,19 +186,31 @@ public class MainActivity extends ActionBarActivity
     }
 
     public void createCustomDialog() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-        View view = findViewById(R.id.layout_dialog_save_route);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+        final View view = getLayoutInflater().inflate(R.layout.layout_dialog_save_route, null);
         // set title
-        alertDialogBuilder.setView(getLayoutInflater().inflate(R.layout.layout_dialog_save_route, null));
+        alertDialogBuilder.setView(view);
 
         // set dialog message
         alertDialogBuilder
                 .setTitle("Save Route")
                 .setCancelable(false)
-                .setPositiveButton("Save",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
 
                         // TODO if save -> save to database the route;
+                        ArrayList<Double> locations_lat = new ArrayList<Double>();
+                        ArrayList<Double> locations_lon = new ArrayList<Double>();
+                        String route_name = ((EditText) view.findViewById(R.id.et_route_name)).getText().toString();
+                        String socialID = SocialNetworkManager.getInstance().getSocialTokenID();
+                        ArrayList<Location> locations = saveCoordinatesListener.getLocations();
+                        for (Location location : locations) {
+                            locations_lon.add(location.getLongitude());
+                            locations_lat.add(location.getLatitude());
+                        }
+                        CreateRouteTask createRouteTask = new CreateRouteTask(route_name, socialID, locations_lat, locations_lon);
+                        createRouteTask.execute();
+                        Log.v("coordonate", saveCoordinatesListener.getLocations().toString());
                         dialog.cancel();
                     }
                 })

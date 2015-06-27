@@ -5,25 +5,18 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.Pools;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.appspot.bustling_bay_88919.symbidrive.Symbidrive;
 import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveFindPoolRequest;
 import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveFindPoolResponse;
-import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveManagePassangerRequest;
-import com.appspot.bustling_bay_88919.symbidrive.model.SymbidrivePoolResponse;
 import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveSinglePoolResponse;
 import com.google.api.client.util.DateTime;
 import com.timteam.symbidrive.symbidrive.R;
-import com.timteam.symbidrive.symbidrive.adapters.PlacesAutoCompleteAdapter;
 import com.timteam.symbidrive.symbidrive.fragments.DatePickerFragment;
 import com.timteam.symbidrive.symbidrive.fragments.FindPoolFragment;
 import com.timteam.symbidrive.symbidrive.fragments.TimePickerFragment;
@@ -96,7 +89,7 @@ public class FindPoolActivity extends ActionBarActivity{
                         SymbidriveFindPoolRequest findPoolRequest = new SymbidriveFindPoolRequest();
 
                         findPoolRequest.setSocialID(
-                                SocialNetworkManager.getInstance().getSocialDeviceID());
+                                SocialNetworkManager.getInstance().getSocialTokenID());
                         findPoolRequest.setDate(date);
                         findPoolRequest.setDelta(date);
                         findPoolRequest.setStartPointLat(source[0]);

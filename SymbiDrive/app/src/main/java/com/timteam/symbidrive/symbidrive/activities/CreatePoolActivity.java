@@ -1,11 +1,8 @@
 package com.timteam.symbidrive.symbidrive.activities;
 
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
@@ -26,9 +23,6 @@ import com.timteam.symbidrive.symbidrive.helpers.DataManager;
 import com.timteam.symbidrive.symbidrive.helpers.SocialNetworkManager;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 
 public class CreatePoolActivity extends ActionBarActivity {
@@ -109,7 +103,7 @@ public class CreatePoolActivity extends ActionBarActivity {
                             createPoolRequest.setDate(dateTime);
                             createPoolRequest.setDriverId(SocialNetworkManager
                                     .getInstance()
-                                    .getSocialDeviceID());
+                                    .getSocialTokenID());
                             createPoolRequest.setSeats(seats);
                             createPoolRequest.setSourcePointLat(sourceCoordinates[0]);
                             createPoolRequest.setSourcePointLon(sourceCoordinates[1]);
