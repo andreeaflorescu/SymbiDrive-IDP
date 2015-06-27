@@ -35,6 +35,7 @@ class Test(unittest.TestCase):
         # p_driverID, p_source_point, p_destination_point, p_date, p_seats, p_is_weekly=False
         res = create_pool("32412", 
                           ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12), 
+                          None,
                           datetime.datetime.now(), 
                           2)
         
@@ -55,6 +56,7 @@ class Test(unittest.TestCase):
         # p_driverID, p_source_point, p_destination_point, p_date, p_seats, p_is_weekly=False
         create_pool("32412", 
                   ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12), 
+                  None,
                   datetime.datetime.now(), 
                   2)
         
@@ -75,6 +77,7 @@ class Test(unittest.TestCase):
         # p_driverID, p_source_point, p_destination_point, p_date, p_seats, p_is_weekly=False
         create_pool("32412", 
                   ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12), 
+                  None,
                   datetime.datetime.now(), 
                   2)
         
@@ -98,18 +101,21 @@ class Test(unittest.TestCase):
         # p_driverID, p_source_point, p_destination_point, p_date, p_seats, p_is_weekly=False
         create_pool("32412",
                   ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12),
+                  None,
                   date,
                   2)
         create_pool("11412",
                   ndb.GeoPt(-21, 32), ndb.GeoPt(31, 12),
+                  None,
                   date,
                   2)
         create_pool("32412",
                   ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12),
+                  None,
                   date + datetime.timedelta(hours=7),
                   2)
 
-        res = find_pool("32412", ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12), date, datetime.timedelta(hours=6), 1000)
+        res = find_pool("32412", ndb.GeoPt(-21, 32), ndb.GeoPt(31, 12), date, datetime.timedelta(hours=6), 1000)
 #         print res[0].key.id()
         self.assertEqual(len(res), 1, "Expected 1 returned value, got %d" % (len(res)))
 

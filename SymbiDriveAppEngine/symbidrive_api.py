@@ -9,10 +9,12 @@ import endpoints
 from protorpc import messages
 from protorpc import message_types
 from protorpc import remote
+
 from controller import user_controller
 from controller import pool_controller
 from google.appengine.ext import ndb
 import datetime
+from controller.route_controller import create_route, get_user_routes
 
 
 symbidrive_api = endpoints.api(name='symbidrive', version='v1.1')
@@ -55,12 +57,6 @@ class AddFeedbackRequest(messages.Message):
     
 class UserResponse(messages.Message):
     ret = messages.StringField(1, required=True)
-
-class CreateRouteRequest(messages.Message):
-#     p_name, p_driver_socialID, p_route_points
-    name = messages.StringField(1, required=True)
-    driver_socialID = messages.StringField(2, required=True)
-    # TODO add points one way or another
 
 @symbidrive_api.api_class(path='user')
 class User_endpoint(remote.Service):
@@ -106,7 +102,6 @@ class User_endpoint(remote.Service):
     def add_feedback(self, request):
         return UserResponse(ret=user_controller.add_feedback(request.socialID,
                                                              request.feedback))
-        
         
 class CreatePoolRequest(messages.Message):
     driver_id = messages.StringField(1, required=True)
@@ -243,5 +238,62 @@ class Pool_endpoint(remote.Service):
         
         return FindPoolResponse(pools=pools)
 
+class CreateRouteRequest(messages.Message):
+#     p_name, p_driver_socialID, p_route_points
+    name = messages.StringField(1, required=True)
+    driver_socialID = messages.StringField(2, required=True)
+    route_points_lat = messages.FloatField(3, repeated=True)
+    route_points_long = messages.FloatField(4, repeated=True)
+    
+class CreateRouteResponse(messages.Message):
+    ret = messages.StringField(1, required=True)
+    
 
+class GetRoutesRequest(messages.Message):
+    driver_socialID = messages.StringField(1, required=True)
+
+class SingleGetRoutesResponse(messages.Message):
+    name = messages.StringField(1, required=True)
+    driver_socialID = messages.StringField(2, required=True)
+    route_points_lat = messages.FloatField(3, repeated=True)
+    route_points_long = messages.FloatField(4, repeated=True)
+
+
+class GetRoutesResponse(messages.Message):
+    routes = messages.MessageField(SingleGetRoutesResponse, 1, repeated=True)
+
+@symbidrive_api.api_class(path='route')
+class Route_endpoint(remote.Service):
+    '''
+        Expose route_controller operations
+    '''
+    @endpoints.method(CreateRouteRequest, CreateRouteResponse,
+                      path='create_route', http_method='POST')
+    def create_route(self, request):
+        # create route points array
+        route_points = []
+        for i in range(len(request.route_points_lat)):
+            route_points.append(ndb.GeoPt(request.route_points_lat[i], request.route_points_long[i]))
+        return CreateRouteResponse(ret = create_route(request.name, 
+                                                      request.driver_socialID, 
+                                                      route_points))
+    @endpoints.method(GetRoutesRequest, GetRoutesResponse,
+                      path='get_routes', http_method='POST')    
+    def get_routes(self, request):
+        routes = get_user_routes(request.driver_socialID)
+        if routes is None:
+            return GetRoutesResponse(routes=[])
+        routes_response = []
+        for route in routes:
+            route_points_lat = []
+            route_points_long = []
+            for point in route.route_points:
+                route_points_lat.append(point.lat)
+                route_points_long.append(point.lon)
+            routes_response.append(SingleGetRoutesResponse(name=route.name, 
+                                                           driver_socialID=route.driver_socialID, 
+                                                           route_points_lat=route_points_lat,
+                                                           route_points_long=route_points_long))
+        return GetRoutesResponse(routes=routes_response)
+            
 APPLICATION = endpoints.api_server([symbidrive_api])

@@ -8,7 +8,9 @@ from google.appengine.ext import ndb
 from google.appengine.api import search
 from model.user import User
 from utils import constants
-from controller.route_controller import add_route_to_pool
+from controller.route_controller import add_route_to_pool, create_route
+from model.gps_route import GPSRoute
+from google.appengine.api.datastore_types import GeoPt
 
 '''
     driver_socialID = ndb.StringProperty(required=True)
@@ -58,6 +60,9 @@ def create_pool(p_driverID, p_source_point, p_destination_point, p_route_id, p_d
         if p_route_id is None:
             return constants.ExitCode.INVALID_POOL_PARAMETER
         else:
+            # check if the route_id is valid
+            if (GPSRoute.get_by_id(p_route_id) is None):
+                return constants.ExitCode.INVALID_POOL_PARAMETER
             create_pool_using_gps_route(p_driverID, p_route_id, p_date, p_seats)
             return constants.ExitCode.POOL_ADDED
                
@@ -70,6 +75,10 @@ def add_passenger_to_pool(pool_id, passenger_socialId):
     pool = Pool.get_by_id(pool_id)
     if (pool is None):
         return constants.ExitCode.INVALID_POOL
+    
+    user = User.query(User.socialProfile.socialID == passenger_socialId).fetch(1);
+    if (len(user) == 0):
+        return constants.ExitCode.INVALID_USER
     
     pool.add_passenger(passenger_socialId)
     pool.put()
@@ -173,3 +182,216 @@ def find_pool(socialID, start_point, end_point, date, delta, walking_distance=10
 #     return results_by_points.extend(results_by_routes)
 
     return results_by_points
+
+
+'''
+Created on Apr 28, 2015
+
+@author: andreea
+'''
+import unittest
+from model.user import User, SocialIdentifier
+from utils import constants
+from google.appengine.ext import ndb, testbed
+import datetime
+from model.pool import Pool
+
+class Test(unittest.TestCase):
+
+
+    def setUp(self):
+        # First, create an instance of the Testbed class.
+        self.testbed = testbed.Testbed()
+        # Then activate the testbed, which prepares the service stubs for use.
+        self.testbed.activate()
+        # Next, declare which service stubs you want to use.
+        self.testbed.init_datastore_v3_stub()
+        self.testbed.init_memcache_stub()
+        self.testbed.init_search_stub()
+
+    def tearDown(self):
+        self.testbed.deactivate()
+
+    def test_add_pool_simple(self):
+        User(deviceID=["12345"], 
+             socialProfile=SocialIdentifier(socialID="32412", profile=constants.SocialProfile.FACEBOOK),
+             username="Andreea").put()
+        # p_driverID, p_source_point, p_destination_point, p_date, p_seats, p_is_weekly=False
+        res = create_pool("32412", 
+                          ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12), 
+                          None,
+                          datetime.datetime.now(), 
+                          2)
+        
+        self.assertEqual(res, constants.ExitCode.POOL_ADDED, "Invalid exit code")
+        
+        pool = Pool.query(Pool.driver_socialID == "32412").fetch(1)
+        
+        self.assertEqual(len(pool), 1, "Pool was not saved")
+        self.assertEqual(pool[0].source_point, ndb.GeoPt(-21, 32), "Invalid source point")
+        self.assertEqual(pool[0].destination_point, ndb.GeoPt(32, 12), "Invalid destination point")
+        self.assertEqual(len(pool[0].passengers), 0, "Invalid passengers list")
+    
+    def test_create_pool_invalid_user(self):
+        res = create_pool("32412", 
+                          ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12), 
+                          None,
+                          datetime.datetime.now(), 
+                          2)
+        self.assertEqual(res, constants.ExitCode.INVALID_USER, "Wrong error message")
+        
+    def test_create_pool_invalid_params(self):
+        User(deviceID=["12345"], 
+             socialProfile=SocialIdentifier(socialID="32412", profile=constants.SocialProfile.FACEBOOK),
+             username="Andreea").put()
+        res = create_pool("32412", 
+                          None, None, 
+                          None,
+                          datetime.datetime.now(), 
+                          2)
+        self.assertEqual(res, constants.ExitCode.INVALID_POOL_PARAMETER, "Wrong error message")
+    
+    def test_create_pool_invalid_route_id(self):
+        User(deviceID=["12345"], 
+             socialProfile=SocialIdentifier(socialID="32412", profile=constants.SocialProfile.FACEBOOK),
+             username="Andreea").put()
+        res = create_pool("32412", 
+                          None, None, 
+                          1,
+                          datetime.datetime.now(), 
+                          2)
+        self.assertEqual(res, constants.ExitCode.INVALID_POOL_PARAMETER, "Wrong error message")
+    
+    def test_create_pool_using_route(self):
+        User(deviceID=["12345"], 
+             socialProfile=SocialIdentifier(socialID="32412", profile=constants.SocialProfile.FACEBOOK),
+             username="Andreea").put()
+        GPSRoute(name="route_name", driver_socialID="12345", route_points=[GeoPt(10.23, 11.23), GeoPt(21.21, 12.21)]).put()
+        route_id = GPSRoute.query(GPSRoute.name == "route_name").fetch(1)[0].key.id();
+        res = create_pool("32412", 
+                          None, None, 
+                          route_id,
+                          datetime.datetime.now(), 
+                          2)
+        self.assertEqual(res, constants.ExitCode.POOL_ADDED, "Wrong error message")
+        
+    def test_delete_pool(self):
+        User(
+             deviceID=["12345"], 
+             socialProfile=SocialIdentifier(socialID="32412", profile=constants.SocialProfile.FACEBOOK),
+             username="Andreea").put()
+        # p_driverID, p_source_point, p_destination_point, p_date, p_seats, p_is_weekly=False
+        create_pool("32412", 
+                  ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12), 
+                  None,
+                  datetime.datetime.now(), 
+                  2)
+        
+        pool = Pool.query(Pool.driver_socialID=="32412").fetch(1)
+        res = delete_pool(pool[0].key.id())
+        self.assertEqual(res, constants.ExitCode.POOL_DELETED)
+    
+    def test_delete_passenger(self):
+        User(
+             deviceID=["12345"], 
+             socialProfile=SocialIdentifier(socialID="32412", profile=constants.SocialProfile.FACEBOOK),
+             username="Andreea").put()
+        
+        User(deviceID=["13245"], 
+             socialProfile=SocialIdentifier(socialID="11412", profile=constants.SocialProfile.FACEBOOK),
+             username="Maria").put()
+        
+        # p_driverID, p_source_point, p_destination_point, p_date, p_seats, p_is_weekly=False
+        create_pool("32412", 
+                  ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12), 
+                  None,
+                  datetime.datetime.now(), 
+                  2)
+        
+        pool = Pool.query(Pool.driver_socialID=="32412").fetch(1)[0]
+        pool.add_passenger("11412")
+        
+        res = delete_passenger_from_pool(pool.key.id(), "11412")
+        self.assertEqual(res, constants.ExitCode.PASSENGER_DELETED_FROM_POOL, "Invalid exit code")
+        
+    def test_add_passenger_invalid_pool(self):
+        res = add_passenger_to_pool("1234", "1234")
+        self.assertEqual(res, constants.ExitCode.INVALID_POOL, "Invalid exit code")
+        
+    def test_add_passenger_invalid_user(self):
+        # test setup
+        User(
+             deviceID=["12345"],
+             socialProfile=SocialIdentifier(socialID="32412", profile=constants.SocialProfile.FACEBOOK),
+             username="Andreea").put()
+        create_pool("32412",
+                  ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12),
+                  None,
+                  datetime.datetime.now(),
+                  2)
+        pool_id = Pool.query(Pool.driver_socialID == "32412").fetch(1)[0].key.id()
+        # call function for testing
+        res = add_passenger_to_pool(pool_id, "1234")
+        self.assertEqual(res, constants.ExitCode.INVALID_USER, "Invalid exit code")
+    
+    def test_add_passenger_correct_arguments(self):
+        User(
+             deviceID=["12345"],
+             socialProfile=SocialIdentifier(socialID="32412", profile=constants.SocialProfile.FACEBOOK),
+             username="Andreea").put()
+
+        User(deviceID=["13245"],
+             socialProfile=SocialIdentifier(socialID="11412", profile=constants.SocialProfile.FACEBOOK),
+             username="Maria").put();
+             
+        create_pool("32412",
+                  ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12),
+                  None,
+                  datetime.datetime.now(),
+                  2)
+        pool_id = Pool.query(Pool.driver_socialID == "32412").fetch(1)[0].key.id()
+        
+        res = add_passenger_to_pool(pool_id, "11412")
+        self.assertEqual(res, constants.ExitCode.PASSENGER_ADDED_TO_POOL, "Wrong exit code")
+        
+        pool = Pool.get_by_id(pool_id)
+        self.assertEqual(pool.seats, 1, "The number of seats was not decremented")
+        self.assertEqual(pool.passengers, ["11412"], "Passenger was not added")
+        
+            
+        
+    def test_find_pool(self):
+        User(
+             deviceID=["12345"],
+             socialProfile=SocialIdentifier(socialID="32412", profile=constants.SocialProfile.FACEBOOK),
+             username="Andreea").put()
+
+        User(deviceID=["13245"],
+             socialProfile=SocialIdentifier(socialID="11412", profile=constants.SocialProfile.FACEBOOK),
+             username="Maria").put()
+
+        date = datetime.datetime.now()
+        # p_driverID, p_source_point, p_destination_point, p_date, p_seats, p_is_weekly=False
+        create_pool("32412",
+                  ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12),
+                  None,
+                  date,
+                  2)
+        create_pool("11412",
+                  ndb.GeoPt(-21, 32), ndb.GeoPt(31, 12),
+                  None,
+                  date,
+                  2)
+        create_pool("32412",
+                  ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12),
+                  None,
+                  date + datetime.timedelta(hours=7),
+                  2)
+
+        res = find_pool("32412", ndb.GeoPt(-21, 32), ndb.GeoPt(31, 12), date, datetime.timedelta(hours=6), 1000)
+#         print res[0].key.id()
+        self.assertEqual(len(res), 1, "Expected 1 returned value, got %d" % (len(res)))
+
+if __name__ == "__main__":
+    #import sys;sys.argv = ['', 'Test.test_add_pool_simple']
+    unittest.main()
