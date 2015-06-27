@@ -11,7 +11,7 @@ public class SocialNetworkManager {
 
     private String socialNetworkID;
 
-    private String socialDeviceID;
+    private String socialTokenID;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -26,12 +26,12 @@ public class SocialNetworkManager {
         return instance;
     }
 
-    public String getSocialDeviceID() {
-        return socialDeviceID;
+    public String getSocialTokenID() {
+        return socialTokenID;
     }
 
-    public void setSocialDeviceID(String socialDeviceID) {
-        this.socialDeviceID = socialDeviceID;
+    public void setSocialTokenID(String socialTokenID) {
+        this.socialTokenID = socialTokenID;
     }
 
     public void setSocialNetworkID(String id){

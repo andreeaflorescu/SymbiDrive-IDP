@@ -1,11 +1,8 @@
 package com.timteam.symbidrive.symbidrive.adapters;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v4.util.Pools;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +12,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.appspot.bustling_bay_88919.symbidrive.Symbidrive;
-import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveFindPoolRequest;
-import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveFindPoolResponse;
 import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveManagePassangerRequest;
 import com.appspot.bustling_bay_88919.symbidrive.model.SymbidrivePoolResponse;
-import com.google.api.client.util.DateTime;
+
 import com.timteam.symbidrive.symbidrive.R;
 import com.timteam.symbidrive.symbidrive.activities.MainActivity;
 import com.timteam.symbidrive.symbidrive.helpers.AppConstants;
@@ -73,7 +68,7 @@ public class MatchPoolAdapter extends ArrayAdapter<PoolInfo> {
                     //TODO
                     //SymbidriveManagePassangerRequest
                     joinPool(Long.parseLong(v.getTag() + ""),
-                            SocialNetworkManager.getInstance().getSocialDeviceID());
+                            SocialNetworkManager.getInstance().getSocialTokenID());
                 }
             });
         }
