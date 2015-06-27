@@ -10,11 +10,10 @@ from protorpc import messages
 from protorpc import message_types
 from protorpc import remote
 
-from controller import user_controller
-from controller import pool_controller
 from google.appengine.ext import ndb
 import datetime
 from controller.route_controller import create_route, get_user_routes
+from controller import user_controller, pool_controller
 
 
 symbidrive_api = endpoints.api(name='symbidrive', version='v1.1')
@@ -144,6 +143,7 @@ class SinglePoolResponse(messages.Message):
     date = message_types.DateTimeField(7, required=True)
     seats = messages.IntegerField(8, required=True)
     pool_id = messages.IntegerField(9, required=True)
+    score = messages.IntegerField(10, required=True)
 
 class FindPoolResponse(messages.Message):
     pools = messages.MessageField(SinglePoolResponse, 1, repeated=True)
@@ -217,23 +217,27 @@ class Pool_endpoint(remote.Service):
         else:
             walking_distance = request.walking_distance
 
-        pools_ = pool_controller.find_pool(socialID, start_point, end_point, date, delta, walking_distance)
+        find_pool_result = pool_controller.find_pool(socialID, start_point, end_point, date, delta, walking_distance)
         
         pools = []
         
-        if pools_ is None:
+        if find_pool_result["pools"] is None:
             return FindPoolResponse(pools=[])
         
-        for pool_ in pools_:
-            pool = SinglePoolResponse(driver_id=pool_.driver_socialID,
-                                      source_point_lat=pool_.source_point.lat,
-                                      source_point_lon=pool_.source_point.lon,
-                                      destination_point_lat=pool_.destination_point.lat,
-                                      destination_point_lon=pool_.destination_point.lon,
-                                      route_id= pool_.route_id,
-                                      date=pool_.date,
-                                      seats=pool_.seats,
-                                      pool_id=pool_.key.id())
+        for i in range(len(find_pool_result["pools"])):
+            res = find_pool_result["pools"][i]
+            score = find_pool_result["scores"][i]
+            pool = SinglePoolResponse(driver_id=res.driver_socialID,
+                                      source_point_lat=res.source_point.lat,
+                                      source_point_lon=res.source_point.lon,
+                                      destination_point_lat=res.destination_point.lat,
+                                      destination_point_lon=res.destination_point.lon,
+                                      route_id= res.route_id,
+                                      date=res.date,
+                                      seats=res.seats,
+                                      pool_id=res.key.id(),
+                                      score=score
+                                      )
             pools.append(pool)
         
         return FindPoolResponse(pools=pools)

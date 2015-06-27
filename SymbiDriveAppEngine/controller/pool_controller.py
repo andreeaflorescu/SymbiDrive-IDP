@@ -11,6 +11,8 @@ from utils import constants
 from controller.route_controller import add_route_to_pool, create_route
 from model.gps_route import GPSRoute
 from google.appengine.api.datastore_types import GeoPt
+from controller.profiles_controller import get_user_info_facebook, match_users
+from model.user_data import UserData
 
 '''
     driver_socialID = ndb.StringProperty(required=True)
@@ -64,11 +66,21 @@ def create_pool(p_driverID, p_source_point, p_destination_point, p_route_id, p_d
             if (GPSRoute.get_by_id(p_route_id) is None):
                 return constants.ExitCode.INVALID_POOL_PARAMETER
             create_pool_using_gps_route(p_driverID, p_route_id, p_date, p_seats)
+            
+            store_data_from_facebook(p_driverID)
+            
             return constants.ExitCode.POOL_ADDED
                
     else:
         create_pool_using_start_and_end_location(p_driverID, p_source_point, p_destination_point, p_date, p_seats)
+        
+        store_data_from_facebook(p_driverID)
+        
         return constants.ExitCode.POOL_ADDED
+
+def store_data_from_facebook(p_driverID):
+    facebook_data = get_user_info_facebook(p_driverID)
+    UserData(p_driverID, facebook_data).put()
 
 def add_passenger_to_pool(pool_id, passenger_socialId):
     
@@ -180,9 +192,29 @@ def find_pool(socialID, start_point, end_point, date, delta, walking_distance=10
 #     results_by_routes = []
 #     results_by_routes = find_pool_using_gps_routes(socialID, start_point, end_point, date, delta, walking_distance)
 #     return results_by_points.extend(results_by_routes)
-
+    
+    scores = match_results(socialID, results_by_points)
+     
+    final_res ={}
+    final_res["scores"] = scores
+    final_res["pools"] = results_by_points
+    
     return results_by_points
 
+def match_results(socialID, results_by_points):
+    
+    scores = {}
+    
+    try:
+        passenger_set = get_user_info_facebook(socialID)
+        for result in results_by_points:
+            driver_set = UserData.query(UserData.token==result.driver_socialID).fetch(1)[0]
+            scores[result.driver_socialID] = match_users(passenger_set, driver_set)
+    except:
+        scores['error'] = 0.0
+        pass  
+    
+    return scores
 
 '''
 Created on Apr 28, 2015
