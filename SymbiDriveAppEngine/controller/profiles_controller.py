@@ -4,11 +4,12 @@ Created on Jun 23, 2015
 @author: zombie
 '''
 
-import facebook
+
 import utils
 import urllib2
 from keyring.py25compat import json
 from google.appengine.ext import deferred
+import facebook
 
 
 def get_user_info(userToken, profile):
