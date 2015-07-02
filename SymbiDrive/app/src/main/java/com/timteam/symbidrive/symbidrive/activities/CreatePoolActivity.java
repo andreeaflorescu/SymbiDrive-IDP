@@ -1,11 +1,15 @@
 package com.timteam.symbidrive.symbidrive.activities;
 
+import android.app.AlertDialog;
+import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,10 +17,13 @@ import android.widget.Toast;
 import com.appspot.bustling_bay_88919.symbidrive.Symbidrive;
 import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveCreatePoolRequest;
 import com.appspot.bustling_bay_88919.symbidrive.model.SymbidrivePoolResponse;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.api.client.util.DateTime;
 import com.timteam.symbidrive.symbidrive.R;
 import com.timteam.symbidrive.symbidrive.fragments.CreatePoolFragment;
+import com.timteam.symbidrive.symbidrive.fragments.CreateScheduleLeaveFragment;
 import com.timteam.symbidrive.symbidrive.fragments.DatePickerFragment;
+import com.timteam.symbidrive.symbidrive.fragments.MapSearchFragment;
 import com.timteam.symbidrive.symbidrive.fragments.TimePickerFragment;
 import com.timteam.symbidrive.symbidrive.helpers.AppConstants;
 import com.timteam.symbidrive.symbidrive.helpers.DataManager;
@@ -26,14 +33,49 @@ import java.io.IOException;
 
 
 public class CreatePoolActivity extends ActionBarActivity {
-
+    private MapSearchFragment mapSearchFragment;
+    private LatLng source;
+    private LatLng destination;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_pool);
+        mapSearchFragment = new MapSearchFragment();
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container_create_pool, new CreatePoolFragment())
+                    .add(R.id.container_create_pool, mapSearchFragment)
+                    .commit();
+        }
+    }
+
+    private void createCustomAlertDialog(String msg) {
+        new AlertDialog.Builder(this)
+                .setTitle("Error")
+                .setMessage(msg)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    public void inflateScheduleFragment(View view) {
+
+        source = mapSearchFragment.getSourceLocation();
+        destination = mapSearchFragment.getDestinationLocation();
+        if (source == null || destination == null) {
+            createCustomAlertDialog("Please choose source and destination points!");
+        } else {
+
+            CreateScheduleLeaveFragment fragment = new CreateScheduleLeaveFragment();
+
+            findViewById(R.id.fragment_map_search).setVisibility(View.INVISIBLE);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.container_create_pool, fragment)
+                    .addToBackStack(null)
                     .commit();
         }
     }
@@ -47,43 +89,32 @@ public class CreatePoolActivity extends ActionBarActivity {
         TimePickerFragment timePickerFragment = new TimePickerFragment();
         timePickerFragment.show(getSupportFragmentManager(), "timePicker");
     }
-
-    public void selectSavedRoute(View v){
-
-    }
+//
+//    public void selectSavedRoute(View v){
+//
+//    }
 
     public void createPool(View v){
 
         View view = getWindow().getDecorView();
-        String source = ((EditText)view.findViewById(R.id.et_source_location))
-                .getText().toString();
-        String destination = ((EditText)view.findViewById(R.id.et_destination_location)).
-                getText().toString();
-        String seats = ((EditText)view.findViewById(R.id.et_available_seats)).
-                getText().toString();
+        CharSequence seats = ((EditText)view.findViewById(R.id.et_available_seats)).
+                getText();
         String dateValue = ((TextView)view.findViewById(R.id.tv_date_picker)).
                 getText().toString();
         String timeValue = ((TextView)view.findViewById(R.id.tv_time_picker)).
                 getText().toString();
 
-        if(source.isEmpty() || destination.isEmpty() || seats.isEmpty()){
-            Toast.makeText(this, "Please complete all fields", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            try {
-                postPool(DataManager.getCoordinates(source, this.getApplicationContext()),
-                        DataManager.getCoordinates(destination, this.getApplicationContext()),
-                        DataManager.getDateTime(dateValue, timeValue),
-                        Long.parseLong(seats));
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if(seats.length() == 0){
+            createCustomAlertDialog("Please fill the number of available seats!");
+        } else {
+            postPool(source,
+                    destination,
+                    DataManager.getDateTime(dateValue, timeValue),
+                    Long.parseLong(seats.toString()));
         }
     }
 
-    public void postPool(final double[] sourceCoordinates,
-                         final double[] destinationCoordinates,
+    public void postPool(final LatLng source, final LatLng destination,
                          final DateTime dateTime,
                          final long seats){
 
@@ -105,10 +136,10 @@ public class CreatePoolActivity extends ActionBarActivity {
                                     .getInstance()
                                     .getSocialTokenID());
                             createPoolRequest.setSeats(seats);
-                            createPoolRequest.setSourcePointLat(sourceCoordinates[0]);
-                            createPoolRequest.setSourcePointLon(sourceCoordinates[1]);
-                            createPoolRequest.setDestinationPointLat(destinationCoordinates[0]);
-                            createPoolRequest.setDestinationPointLon(destinationCoordinates[1]);
+                            createPoolRequest.setSourcePointLat(source.latitude);
+                            createPoolRequest.setSourcePointLon(source.longitude);
+                            createPoolRequest.setDestinationPointLat(destination.latitude);
+                            createPoolRequest.setDestinationPointLon(destination.longitude);
 
                             return apiServiceHandle.createPool(createPoolRequest).execute();
 

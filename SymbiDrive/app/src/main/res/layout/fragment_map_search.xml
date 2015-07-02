@@ -1,0 +1,89 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fragment_map_search"
+    tools:context="com.timteam.symbidrive.symbidrive.fragments.MapSearchFragment">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:background="@drawable/layout_border"
+            android:id="@+id/layout_search_coord"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="You can adjust the position by dragging markers on the map"/>
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="10dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Source Location"
+                android:textColor="@android:color/holo_blue_light"
+                android:textSize="20dp"/>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <AutoCompleteTextView
+                    android:id="@+id/et_source_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Search"/>
+
+            </LinearLayout>
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Destination Location"
+                android:textColor="@android:color/holo_blue_light"
+                android:textSize="20dp"/>
+
+            <AutoCompleteTextView
+                android:id="@+id/et_destination_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search"/>
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="10dp" />
+        </LinearLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_save_coord"
+            android:textColor="#ffffff"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/holo_blue_dark"
+            android:text="NEXT >"
+            android:onClick="inflateScheduleFragment"/>
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_search_coord"
+            android:layout_above="@id/btn_save_coord"
+            android:name="com.google.android.gms.maps.MapFragment"/>
+
+
+
+
+
+
+    </RelativeLayout>
+
+</FrameLayout>

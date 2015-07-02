@@ -85,6 +85,8 @@ public class PlacesAutoCompleteAdapter extends ArrayAdapter<String> implements F
         super(context, textViewResourceId);
     }
 
+
+
     @Override
     public int getCount() {
         return resultList.size();
