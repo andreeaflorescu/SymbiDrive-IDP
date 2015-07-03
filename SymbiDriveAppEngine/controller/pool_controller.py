@@ -3,8 +3,6 @@ Created on Apr 28, 2015
 
 @author: andreea
 '''
-import appengine_config
-import facebook
 from model.pool import Pool
 from google.appengine.ext import ndb
 from google.appengine.api import search
@@ -70,14 +68,14 @@ def create_pool(p_driverID, p_source_point, p_destination_point, p_route_id, p_d
                 return constants.ExitCode.INVALID_POOL_PARAMETER
             create_pool_using_gps_route(p_driverID, p_route_id, p_date, p_seats)
             
-            store_data_from_facebook(p_driverID)
+#             store_data_from_facebook(p_driverID)
             
             return constants.ExitCode.POOL_ADDED
                
     else:
         create_pool_using_start_and_end_location(p_driverID, p_source_point, p_destination_point, p_date, p_seats)
         
-        store_data_from_facebook(p_driverID)
+#         store_data_from_facebook(p_driverID)
         
         return constants.ExitCode.POOL_ADDED
 
@@ -196,13 +194,25 @@ def find_pool(socialID, start_point, end_point, date, delta, walking_distance=10
 #     results_by_routes = find_pool_using_gps_routes(socialID, start_point, end_point, date, delta, walking_distance)
 #     return results_by_points.extend(results_by_routes)
     
-    scores = match_results(socialID, results_by_points)
+#     scores = match_results(socialID, results_by_points)
      
-    final_res = {}
-    final_res["scores"] = scores
-    final_res["pools"] = results_by_points
+#     final_res = {}
+#     final_res["scores"] = scores
+#     final_res["pools"] = results_by_points
     
     return results_by_points
+
+def get_pools(socialID):
+    
+    res = {}
+    created_pools = Pool.query(Pool.driver_socialID == socialID).fetch(10)
+    joined_pools = Pool.query(Pool.passengers == socialID).fetch(10)
+    
+    res["created"] = created_pools
+    res["joined"] = joined_pools
+    
+    return res
+    
 
 def match_results(socialID, results_by_points):
     
@@ -426,7 +436,23 @@ class Test(unittest.TestCase):
         res = find_pool("32412", ndb.GeoPt(-21, 32), ndb.GeoPt(31, 12), date, datetime.timedelta(hours=6), 1000)
 #         print res[0].key.id()
         self.assertEqual(len(res), 1, "Expected 1 returned value, got %d" % (len(res)))
-
+    
+    def test_view_pools(self):
+        User(
+             deviceID=["12345"],
+             socialProfile=SocialIdentifier(socialID="32412", profile=constants.SocialProfile.FACEBOOK),
+             username="Andreea").put()
+             
+        date = datetime.datetime.now()
+        create_pool("32412",
+                  ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12),
+                  None,
+                  date,
+                  2)
+    
+        res = get_pools("32412")
+        print res
+        
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.test_add_pool_simple']
     unittest.main()

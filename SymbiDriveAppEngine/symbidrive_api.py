@@ -143,13 +143,18 @@ class SinglePoolResponse(messages.Message):
     date = message_types.DateTimeField(7, required=True)
     seats = messages.IntegerField(8, required=True)
     pool_id = messages.IntegerField(9, required=True)
-    score = messages.IntegerField(10, required=True)
+    score = messages.IntegerField(10, required=False)
 
 class FindPoolResponse(messages.Message):
     pools = messages.MessageField(SinglePoolResponse, 1, repeated=True)
 
+class ViewPoolsRequest(messages.Message):
+    socialID = messages.StringField(1, required=True)
 
-
+class ViewPoolsResponse(messages.Message):
+    created_pools = messages.MessageField(SinglePoolResponse, 1, repeated=True)
+    joined_pools = messages.MessageField(SinglePoolResponse, 2, repeated=True)
+    
 @symbidrive_api.api_class(path='pool')
 class Pool_endpoint(remote.Service):
     '''
@@ -202,6 +207,46 @@ class Pool_endpoint(remote.Service):
     def delete_passenger_from_pool(self, request):
         return PoolResponse(ret=pool_controller.delete_passenger_from_pool(request.pool_id, 
                                                                            request.passenger_id))
+    
+    @endpoints.method(ViewPoolsRequest, ViewPoolsResponse, 
+                      path="view_pools", http_method='POST')
+    def view_pools(self, request):
+        
+        pools = pool_controller.get_pools(request.socialID)
+        
+        created_pools = []
+        if (pools["created"] is not None):
+            for i in range(len(pools["created"])):
+                res = pools["created"][i]
+                pool = SinglePoolResponse(driver_id=res.driver_socialID,
+                                          source_point_lat=res.source_point.lat,
+                                          source_point_lon=res.source_point.lon,
+                                          destination_point_lat=res.destination_point.lat,
+                                          destination_point_lon=res.destination_point.lon,
+                                          route_id= res.route_id,
+                                          date=res.date,
+                                          seats=res.seats,
+                                          pool_id=res.key.id(),
+                                          )
+                created_pools.append(pool)
+            
+        joined_pools = []
+        if (pools["joined"] is not None):
+            for i in range(len(pools["joined"])):
+                res = pools["joined"][i]
+                pool = SinglePoolResponse(driver_id=res.driver_socialID,
+                                          source_point_lat=res.source_point.lat,
+                                          source_point_lon=res.source_point.lon,
+                                          destination_point_lat=res.destination_point.lat,
+                                          destination_point_lon=res.destination_point.lon,
+                                          route_id= res.route_id,
+                                          date=res.date,
+                                          seats=res.seats,
+                                          pool_id=res.key.id(),
+                                          )
+                joined_pools.append(pool)
+        return ViewPoolsResponse(created_pools=created_pools, joined_pools=joined_pools)
+        
         
     @endpoints.method(FindPoolRequest, FindPoolResponse,
                       path='find_pool', http_method='POST')
@@ -221,12 +266,17 @@ class Pool_endpoint(remote.Service):
         
         pools = []
         
-        if find_pool_result["pools"] is None:
+#         if find_pool_result["pools"] is None:
+#             return FindPoolResponse(pools=[])
+        
+        if find_pool_result is None:
             return FindPoolResponse(pools=[])
         
-        for i in range(len(find_pool_result["pools"])):
-            res = find_pool_result["pools"][i]
-            score = find_pool_result["scores"][i]
+#         for i in range(len(find_pool_result["pools"])):
+        for i in range(len(find_pool_result)):
+            res = find_pool_result[i]
+#             res = find_pool_result["pools"][i]
+#             score = find_pool_result["scores"][i]
             pool = SinglePoolResponse(driver_id=res.driver_socialID,
                                       source_point_lat=res.source_point.lat,
                                       source_point_lon=res.source_point.lon,
@@ -236,7 +286,7 @@ class Pool_endpoint(remote.Service):
                                       date=res.date,
                                       seats=res.seats,
                                       pool_id=res.key.id(),
-                                      score=score
+#                                       score=score
                                       )
             pools.append(pool)
         
