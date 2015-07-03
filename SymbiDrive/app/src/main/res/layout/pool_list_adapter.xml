@@ -17,10 +17,10 @@
             android:src="@drawable/source_pin"/>
 
         <TextView
+            android:id="@+id/tv_source_addr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15dp"
-            android:text="Spl. Independentei"
             android:textColor="@android:color/black"/>
 
         </LinearLayout>
@@ -36,10 +36,10 @@
             android:src="@drawable/destination_pin"/>
 
         <TextView
+            android:id="@+id/tv_destination_addr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15dp"
-            android:text="Bv. Aviatorilor"
             android:textColor="@android:color/black"/>
         
         <Space
@@ -48,6 +48,42 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:baselineAlignBottom="true"
+            android:clickable="true"
+            android:src="@drawable/calendar_128"/>
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"/>
+        
+        <TextView
+            android:layout_width="20dp"
+            android:layout_height="10dp" />
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:baselineAlignBottom="true"
+            android:clickable="true"
+            android:src="@drawable/clock_128"/>
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:clickable="true"/>/>
+
+    </LinearLayout>
 
 
 </LinearLayout>

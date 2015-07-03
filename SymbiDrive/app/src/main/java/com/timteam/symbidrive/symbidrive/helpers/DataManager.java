@@ -4,9 +4,13 @@ import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 
+import com.appspot.bustling_bay_88919.symbidrive.model.SymbidrivePoolResponse;
+import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveSinglePoolResponse;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.api.client.util.DateTime;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +31,18 @@ public class DataManager {
         }
 
         return coordinates;
+    }
+
+    public static String getAddress(double latitude, double longitude, Context context) throws IOException {
+        Geocoder geocoder = new Geocoder(context);
+        List<Address> addresses;
+        addresses = geocoder.getFromLocation(latitude,longitude, 1);
+        String address = new String();
+        if (addresses != null && addresses.size() > 0) {
+            address = addresses.get(0).getAddressLine(0);
+        }
+
+        return address;
     }
 
     public static DateTime getDateTime(String dateValue, String timeValue){
@@ -67,4 +83,20 @@ public class DataManager {
         return new DateTime(dateTimeValue);
     }
 
+
+    public static PoolInfo[] getPoolInfoFromPoolResponse(List<SymbidriveSinglePoolResponse> response) {
+        PoolInfo[] poolsInfo = new PoolInfo[response.size()];
+        for (int i = 0; i < response.size(); i++) {
+            SymbidriveSinglePoolResponse pool = response.get(i);
+            poolsInfo[i] = new PoolInfo(pool.getDate(),
+                    pool.getDestinationPointLat(),
+                    pool.getDestinationPointLon(),
+                    pool.getSourcePointLat(),
+                    pool.getSourcePointLon(),
+                    pool.getSeats(),
+                    pool.getPoolId(),
+                    pool.getDriverId());
+        }
+        return poolsInfo;
+    }
 }
