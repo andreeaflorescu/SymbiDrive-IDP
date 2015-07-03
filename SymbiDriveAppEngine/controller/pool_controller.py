@@ -3,6 +3,8 @@ Created on Apr 28, 2015
 
 @author: andreea
 '''
+import appengine_config
+import facebook
 from model.pool import Pool
 from google.appengine.ext import ndb
 from google.appengine.api import search
@@ -11,7 +13,8 @@ from utils import constants
 from controller.route_controller import add_route_to_pool, create_route
 from model.gps_route import GPSRoute
 from google.appengine.api.datastore_types import GeoPt
-from controller.profiles_controller import get_user_info_facebook, match_users
+from controller.profiles_controller import get_user_info_facebook, match_users,\
+    calculate_similatrity
 from model.user_data import UserData
 
 '''
@@ -26,19 +29,19 @@ from model.user_data import UserData
 
 def create_pool_using_gps_route(p_driverID, p_route_id, p_date, p_seats):
     # create pool instance with route id added
-    pool_key = Pool(driver_socialID = p_driverID, 
-                     date = p_date,
+    pool_key = Pool(driver_socialID=p_driverID,
+                     date=p_date,
                      seats=p_seats,
                      route_id=p_route_id).put()
          
     # add the route to pool
     add_route_to_pool(pool_key.id(), p_route_id)
 
-def create_pool_using_start_and_end_location(p_driverID, p_source_point, p_destination_point,  p_date, p_seats):
-    pool_key = Pool(driver_socialID = p_driverID, 
-                         source_point = p_source_point,
-                         destination_point = p_destination_point,
-                         date = p_date,
+def create_pool_using_start_and_end_location(p_driverID, p_source_point, p_destination_point, p_date, p_seats):
+    pool_key = Pool(driver_socialID=p_driverID,
+                         source_point=p_source_point,
+                         destination_point=p_destination_point,
+                         date=p_date,
                          seats=p_seats).put()
     source_point = search.GeoPoint(p_source_point.lat, p_source_point.lon)
     destination_point = search.GeoPoint(p_destination_point.lat, p_destination_point.lon)
@@ -123,12 +126,12 @@ def find_pool_using_start_and_end_points(socialID, start_point, end_point, date,
     query = "distance(s_point, geopoint(%f,%f)) < %f AND distance(d_point, geopoint(%f,%f)) < %f" % (
                 start_point.lat, start_point.lon, walking_distance,
                 end_point.lat, end_point.lon, walking_distance)
-    expr = "distance(s_point, geopoint(%f,%f)) + distance(d_point, geopoint(%f,%f))" %(
+    expr = "distance(s_point, geopoint(%f,%f)) + distance(d_point, geopoint(%f,%f))" % (
                 start_point.lat, start_point.lon,
                 end_point.lat, end_point.lon)
     sortexpr = search.SortExpression(
                 expression=expr,
-                direction=search.SortExpression.ASCENDING, default_value=2*walking_distance+1)
+                direction=search.SortExpression.ASCENDING, default_value=2 * walking_distance + 1)
     search_query = search.Query(
                 query_string=query,
                 options=search.QueryOptions(
@@ -150,12 +153,12 @@ def find_pool_using_gps_routes(socialID, start_point, end_point, date, delta, wa
     query = "distance(point, geopoint(%f,%f)) < %f AND distance(point, geopoint(%f,%f)) < %f" % (
                 start_point.lat, start_point.lon, walking_distance,
                 end_point.lat, end_point.lon, walking_distance)
-    expr = "distance(point, geopoint(%f,%f)) + distance(point, geopoint(%f,%f))" %(
+    expr = "distance(point, geopoint(%f,%f)) + distance(point, geopoint(%f,%f))" % (
                 start_point.lat, start_point.lon,
                 end_point.lat, end_point.lon)
     sortexpr = search.SortExpression(
                 expression=expr,
-                direction=search.SortExpression.ASCENDING, default_value=2*walking_distance+1)
+                direction=search.SortExpression.ASCENDING, default_value=2 * walking_distance + 1)
     search_query = search.Query(
                 query_string=query,
                 options=search.QueryOptions(
@@ -195,7 +198,7 @@ def find_pool(socialID, start_point, end_point, date, delta, walking_distance=10
     
     scores = match_results(socialID, results_by_points)
      
-    final_res ={}
+    final_res = {}
     final_res["scores"] = scores
     final_res["pools"] = results_by_points
     
@@ -208,8 +211,8 @@ def match_results(socialID, results_by_points):
     try:
         passenger_set = get_user_info_facebook(socialID)
         for result in results_by_points:
-            driver_set = UserData.query(UserData.token==result.driver_socialID).fetch(1)[0]
-            scores[result.driver_socialID] = match_users(passenger_set, driver_set)
+            driver_set = UserData.query(UserData.token == result.driver_socialID).fetch(1)[0]
+            scores[result.driver_socialID] = calculate_similatrity(passenger_set, driver_set)
     except:
         scores['error'] = 0.0
         pass  
@@ -245,14 +248,14 @@ class Test(unittest.TestCase):
         self.testbed.deactivate()
 
     def test_add_pool_simple(self):
-        User(deviceID=["12345"], 
+        User(deviceID=["12345"],
              socialProfile=SocialIdentifier(socialID="32412", profile=constants.SocialProfile.FACEBOOK),
              username="Andreea").put()
         # p_driverID, p_source_point, p_destination_point, p_date, p_seats, p_is_weekly=False
-        res = create_pool("32412", 
-                          ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12), 
+        res = create_pool("32412",
+                          ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12),
                           None,
-                          datetime.datetime.now(), 
+                          datetime.datetime.now(),
                           2)
         
         self.assertEqual(res, constants.ExitCode.POOL_ADDED, "Invalid exit code")
@@ -265,82 +268,82 @@ class Test(unittest.TestCase):
         self.assertEqual(len(pool[0].passengers), 0, "Invalid passengers list")
     
     def test_create_pool_invalid_user(self):
-        res = create_pool("32412", 
-                          ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12), 
+        res = create_pool("32412",
+                          ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12),
                           None,
-                          datetime.datetime.now(), 
+                          datetime.datetime.now(),
                           2)
         self.assertEqual(res, constants.ExitCode.INVALID_USER, "Wrong error message")
         
     def test_create_pool_invalid_params(self):
-        User(deviceID=["12345"], 
+        User(deviceID=["12345"],
              socialProfile=SocialIdentifier(socialID="32412", profile=constants.SocialProfile.FACEBOOK),
              username="Andreea").put()
-        res = create_pool("32412", 
-                          None, None, 
+        res = create_pool("32412",
+                          None, None,
                           None,
-                          datetime.datetime.now(), 
+                          datetime.datetime.now(),
                           2)
         self.assertEqual(res, constants.ExitCode.INVALID_POOL_PARAMETER, "Wrong error message")
     
     def test_create_pool_invalid_route_id(self):
-        User(deviceID=["12345"], 
+        User(deviceID=["12345"],
              socialProfile=SocialIdentifier(socialID="32412", profile=constants.SocialProfile.FACEBOOK),
              username="Andreea").put()
-        res = create_pool("32412", 
-                          None, None, 
+        res = create_pool("32412",
+                          None, None,
                           1,
-                          datetime.datetime.now(), 
+                          datetime.datetime.now(),
                           2)
         self.assertEqual(res, constants.ExitCode.INVALID_POOL_PARAMETER, "Wrong error message")
     
     def test_create_pool_using_route(self):
-        User(deviceID=["12345"], 
+        User(deviceID=["12345"],
              socialProfile=SocialIdentifier(socialID="32412", profile=constants.SocialProfile.FACEBOOK),
              username="Andreea").put()
         GPSRoute(name="route_name", driver_socialID="12345", route_points=[GeoPt(10.23, 11.23), GeoPt(21.21, 12.21)]).put()
         route_id = GPSRoute.query(GPSRoute.name == "route_name").fetch(1)[0].key.id();
-        res = create_pool("32412", 
-                          None, None, 
+        res = create_pool("32412",
+                          None, None,
                           route_id,
-                          datetime.datetime.now(), 
+                          datetime.datetime.now(),
                           2)
         self.assertEqual(res, constants.ExitCode.POOL_ADDED, "Wrong error message")
         
     def test_delete_pool(self):
         User(
-             deviceID=["12345"], 
+             deviceID=["12345"],
              socialProfile=SocialIdentifier(socialID="32412", profile=constants.SocialProfile.FACEBOOK),
              username="Andreea").put()
         # p_driverID, p_source_point, p_destination_point, p_date, p_seats, p_is_weekly=False
-        create_pool("32412", 
-                  ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12), 
+        create_pool("32412",
+                  ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12),
                   None,
-                  datetime.datetime.now(), 
+                  datetime.datetime.now(),
                   2)
         
-        pool = Pool.query(Pool.driver_socialID=="32412").fetch(1)
+        pool = Pool.query(Pool.driver_socialID == "32412").fetch(1)
         res = delete_pool(pool[0].key.id())
         self.assertEqual(res, constants.ExitCode.POOL_DELETED)
     
     def test_delete_passenger(self):
         User(
-             deviceID=["12345"], 
+             deviceID=["12345"],
              socialProfile=SocialIdentifier(socialID="32412", profile=constants.SocialProfile.FACEBOOK),
              username="Andreea").put()
         
-        User(deviceID=["13245"], 
+        User(deviceID=["13245"],
              socialProfile=SocialIdentifier(socialID="11412", profile=constants.SocialProfile.FACEBOOK),
              username="Maria").put()
         
         # p_driverID, p_source_point, p_destination_point, p_date, p_seats, p_is_weekly=False
-        create_pool("32412", 
-                  ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12), 
+        create_pool("32412",
+                  ndb.GeoPt(-21, 32), ndb.GeoPt(32, 12),
                   None,
-                  datetime.datetime.now(), 
+                  datetime.datetime.now(),
                   2)
         
-        pool = Pool.query(Pool.driver_socialID=="32412").fetch(1)[0]
+        pool = Pool.query(Pool.driver_socialID == "32412").fetch(1)[0]
         pool.add_passenger("11412")
         
         res = delete_passenger_from_pool(pool.key.id(), "11412")
@@ -425,5 +428,5 @@ class Test(unittest.TestCase):
         self.assertEqual(len(res), 1, "Expected 1 returned value, got %d" % (len(res)))
 
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.test_add_pool_simple']
+    # import sys;sys.argv = ['', 'Test.test_add_pool_simple']
     unittest.main()
