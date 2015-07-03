@@ -11,14 +11,6 @@ import com.timteam.symbidrive.symbidrive.R;
 
 import java.util.Calendar;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FindScheduleLeaveFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FindScheduleLeaveFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FindScheduleLeaveFragment extends Fragment {
 
     public FindScheduleLeaveFragment() {
@@ -49,10 +41,9 @@ public class FindScheduleLeaveFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View rootView = inflater.inflate(R.layout.fragment_create_schedule_leave, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_find_schedule_leave, container, false);
         setTimePickerView(rootView);
         setDatePickerView(rootView);
         return rootView;
     }
-
 }
