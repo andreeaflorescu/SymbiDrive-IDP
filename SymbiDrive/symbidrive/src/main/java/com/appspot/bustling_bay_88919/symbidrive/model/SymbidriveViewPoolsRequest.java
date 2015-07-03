@@ -19,7 +19,7 @@
 package com.appspot.bustling_bay_88919.symbidrive.model;
 
 /**
- * Model definition for SymbidriveGetRoutesResponse.
+ * Model definition for SymbidriveViewPoolsRequest.
  *
  * <p> This is the Java data model class that specifies how to parse/serialize into the JSON that is
  * transmitted over HTTP when working with the symbidrive. For a detailed explanation see:
@@ -29,43 +29,37 @@ package com.appspot.bustling_bay_88919.symbidrive.model;
  * @author Google, Inc.
  */
 @SuppressWarnings("javadoc")
-public final class SymbidriveGetRoutesResponse extends com.google.api.client.json.GenericJson {
+public final class SymbidriveViewPoolsRequest extends com.google.api.client.json.GenericJson {
 
   /**
    * The value may be {@code null}.
    */
   @com.google.api.client.util.Key
-  private java.util.List<SymbidriveSingleGetRoutesResponse> routes;
-
-  static {
-    // hack to force ProGuard to consider SymbidriveSingleGetRoutesResponse used, since otherwise it would be stripped out
-    // see http://code.google.com/p/google-api-java-client/issues/detail?id=528
-    com.google.api.client.util.Data.nullOf(SymbidriveSingleGetRoutesResponse.class);
-  }
+  private java.lang.String socialID;
 
   /**
    * @return value or {@code null} for none
    */
-  public java.util.List<SymbidriveSingleGetRoutesResponse> getRoutes() {
-    return routes;
+  public java.lang.String getSocialID() {
+    return socialID;
   }
 
   /**
-   * @param routes routes or {@code null} for none
+   * @param socialID socialID or {@code null} for none
    */
-  public SymbidriveGetRoutesResponse setRoutes(java.util.List<SymbidriveSingleGetRoutesResponse> routes) {
-    this.routes = routes;
+  public SymbidriveViewPoolsRequest setSocialID(java.lang.String socialID) {
+    this.socialID = socialID;
     return this;
   }
 
   @Override
-  public SymbidriveGetRoutesResponse set(String fieldName, Object value) {
-    return (SymbidriveGetRoutesResponse) super.set(fieldName, value);
+  public SymbidriveViewPoolsRequest set(String fieldName, Object value) {
+    return (SymbidriveViewPoolsRequest) super.set(fieldName, value);
   }
 
   @Override
-  public SymbidriveGetRoutesResponse clone() {
-    return (SymbidriveGetRoutesResponse) super.clone();
+  public SymbidriveViewPoolsRequest clone() {
+    return (SymbidriveViewPoolsRequest) super.clone();
   }
 
 }
