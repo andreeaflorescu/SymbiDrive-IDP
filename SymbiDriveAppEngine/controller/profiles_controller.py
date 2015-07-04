@@ -10,6 +10,8 @@ import urllib2
 from google.appengine.ext import deferred
 import facebook
 import json
+import io
+from _codecs import encode
 
 
 def get_user_info(userToken, profile):
@@ -19,6 +21,9 @@ def get_user_info(userToken, profile):
         
 
 def get_user_info_facebook(userToken):
+    
+    app_id = ""
+    app_secret = ""
     
     result = []
     
@@ -47,7 +52,7 @@ def get_facebook_places(places_json, result):
         if place['place']['name'] not in result:
             result.append(place['place']['name'])
             
-    if 'next' in places_json['paging']:
+    if 'paging' in places_json and 'next' in places_json['paging']:
         next_page_url = urllib2.urlopen(places_json['paging']['next']).read()
         json_response = json.loads(next_page_url)
         get_facebook_places(json_response, result)        
@@ -56,15 +61,21 @@ def get_facebook_places(places_json, result):
 
 def calculate_similatrity(set1, set2):
     
-    score = 0.0;
+    score = 0.0
+#     f = open("text", 'w+')
     
     for string1 in set1:
         for string2 in set2:
             if(string1 == string2):
                 score += 1.0
             else:
+#                 c = compute_dice_coefficient(string1, string2)
+#                 if c > 0.0: 
+#                     f.write(string1.encode('utf-8') + " ~ " + string2.encode('utf-8') + "\t")
+#                     f.write(str(c))
+#                     f.write('\n')
                 score += compute_dice_coefficient(string1, string2)
-                
+            
     return score        
 
 def split_string(p_string):
@@ -85,12 +96,12 @@ def compute_dice_coefficient(x, y):
     lenghtRaport = 1
     
     if len(x) > len(y):
-        if intersect < len(y_set) / 2:
+        if intersect < len(x) / 2:
             return 0.0
         lenghtRaport = len(y) * 1.0 / len(x)
     else:
-        if intersect < len(x_set) / 2:
-            return 0.0;
+        if intersect < len(y) / 2:
+            return 0.0
         lenghtRaport = len(x) * 1.0 / len(y)
     
     return (2.0 * intersect / summ * lenghtRaport)

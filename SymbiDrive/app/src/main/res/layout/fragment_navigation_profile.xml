@@ -12,22 +12,40 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="3"
-        android:layout_marginBottom="20px"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Username"
-            android:textColor="@android:color/holo_blue_light"
-            android:textSize="40px"/>
-        <EditText
-            android:layout_weight="2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="30dp">
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/profile_picture"
             />
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:paddingLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cristina Necula"
+                android:textSize="20dp"
+                android:id="@+id/username"/>
+
+            <TextView
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:textSize="17dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rating: -"
+                android:id="@+id/tv_rating"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,6 +65,7 @@
             android:layout_weight="2"
             android:layout_height="wrap_content"
             android:inputType="number"
+            android:id="@+id/et_telephone"
             />
     </LinearLayout>
 
@@ -67,6 +86,7 @@
             android:layout_weight="2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:id="@+id/et_car_type"
             />
     </LinearLayout>
 
@@ -95,7 +115,9 @@
             android:layout_height="wrap_content"
             android:textOff="No"
             android:textOn="Yes"
-            android:layout_weight="2"/>
+            android:layout_weight="2"
+            android:id="@+id/sw_smoking"
+            />
 
     </LinearLayout>
     <LinearLayout
@@ -117,31 +139,40 @@
             android:layout_height="wrap_content"
             android:textOff="No"
             android:textOn="Yes"
-            android:layout_weight="2"/>
+            android:layout_weight="2"
+            android:id="@+id/sw_music"/>
 
     </LinearLayout>
 
-
-
-    <Button
-        android:layout_marginTop="50dp"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Save"
-        android:textColor="@android:color/white"
-        android:background="@android:color/holo_green_dark"
-        android:layout_gravity="center_horizontal|bottom"
-        />
+        android:weightSum="2"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal">
+        <Button
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:textColor="@android:color/white"
+            android:background="@android:color/holo_green_dark"
+            android:id="@+id/btn_save"
+            />
+        <Button
+            android:id="@+id/btn_logout"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Logout"
+            android:textColor="@android:color/white"
+            android:background="@android:color/holo_blue_dark"
 
-    <Button
-        android:id="@+id/btn_logout"
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Logout"
-        android:textColor="@android:color/white"
-        android:background="@android:color/holo_orange_dark"
-        android:layout_gravity="center_horizontal|bottom"
-        />
+            />
+        </LinearLayout>
 
 </LinearLayout>

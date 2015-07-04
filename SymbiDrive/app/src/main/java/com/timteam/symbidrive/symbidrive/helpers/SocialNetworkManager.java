@@ -1,5 +1,7 @@
 package com.timteam.symbidrive.symbidrive.helpers;
 
+import android.graphics.Bitmap;
+
 import com.google.android.gms.common.api.GoogleApiClient;
 
 /**
@@ -10,6 +12,10 @@ public class SocialNetworkManager {
     private static SocialNetworkManager instance = null;
 
     private String socialNetworkID;
+
+    private String username;
+
+    private Bitmap profilePicture;
 
     private String socialTokenID;
 
@@ -56,5 +62,21 @@ public class SocialNetworkManager {
 
     public void setIsLoggedIn(Boolean isLoggedIn) {
         this.isLoggedIn = isLoggedIn;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Bitmap getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(Bitmap profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }
