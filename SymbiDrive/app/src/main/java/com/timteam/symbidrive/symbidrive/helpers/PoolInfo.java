@@ -15,6 +15,20 @@ import java.io.Serializable;
  * Created by zombie on 6/7/15.
  */
 public class PoolInfo implements Serializable {
+    @Override
+    public String toString() {
+        return "PoolInfo{" +
+                "date=" + date +
+                ", destinationPointLat=" + destinationPointLat +
+                ", destinationPointLon=" + destinationPointLon +
+                ", sourcePointLat=" + sourcePointLat +
+                ", sourcePointLon=" + sourcePointLon +
+                ", seats=" + seats +
+                ", poolID=" + poolID +
+                ", driverID='" + driverID + '\'' +
+                ", driverUserName='" + driverUserName + '\'' +
+                '}';
+    }
 
     private DateTime date;
     private double destinationPointLat;

@@ -35,6 +35,10 @@ public class PoolsArrayAdapter extends ArrayAdapter<PoolInfo> {
         this.poolInfos = values;
     }
 
+    public PoolInfo getPoolInfo(int position) {
+        return poolInfos[position];
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 

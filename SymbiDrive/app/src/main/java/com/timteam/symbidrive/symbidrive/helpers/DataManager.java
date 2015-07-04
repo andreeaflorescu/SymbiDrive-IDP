@@ -97,6 +97,7 @@ public class DataManager {
                     pool.getPoolId(),
                     pool.getDriverId());
         }
+
         return poolsInfo;
     }
 }

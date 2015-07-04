@@ -1,6 +1,7 @@
 package com.timteam.symbidrive.symbidrive.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -19,6 +21,7 @@ import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveSinglePoolRespo
 import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveViewPoolsRequest;
 import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveViewPoolsResponse;
 import com.timteam.symbidrive.symbidrive.R;
+import com.timteam.symbidrive.symbidrive.activities.CreatedPoolDetailsActivity;
 import com.timteam.symbidrive.symbidrive.activities.MainActivity;
 import com.timteam.symbidrive.symbidrive.adapters.PoolsArrayAdapter;
 import com.timteam.symbidrive.symbidrive.helpers.AppConstants;
@@ -87,6 +90,54 @@ public class ViewPoolsFragment extends Fragment {
 
         createdPoolsListView.setAdapter(new PoolsArrayAdapter(rootView.getContext(), createdPoolInfos));
         joinedPoolsListView.setAdapter(new PoolsArrayAdapter(rootView.getContext(), joinedPoolInfo));
+
+        createdPoolsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                PoolsArrayAdapter adapter = (PoolsArrayAdapter) parent.getAdapter();
+                openCreatedPoolDetails(adapter.getPoolInfo(position));
+            }
+        });
+
+        joinedPoolsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                PoolsArrayAdapter adapter = (PoolsArrayAdapter) parent.getAdapter();
+                openJoinedPoolDetails(adapter.getPoolInfo(position));
+            }
+        });
+
+
+    }
+
+    private void openCreatedPoolDetails(PoolInfo poolInfo) {
+        Intent createPoolDetailsActivity = new Intent(this.getActivity(), CreatedPoolDetailsActivity.class);
+        createPoolDetailsActivity.putExtra("destinationPointLat", poolInfo.getDestinationPointLat());
+        createPoolDetailsActivity.putExtra("destinationPointLon", poolInfo.getDestinationPointLon());
+        createPoolDetailsActivity.putExtra("sourcePointLat", poolInfo.getSourcePointLat());
+        createPoolDetailsActivity.putExtra("sourcePointLon", poolInfo.getSourcePointLon());
+        createPoolDetailsActivity.putExtra("poolID", poolInfo.getPoolID());
+        createPoolDetailsActivity.putExtra("driverUserName", poolInfo.getDriverUserName());
+        createPoolDetailsActivity.putExtra("driverID", poolInfo.getDriverID());
+        createPoolDetailsActivity.putExtra("seats", poolInfo.getSeats());
+        createPoolDetailsActivity.putExtra("date", poolInfo.getDate());
+        startActivity(createPoolDetailsActivity);
+    }
+
+    private void openJoinedPoolDetails(PoolInfo poolInfo) {
+        Intent createPoolDetailsActivity = new Intent(this.getActivity(), CreatedPoolDetailsActivity.class);
+        createPoolDetailsActivity.putExtra("poolInfo", poolInfo);
+
+        createPoolDetailsActivity.putExtra("destinationPointLat", poolInfo.getDestinationPointLat());
+        createPoolDetailsActivity.putExtra("destinationPointLon", poolInfo.getDestinationPointLon());
+        createPoolDetailsActivity.putExtra("sourcePointLat", poolInfo.getSourcePointLat());
+        createPoolDetailsActivity.putExtra("sourcePointLon", poolInfo.getSourcePointLon());
+        createPoolDetailsActivity.putExtra("poolID", poolInfo.getPoolID());
+        createPoolDetailsActivity.putExtra("driverUserName", poolInfo.getDriverUserName());
+        createPoolDetailsActivity.putExtra("driverID", poolInfo.getDriverID());
+        createPoolDetailsActivity.putExtra("date", poolInfo.getDate());
+
+        startActivity(createPoolDetailsActivity);
     }
 
     public void postGetPools() {
