@@ -105,16 +105,21 @@ class TestGetUserInfo(unittest.TestCase):
     
     def test_get_info_for_invalid_user(self):
         register_user("12345", "123456", constants.SocialProfile.GOOGLE, "Andreea")
-        
+        res = {}
         res = get_user_info("123454")
+        
+        
         self.assertEqual(res, {}, "Response is not empty")
     
     def test_get_info_for_existing_user(self):
         register_user("12345", "123456", constants.SocialProfile.GOOGLE, "Andreea")
         
         actual = get_user_info("123456")
+        print actual
         
-        expected = {"username": "Andreea", "telephone":None, "isSmoker": False, "listenToMusic": False, "car": None, "rating": None, "feedback": []}
+        print actual['username']
+        
+        expected = {'username': u'Andreea', 'rating': -1.0, 'feedback': [], 'car': '', 'isSmoker': False, 'telephone': '', 'listenToMusic': False}
         self.assertEqual(actual, expected, "Wrong info about user")
         
 class TestUpdateProfile(unittest.TestCase):

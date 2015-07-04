@@ -350,7 +350,7 @@ public class LoginActivity extends ActionBarActivity implements
 
                         } catch (IOException e) {
                             Log.e("symbi", "Exception during API call", e);
-                            showMessage(e.getMessage());
+                            //showMessage(e.getMessage());
                         }
                         return null;
                     }
@@ -360,14 +360,12 @@ public class LoginActivity extends ActionBarActivity implements
                         if (response != null) {
                             Log.v("symbi", response.getRet());
                             //TODO - verify results
-                            showMessage("Welcome " + socialNetworkManager.getUsername());
                             openMainPage(socialNetworkManager.getSocialNetworkID());
                         } else {
-                            showMessage("Seems like something went wrong on server. Please try again");
+                            showMessage(getResources().getString(R.string.server_error_message));
                         }
                     }
                 };
-
         loginRequest.execute();
     }
 

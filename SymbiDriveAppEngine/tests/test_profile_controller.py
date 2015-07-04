@@ -6,7 +6,8 @@ Created on Jun 24, 2015
 import unittest
 from google.appengine.ext import testbed
 from controller import profiles_controller
-from google.appengine.api import taskqueue
+import time
+from controller.profiles_controller import calculate_similatrity
 
 
 class TestGetUserProfileInfo(unittest.TestCase):
@@ -27,10 +28,10 @@ class TestGetUserProfileInfo(unittest.TestCase):
         self.testbed.deactivate()
         pass
 
-    @unittest.skip('skip')
+#     @unittest.skip('skip')
     def test_get_user_info_facebook(self):
         
-        p_token = "CAACEdEose0cBAOqQkqv6SCliXxtsaWEuT6zOgyzPqE6KYkZBZAXGy3mqfbQsI4XcJdf4oZCFvNpgLcPhVW2sjlC2Q3WZAAfl8cP9fIteHlO0ZCyLtM0WnpCTq8qdKzdDTnNOBFiWPWghTWYu7ZAZBhZCPZC7NupgOQ2Y66ZAz6KEwQqUqcAMG5rW5HwrZAPtFRK7yRQDW3z0DbdAW4ZAxqa3JJrx"
+        p_token = "CAACEdEose0cBALTXaDqUNcAdMKEYNbWWZCCxLdcOkYY8JIcZCFVEJxh0Gj84hS5reMUJIL4YRXjeU7CYy05UHnxUzVwBULqLFpKyFLdNS3htXZAOnDfWSgjWbZBwysgsXW4QZCZAPwLfRd3ZClU4kER5mOWiJesZBdiLlH6qR9jXg7NWX6ZCosi3bNTQiwh4S2kOMWp3RFnZAKIaaiii7GZC4O0"
         res = profiles_controller.get_user_info_facebook(p_token)
         
         self.assertGreater(len(res), 0, "Result is empty")
@@ -39,16 +40,35 @@ class TestGetUserProfileInfo(unittest.TestCase):
     @unittest.skip('skip')
     def test_similatiry(self):
         
-        p_token1 = "CAACEdEose0cBAOqQkqv6SCliXxtsaWEuT6zOgyzPqE6KYkZBZAXGy3mqfbQsI4XcJdf4oZCFvNpgLcPhVW2sjlC2Q3WZAAfl8cP9fIteHlO0ZCyLtM0WnpCTq8qdKzdDTnNOBFiWPWghTWYu7ZAZBhZCPZC7NupgOQ2Y66ZAz6KEwQqUqcAMG5rW5HwrZAPtFRK7yRQDW3z0DbdAW4ZAxqa3JJrx"
-        p_token2 = "CAACEdEose0cBAO3wq2ZCJgmwgZCde9Vozlu3FZCZAb7dFvK6mMts5DRGXZCH4ZAyzq7EFiLVnS1N7XJ7r6zIIrwUWNVxt5hbBNY1HoKAO2MZCziJVpFUXA2mZA6Hj3a9KhCDCR8M2py9mmMGgflIE0v76weIOgdcYFjnTSFDKwhTmulVKa592deiC07ok1qnfgItJlr62L9xnZBPbRTrkSPYg"
+        p_token1 = "CAACEdEose0cBAOZCZBPaQOCTO9wbYReR2lBxUbT558HTaTkaEdVrDhUnnmZC7gQisPqd4ohU6UZA3o7g2bOyO7u32J2SO0m8OUnIpYR06hPFdVrBuaF6BxPk7IL77LZBkqR9AWTc64V0pwomDZAkQewPTgxJ0p6gNc2MY24R8o6RdolJrNDiZAWmMeZAzKnCZCkzwlV2OuOYJPEQosFr9CO9z"
+        p_token2 = "CAACEdEose0cBAJZBc1tM3fjGMcBgYRyPZBKIQhO7AXe4gmufrJyZAcvasokau5MZBsadD5aNxFwZCZC4ema868YoY7Tt4JhZCLF5GhGZBcafKdaR5mfduPKkcjzduU3Jo1nscRd2epOxbiFnLeGl6KY0CVL4CyzvybkEqciLEHm0XOvEL6yZBR4ECHMNz4R5IfHzJcjVrfzsoT42jeBo7aK7aICDrsESvgXcZD"
+        p_token3 = "CAACEdEose0cBAOasqegBtx9NnZBGiefADra211LDYnLZCLbUZBZBwFwjbkC7mGLZCraQBlnVBNgfhQFCGPAFKGj5kU01udniQMP01l6mxVIJir0qXf1uiRDDhlf8eUFevvXRZByoY2SJraU6uhZC8sytq5acZANxzewc6FlgLhoZBl5IqrBqs464l3JPFGPeonpN7n3vuo0T6j9YPCOyQrOZCsxcbYdXKchC0ZD"
+        p_token4 = "CAACEdEose0cBAJZBc1tM3fjGMcBgYRyPZBKIQhO7AXe4gmufrJyZAcvasokau5MZBsadD5aNxFwZCZC4ema868YoY7Tt4JhZCLF5GhGZBcafKdaR5mfduPKkcjzduU3Jo1nscRd2epOxbiFnLeGl6KY0CVL4CyzvybkEqciLEHm0XOvEL6yZBR4ECHMNz4R5IfHzJcjVrfzsoT42jeBo7aK7aICDrsESvgXcZD"
+        p_token5 = "CAACEdEose0cBAAssgRlgBjOKDsjXgiZBZCBDtCM4PZCxfdFEtrOf0a5KUeh6f7vcZCcC56E3RBlwFNO2zdyfGHZBFZCRB6ANC9rKpcuCmPEcJJTlgvBEmUsYxGwSVZBd0sZCvD5yj3cgc6humauguWOap0VHKHBcg2qDVUJljDcGEc8lX4ZAEYifziup6Dr5sjkkfy8yZCKZA3EzukZAtYiiw2nkxXWl9kc7VXMZD"
+        p_token6 = "CAACEdEose0cBAPbK4EXAkHwlWZBJShMX02m2SgCkKgUMsD2QW6P9Ldj7alHHzase9zcejkfpirjZBeNhBq9N9LSvDAe2buQ6oD7Of4AjR9BBKJSCZCbsAEDrAeg8124TyeJCeZB6Vo0bSZB9krVHu1RNaBw6KFwoxdfwralqLG7RVzjZA7n8BH7XDmg6zzX5DzcZBL0ylo3CmZChhAbtsgsZBY4fbN96zgzEZD"
         
+        f=open("text", 'w+')
+        
+        time1 = time.time()
         set1 = profiles_controller.get_user_info_facebook(p_token1)
-        set2 = profiles_controller.get_user_info_facebook(p_token2)
+        time2 = time.time()
+        f.write("get user info = " + str((time2 - time1)) + "\n")
+        sets = []
+        sets.append(profiles_controller.get_user_info_facebook(p_token2))
+        sets.append(profiles_controller.get_user_info_facebook(p_token3))
+        sets.append(profiles_controller.get_user_info_facebook(p_token4))
+        sets.append(profiles_controller.get_user_info_facebook(p_token5))
+        sets.append(profiles_controller.get_user_info_facebook(p_token6))
         
-        res = profiles_controller.calculate_similatrity(set1, set2)
-        print res
+        time3 = time.time()
+#         res = profiles_controller.calculate_similatrity(set1, set2)
+        for i in range(len(sets)):
+            calculate_similatrity(set1, sets[i])
+        time4 = time.time()
+        f.write("get similatiry = " + str((time4 - time3)) + "\n")
+#         print res
         
-        self.assertGreater(res, -1.0, "Similarity is not corerect")
+#         self.assertGreater(res, -1.0, "Similarity is not corerect")
         pass
     
     @unittest.skip('skip')   
@@ -69,7 +89,7 @@ class TestGetUserProfileInfo(unittest.TestCase):
         
         self.assertEqual(res, 0.4, "GRESIT")
         pass
-    
+    @unittest.skip('skip')
     def test_match_users(self):
         p_token1 = "CAACEdEose0cBAGWZBQ8MsKMk95i7gnZA4N17rJtI8pjOy7GoP5Xvev1LSgAr5CRgLGDoOmmxjGIZAgZAv9prEKalc7Y0GgQgmWQZCZAnXdEGNltwY8rr1GZBcDJqXfr4sysaVEIUfKVDgmOwZAi3F8XUIWTIecYoQYwZB0GoFSYCHpnMYQhb1Sm968AXlAZCsXFR5Whkk1mHZAHAB4C0PGXBHtg"
         p_token2 = "CAACEdEose0cBAA7xIIcGgcHZA4z0C0r1P0iZBJHFTzlaZCFIQsyZB1pWcMhmXCZBpTzZAXhjaoxQaz2wVpFB5mN48zRRofZCBVNVOTblmUJQXLZCo7Q9uyndKpTHtijF3BXD8ZBJ4Wkha7nm9iOmbEjDF8LpBfBY9B3hi6abXM2yPeVAdrKoiL2rIpJPZAgc8f2LZAFdptEVNrj4sc2zaSATWUG"
