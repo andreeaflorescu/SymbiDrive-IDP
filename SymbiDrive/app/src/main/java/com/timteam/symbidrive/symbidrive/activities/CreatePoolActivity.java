@@ -89,10 +89,6 @@ public class CreatePoolActivity extends ActionBarActivity {
         TimePickerFragment timePickerFragment = new TimePickerFragment();
         timePickerFragment.show(getSupportFragmentManager(), "timePicker");
     }
-//
-//    public void selectSavedRoute(View v){
-//
-//    }
 
     public void createPool(View v){
 

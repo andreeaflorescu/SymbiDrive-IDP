@@ -21,10 +21,9 @@ import android.widget.EditText;
 import com.timteam.symbidrive.symbidrive.R;
 import com.timteam.symbidrive.symbidrive.fragments.HomeFragment;
 import com.timteam.symbidrive.symbidrive.fragments.NavigationDrawerFragment;
-import com.timteam.symbidrive.symbidrive.fragments.PoolsFragment;
+import com.timteam.symbidrive.symbidrive.fragments.ViewPoolsFragment;
 import com.timteam.symbidrive.symbidrive.fragments.ProfileFragment;
 import com.timteam.symbidrive.symbidrive.fragments.RegisterRouteFragment;
-import com.timteam.symbidrive.symbidrive.fragments.SaveRouteDialogFragment;
 import com.timteam.symbidrive.symbidrive.helpers.CreateRouteTask;
 import com.timteam.symbidrive.symbidrive.helpers.SocialNetworkManager;
 import com.timteam.symbidrive.symbidrive.listeners.SaveCoordinatesListener;
@@ -78,7 +77,7 @@ public class MainActivity extends ActionBarActivity
                 fragment = new HomeFragment();
                 break;
             case 1:
-                fragment = new PoolsFragment();
+                fragment = new ViewPoolsFragment();
                 break;
             case 2:
                 fragment = new RegisterRouteFragment();

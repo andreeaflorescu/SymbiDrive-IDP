@@ -27,6 +27,12 @@
             android:background="@android:color/holo_blue_dark"
             android:textSize="20dp"/>
 
+        <TextView
+            android:id="@+id/tv_no_created_pools"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:text="You haven't created any pools!"/>
+
         <ListView
             android:id="@+id/createdPoolsList"
             android:layout_width="fill_parent"
@@ -53,7 +59,11 @@
             android:background="@android:color/holo_green_dark"
             android:textColor="@android:color/white"
             android:textSize="20dp"/>
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/tv_no_joined_pools"
+            android:text="You haven't joined any pools!"/>
         <ListView
             android:id="@+id/joinedPoolsList"
             android:layout_margin="5dp"
