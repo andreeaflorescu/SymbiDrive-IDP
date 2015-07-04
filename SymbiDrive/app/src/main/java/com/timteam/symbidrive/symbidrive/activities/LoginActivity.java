@@ -2,6 +2,8 @@ package com.timteam.symbidrive.symbidrive.activities;
 
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -17,6 +19,8 @@ import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
@@ -30,8 +34,15 @@ import com.timteam.symbidrive.symbidrive.helpers.SocialNetworkManager;
 import com.timteam.symbidrive.symbidrive.listeners.FacebookLoginCallback;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import android.provider.Settings.Secure;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class LoginActivity extends ActionBarActivity implements
@@ -54,7 +65,7 @@ public class LoginActivity extends ActionBarActivity implements
     private CallbackManager callbackManager;
     private AccessTokenTracker accessTokenTracker;
 
-
+    private SocialNetworkManager socialNetworkManager;
 
     private void initializeSocialNetworks() {
 
@@ -91,6 +102,8 @@ public class LoginActivity extends ActionBarActivity implements
         LoginButton loginButton = (LoginButton) findViewById(R.id.btn_facebook_login);
         loginButton.setOnClickListener(this);
         loginButton.registerCallback(callbackManager, new FacebookLoginCallback(this));
+
+        socialNetworkManager = SocialNetworkManager.getInstance();
     }
 
     protected void onStart() {
@@ -130,7 +143,7 @@ public class LoginActivity extends ActionBarActivity implements
     }
 
     public void openMainPage(String socialNetworkID){
-        SocialNetworkManager.getInstance().setSocialNetworkID(socialNetworkID);
+        socialNetworkManager.setSocialNetworkID(socialNetworkID);
         Intent mainPageIntent = new Intent(this, MainActivity.class);
         startActivity(mainPageIntent);
     }
@@ -154,14 +167,17 @@ public class LoginActivity extends ActionBarActivity implements
 
         if (view.getId() == R.id.btn_google_login
                 && !mGoogleApiClient.isConnecting()) {
+            socialNetworkManager
+                    .setSocialNetworkID(getResources().getString(R.string.google_profile));
             mSignInClicked = true;
             resolveSignInError();
         }
 
         if (view.getId() == R.id.btn_facebook_login) {
+            socialNetworkManager
+                    .setSocialNetworkID(getResources().getString(R.string.facebook_profile));
             LoginManager.getInstance().logInWithReadPermissions(this,
                     Arrays.asList("basic_info",
-                            "user_friends",
                             "user_likes",
                             "user_birthday"));
         }
@@ -170,25 +186,30 @@ public class LoginActivity extends ActionBarActivity implements
     public void onConnected(Bundle connectionHint) {
         // We've resolved any connection errors.  mGoogleApiClient can be used to
         // access Google APIs on behalf of the user.
-        mSignInClicked = false;
-        //Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
-        SocialNetworkManager.getInstance().setmGoogleApiClient(mGoogleApiClient);
+        if(socialNetworkManager.getSocialNetworkID() ==
+                getResources().getString(R.string.google_profile)){
+            mSignInClicked = false;
+            //Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
+            socialNetworkManager.setmGoogleApiClient(mGoogleApiClient);
 
-        if(SocialNetworkManager.getInstance().getIsLoggedIn() == null ||
-                !SocialNetworkManager.getInstance().getIsLoggedIn()){
+            if(socialNetworkManager.getIsLoggedIn() == null ||
+                    !socialNetworkManager.getIsLoggedIn()){
 
-            Object[] params = new Object[2];
-            params[0] = this;
-            params[1] = Plus.AccountApi.getAccountName(mGoogleApiClient);
-            new GetGoogleInfoTask().execute(params);
+                Object[] params = new Object[2];
+                params[0] = this;
+                params[1] = Plus.AccountApi.getAccountName(mGoogleApiClient);
+                new GetGoogleInfoTask().execute(params);
 
-            openMainPage(getResources().getString(R.string.google_profile));
+                openMainPage(getResources().getString(R.string.google_profile));
+            }
         }
     }
 
     protected void onActivityResult(int requestCode, int responseCode, Intent intent) {
 
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == RC_SIGN_IN &&
+                socialNetworkManager.getSocialNetworkID() ==
+                        getResources().getString(R.string.google_profile)) {
             if (responseCode != RESULT_OK) {
                 mSignInClicked = false;
             }
@@ -199,9 +220,10 @@ public class LoginActivity extends ActionBarActivity implements
                 mGoogleApiClient.connect();
             }
         }
-
-        callbackManager.onActivityResult(requestCode, responseCode, intent);
-
+        if(socialNetworkManager.getSocialNetworkID() ==
+                getResources().getString(R.string.facebook_profile)){
+            callbackManager.onActivityResult(requestCode, responseCode, intent);
+        }
     }
 
     public void onConnectionSuspended(int cause) {
@@ -225,51 +247,132 @@ public class LoginActivity extends ActionBarActivity implements
     }
 
     private void updateWithToken(final AccessToken currentAccessToken) {
+
         if (currentAccessToken != null) {
 
-            SocialNetworkManager.getInstance().setSocialTokenID(currentAccessToken.getToken());
-            final String android_id = Secure.getString(this.getContentResolver(),
-                    Secure.ANDROID_ID);
+            socialNetworkManager.setSocialTokenID(currentAccessToken.getToken());
+            socialNetworkManager.setSocialNetworkID(getString(R.string.facebook_profile));
+            socialNetworkManager
+                    .setSocialNetworkID(getResources().getString(R.string.facebook_profile));
+            openMainPage("facebook");
 
-            AsyncTask<Integer, Void, SymbidriveUserResponse> loginRequest =
-                    new AsyncTask<Integer, Void, SymbidriveUserResponse> () {
-                        @Override
-                        protected SymbidriveUserResponse doInBackground(Integer... integers) {
-                            // Retrieve service handle.
-                            Symbidrive apiServiceHandle = AppConstants.getApiServiceHandle();
-
-                            try {
-
-                                SymbidriveRegisterUserRequest registerUserRequest =
-                                        new SymbidriveRegisterUserRequest();
-                                registerUserRequest.setDeviceID(android_id);
-                                registerUserRequest.setProfile("Facebook");
-                                registerUserRequest.setSocialID(currentAccessToken.getToken());
-                                registerUserRequest.setUsername("extraordinar");
-                                return apiServiceHandle.registerUser(registerUserRequest).execute();
-
-                            } catch (IOException e) {
-                                Log.e("symbi", "Exception during API call", e);
-                            }
-                            return null;
-                        }
-
-                        @Override
-                        protected void onPostExecute(SymbidriveUserResponse response) {
-                            if (response != null) {
-                                Log.v("symbi", response.getRet());
-                            } else {
-                                Log.v("symbi", "No greetings were returned by the API.");
-                            }
-                        }
-
-
-                    };
-
-            loginRequest.execute(1);
-
-            openMainPage(getResources().getString(R.string.facebook_profile));
+            callFacebookGraph(currentAccessToken);
         }
+    }
+
+    private void callFacebookGraph(final AccessToken accessToken){
+
+        String username;
+
+        GraphRequest request = GraphRequest.newMeRequest(
+                accessToken,
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(
+                            JSONObject object,
+                            GraphResponse response) {
+                        try {
+                            parseFacebookResponse(response.getJSONObject());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "name, picture");
+        request.setParameters(parameters);
+        request.executeAsync();
+    }
+
+    private void parseFacebookResponse(final JSONObject response) throws JSONException,
+            IOException {
+
+        socialNetworkManager.setUsername(response.getString("name"));
+
+        AsyncTask<Void, Void, Void> getPhotoTask = new AsyncTask<Void, Void, Void>(){
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                URL imgUrl = null;
+                try {
+                    imgUrl = new URL(response.getJSONObject("picture")
+                            .getJSONObject("data").getString("url"));
+                    InputStream in = (InputStream) imgUrl.getContent();
+                    Bitmap bitmap = BitmapFactory.decodeStream(in);
+                    socialNetworkManager.setProfilePicture(bitmap);
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                loginTask();
+            }
+        };
+        getPhotoTask.execute();
+
+    }
+
+    private void loginTask(){
+
+
+        final String android_id = Secure.getString(this.getContentResolver(),
+                Secure.ANDROID_ID);
+
+        AsyncTask<Void, Void, SymbidriveUserResponse> loginRequest =
+                new AsyncTask<Void, Void, SymbidriveUserResponse> () {
+
+                    @Override
+                    protected SymbidriveUserResponse doInBackground(Void... params) {
+
+                        Symbidrive apiServiceHandle = AppConstants.getApiServiceHandle();
+
+                        try {
+                            SymbidriveRegisterUserRequest registerUserRequest =
+                                    new SymbidriveRegisterUserRequest();
+
+                            registerUserRequest.setDeviceID(android_id);
+                            registerUserRequest.setProfile(socialNetworkManager.getSocialNetworkID());
+                            registerUserRequest.setSocialID(socialNetworkManager.getSocialTokenID());
+                            registerUserRequest.setUsername(socialNetworkManager.getUsername());
+
+                            return apiServiceHandle.registerUser(registerUserRequest).execute();
+
+                        } catch (IOException e) {
+                            Log.e("symbi", "Exception during API call", e);
+                            showMessage(e.getMessage());
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(SymbidriveUserResponse response) {
+                        if (response != null) {
+                            Log.v("symbi", response.getRet());
+                            //TODO - verify results
+                            showMessage("Welcome " + socialNetworkManager.getUsername());
+                            openMainPage(socialNetworkManager.getSocialNetworkID());
+                        } else {
+                            showMessage("Seems like something went wrong on server. Please try again");
+                        }
+                    }
+                };
+
+        loginRequest.execute();
+    }
+
+    private void showMessage(String message){
+        Toast.makeText(this, message, Toast.LENGTH_SHORT);
     }
 
 }
