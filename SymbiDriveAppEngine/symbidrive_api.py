@@ -40,11 +40,11 @@ class UserInfoResponse(messages.Message):
     
 class UpdateUserInfoRequest(messages.Message):
     socialID = messages.StringField(1, required=True)
-    username = messages.StringField(2, required=True)
-    telephone = messages.StringField(3, required=True)
-    isSmoker = messages.BooleanField(4, required=True)
-    listenToMusic = messages.BooleanField(5, required=True)
-    car = messages.StringField(6, required=True)
+    username = messages.StringField(2, required=False)
+    telephone = messages.StringField(3, required=False)
+    isSmoker = messages.BooleanField(4, required=False)
+    listenToMusic = messages.BooleanField(5, required=False)
+    car = messages.StringField(6, required=False)
 
 class AddRatingRequest(messages.Message):
     socialID = messages.StringField(1, required=True)

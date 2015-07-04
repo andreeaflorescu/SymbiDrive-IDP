@@ -1,16 +1,20 @@
 package com.timteam.symbidrive.symbidrive.activities;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,19 +36,21 @@ import com.timteam.symbidrive.symbidrive.helpers.SocialNetworkManager;
 import java.io.IOException;
 
 
-public class CreatePoolActivity extends ActionBarActivity {
+public class CreatePoolActivity extends FragmentActivity {
     private MapSearchFragment mapSearchFragment;
+
+    private CreatePoolFragment createPoolFragment;
     private LatLng source;
     private LatLng destination;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_pool);
-        mapSearchFragment = new MapSearchFragment();
+        createPoolFragment = new CreatePoolFragment();
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container_create_pool, mapSearchFragment)
+                    .add(R.id.container_create_pool, createPoolFragment)
                     .commit();
         }
     }
@@ -78,6 +84,15 @@ public class CreatePoolActivity extends ActionBarActivity {
                     .addToBackStack(null)
                     .commit();
         }
+    }
+
+    public void inflateMapSearchFragment(View view) {
+        mapSearchFragment = new MapSearchFragment();
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container_create_pool, mapSearchFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     public void showDatePickerDialog(View v) {
@@ -158,6 +173,20 @@ public class CreatePoolActivity extends ActionBarActivity {
                 };
 
         postPoolInfo.execute((Void) null);
+    }
+
+    public void selectRoute(View view) {
+        CreateScheduleLeaveFragment fragment = new CreateScheduleLeaveFragment();
+        if (findViewById(R.id.fragment_map_search) != null) {
+            findViewById(R.id.fragment_map_search).setVisibility(View.INVISIBLE);
+        }
+
+        findViewById(R.id.fragment_create_pool).setVisibility(View.INVISIBLE);
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container_create_pool, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     public void openPoolsActivity(){
