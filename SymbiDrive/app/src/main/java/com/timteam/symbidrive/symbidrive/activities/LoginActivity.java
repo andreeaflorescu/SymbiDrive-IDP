@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import android.provider.Settings.Secure;
 import android.widget.Toast;
@@ -92,6 +93,8 @@ public class LoginActivity extends ActionBarActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        socialNetworkManager = SocialNetworkManager.getInstance();
+
         initializeSocialNetworks();
         updateWithToken(AccessToken.getCurrentAccessToken());
 
@@ -102,8 +105,6 @@ public class LoginActivity extends ActionBarActivity implements
         LoginButton loginButton = (LoginButton) findViewById(R.id.btn_facebook_login);
         loginButton.setOnClickListener(this);
         loginButton.registerCallback(callbackManager, new FacebookLoginCallback(this));
-
-        socialNetworkManager = SocialNetworkManager.getInstance();
     }
 
     protected void onStart() {
@@ -254,7 +255,7 @@ public class LoginActivity extends ActionBarActivity implements
             socialNetworkManager.setSocialNetworkID(getString(R.string.facebook_profile));
             socialNetworkManager
                     .setSocialNetworkID(getResources().getString(R.string.facebook_profile));
-            openMainPage("facebook");
+            openMainPage(getResources().getString(R.string.facebook_profile));
 
             callFacebookGraph(currentAccessToken);
         }
@@ -328,6 +329,7 @@ public class LoginActivity extends ActionBarActivity implements
 
         final String android_id = Secure.getString(this.getContentResolver(),
                 Secure.ANDROID_ID);
+        Log.v("android_id", android_id);
 
         AsyncTask<Void, Void, SymbidriveUserResponse> loginRequest =
                 new AsyncTask<Void, Void, SymbidriveUserResponse> () {
@@ -359,8 +361,23 @@ public class LoginActivity extends ActionBarActivity implements
                     protected void onPostExecute(SymbidriveUserResponse response) {
                         if (response != null) {
                             Log.v("symbi", response.getRet());
-                            //TODO - verify results
-                            openMainPage(socialNetworkManager.getSocialNetworkID());
+
+                            ArrayList<String> userOkResponses = new ArrayList<String>(){{
+                                add("USER_ALREADY_REGISTERED");
+                                add("USER_REGISTER_WITH_OTHER_PROFILE");
+                                add("USER_REGISTER_ON_OTHER_DEVICE");
+                                add("USER_CREATED");
+                            }};
+
+                            if(userOkResponses.contains(response.getRet())){
+                                showMessage("Welcome " + socialNetworkManager.getUsername().trim());
+                                openMainPage(socialNetworkManager.getSocialNetworkID());
+                            }
+                            else {
+                                showMessage("You received bad rating or feedback. " +
+                                        "You are no longer allowed to use the application!");
+                            }
+
                         } else {
                             showMessage(getResources().getString(R.string.server_error_message));
                         }
@@ -370,7 +387,7 @@ public class LoginActivity extends ActionBarActivity implements
     }
 
     private void showMessage(String message){
-        Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
 }

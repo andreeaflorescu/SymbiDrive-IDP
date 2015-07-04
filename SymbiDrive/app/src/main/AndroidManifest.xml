@@ -81,6 +81,11 @@
             android:name=".activities.CreatedPoolDetailsActivity"
             android:label="@string/title_activity_pool_details" >
         </activity>
+        <activity
+            android:name=".activities.DriverProfileActivity"
+            android:label="DriverProfileActivity">
+        </activity>
+
     </application>
 
 </manifest>

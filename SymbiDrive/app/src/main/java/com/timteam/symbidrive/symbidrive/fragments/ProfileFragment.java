@@ -1,6 +1,8 @@
 package com.timteam.symbidrive.symbidrive.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -18,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.appspot.bustling_bay_88919.symbidrive.Symbidrive;
-import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveRegisterUserRequest;
 import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveUpdateUserInfoRequest;
 import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveUserInfoRequest;
 import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveUserInfoResponse;
@@ -28,6 +30,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.plus.Plus;
 import com.timteam.symbidrive.symbidrive.R;
+import com.timteam.symbidrive.symbidrive.activities.DriverProfileActivity;
 import com.timteam.symbidrive.symbidrive.activities.LoginActivity;
 import com.timteam.symbidrive.symbidrive.helpers.AppConstants;
 import com.timteam.symbidrive.symbidrive.helpers.SocialNetworkManager;
@@ -35,6 +38,7 @@ import com.timteam.symbidrive.symbidrive.activities.MainActivity;
 import com.facebook.login.LoginManager;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by zombie on 3/22/15.
@@ -45,8 +49,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
     private GoogleApiClient mGoogleApiClient;
 
-    private Button btn_logout;
-    private Button btn_save;
+    private Button btnLogout;
+    private Button btnSave;
+    private Button btnViewFeedback;
 
     private boolean music = false;
     private boolean smoking = false;
@@ -54,17 +59,21 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     private String telephone = "";
     private String carType = "";
 
+    private View rootView;
+
+    private ArrayList<String> feedback;
+
     public ProfileFragment(){}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_navigation_profile, container, false);
+        rootView = inflater.inflate(R.layout.fragment_navigation_profile, container, false);
         socialNetworkManager = SocialNetworkManager.getInstance();
 
-        setButtons(rootView);
-        initializeSwitch(rootView);
+        setButtons();
+        initializeSwitch();
 
         TextView username = ((TextView)rootView.findViewById(R.id.username));
         username.setText(socialNetworkManager.getUsername());
@@ -72,12 +81,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         ImageView profilePicture = ((ImageView)rootView.findViewById(R.id.profile_picture));
         profilePicture.setImageBitmap(socialNetworkManager.getProfilePicture());
 
-        getUserInfoTask(rootView);
+        getUserInfoTask();
 
         return rootView;
     }
 
-    void getUserInfoTask(final View rootView){
+    void getUserInfoTask(){
 
         AsyncTask<Void, Void, SymbidriveUserInfoResponse> getUserInfoTask =
                 new AsyncTask<Void, Void, SymbidriveUserInfoResponse>() {
@@ -92,7 +101,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                             SymbidriveUserInfoRequest getUserInfoRequest
                                     = new SymbidriveUserInfoRequest();
                             getUserInfoRequest.setSocialID(socialNetworkManager.getSocialTokenID());
-
 
                             return apiServiceHandle.getUserInfo(getUserInfoRequest).execute();
 
@@ -129,12 +137,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         if(response.getListenToMusic() != null){
             ((Switch)v.findViewById(R.id.sw_music)).setChecked(response.getListenToMusic());
         }
-        if(response.getRating() != null){
+        if(response.getRating() != null && response.getRating() > 0){
             ((TextView)v.findViewById(R.id.tv_rating)).setText("Rating: " + response.getRating());
         }
+
     }
 
-    private void initializeSwitch(View rootView){
+    private void initializeSwitch(){
 
         Switch aSwitch = ((Switch)rootView.findViewById(R.id.sw_smoking));
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -155,25 +164,28 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         });
     }
 
-    private void setButtons(View rootView){
+    private void setButtons(){
 
-        btn_logout = (Button)rootView.findViewById(R.id.btn_logout);
-        btn_logout.setOnClickListener(this);
+        btnLogout = (Button)rootView.findViewById(R.id.btn_logout);
+        btnLogout.setOnClickListener(this);
 
-        btn_save = (Button)rootView.findViewById(R.id.btn_save);
-        btn_save.setOnClickListener(this);
+        btnSave = (Button)rootView.findViewById(R.id.btn_save);
+        btnSave.setOnClickListener(this);
+
+        btnViewFeedback = (Button)rootView.findViewById(R.id.btn_view_feedback);
+        btnViewFeedback.setOnClickListener(this);
 
         if(socialNetworkManager.getSocialNetworkID().equals(
                 getResources().getString(R.string.google_profile))){
 
             mGoogleApiClient = socialNetworkManager.getmGoogleApiClient();
             mGoogleApiClient.connect();
-            btn_logout.setText("Log out from " + socialNetworkManager.getSocialNetworkID());
+            btnLogout.setText("Log out from " + socialNetworkManager.getSocialNetworkID());
         }
 
         if(socialNetworkManager.getSocialNetworkID().equals(
                 getResources().getString(R.string.facebook_profile).toString())){
-            btn_logout.setText("Log out from " + "Facebook");
+            btnLogout.setText("Log out from " + "Facebook");
         }
     }
 
@@ -188,18 +200,55 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
 
         if(v.getId() == R.id.btn_logout){
-            logout();
+            //logout();
+            Intent intent = new Intent(getActivity(), DriverProfileActivity.class);
+            getActivity().startActivity(intent);
         }
         if(v.getId() == R.id.btn_save){
-            executeUpdateTask(v);
+            executeUpdateTask();
+        }
+        if(v.getId() == R.id.btn_view_feedback){
+            viewFeedback();
         }
     }
 
-    private void executeUpdateTask(View v){
+    private void viewFeedback(){
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                R.layout.feedback_text_view);
+        adapter.add("whatever data1");
+        adapter.add("whatever data2");
+        adapter.add("whatever data3");
+        adapter.add("whatever data3");
+        adapter.add("whatever data3");adapter.add("whatever data3");adapter.add("whatever data3");
+        adapter.add("whatever data3");
+        adapter.add("whatever data3");
+        adapter.add("whatever data3");
+        for(int i = 0; i < 20; i++){
+            adapter.add("bla bla bls ssdfsdf dfsfd sdfsd sdfsd sdf sdf sdfs sdfsdf sdfsdf " +
+                    "sdfsdf sdfs sdfsdf sdfsdf sdfs sdfsdf");
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Received Feedback");
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+            }
+        });
+        builder.setPositiveButton("Dismiss", new android.content.DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int arg1) {
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void executeUpdateTask(){
 
         try{
-            telephone = ((EditText)v.findViewById(R.id.et_telephone)).getText().toString();
-            carType = ((EditText)v.findViewById(R.id.et_car_type)).getText().toString();
+            telephone = ((EditText)rootView.findViewById(R.id.et_telephone)).getText().toString();
+            carType = ((EditText)rootView.findViewById(R.id.et_car_type)).getText().toString();
         }
         catch (Exception ex){
             Log.v("null", "no text provided");
@@ -237,6 +286,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
                     @Override
                     protected void onPostExecute(SymbidriveUserResponse response) {
+                        super.onPostExecute(response);
                         if (response != null) {
                             Log.v("symbi", response.getRet());
                             //TODO - verify results
@@ -252,7 +302,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     }
 
     private void showMessage(String message){
-        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_SHORT);
+        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     private void logout(){
