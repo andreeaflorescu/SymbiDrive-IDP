@@ -5,11 +5,13 @@ Created on Apr 21, 2015
 '''
 
 import unittest
-from google.appengine.ext import testbed
+from google.appengine.ext import testbed, ndb
 from controller.user_controller import register_user, get_user_info, add_rating,\
     update_user_profile, add_feedback
 from utils import constants
 from model.user import User, SocialIdentifier
+from model.pool import Pool
+import datetime
 
 class TestRegisterUser(unittest.TestCase):
     
@@ -88,7 +90,41 @@ class TestRegisterUser(unittest.TestCase):
         
         # check if no other user was added
         self.assertEqual(len(User.query().fetch(10)), 3 , "Wrong number of users")
-    
+        
+    def test_register_user_updateID(self):
+        
+        p_deviceID = "124453"
+        p_profileID = "2131314"
+        p_profile = constants.SocialProfile.FACEBOOK
+        p_username = "Andreea Florescu"
+
+        res = register_user(p_deviceID, p_profileID, p_profile, p_username)
+        register_user("1", "12", constants.SocialProfile.FACEBOOK, "mama")
+        register_user("2", "22", p_profile, "sugi")
+        
+        pool = Pool(driver_socialID="2131314", source_point=ndb.GeoPt(-34, -54),
+                    destination_point=ndb.GeoPt(-32.0, 43.9),
+                    date=datetime.datetime.now(), 
+                    seats=2).put()
+        pool = Pool(driver_socialID="2131314", source_point=ndb.GeoPt(-34, -54),
+                    destination_point=ndb.GeoPt(-32.0, 43.9),
+                    date=datetime.datetime.now(), 
+                    seats=2).put()
+        
+        
+        register_user("124453", "123456", constants.SocialProfile.FACEBOOK, "Andreea")
+        
+        pool = Pool.query().fetch(1)[0]
+        pool.add_passenger("12")
+        pool.add_passenger("22")
+        print pool
+        
+        
+        register_user("1", "123", p_profile, "mere")
+        
+        print Pool.query().fetch(1)[0]
+        
+        self.assertEqual(0, 0, "")
 
 class TestGetUserInfo(unittest.TestCase):
     def setUp(self):
@@ -115,9 +151,6 @@ class TestGetUserInfo(unittest.TestCase):
         register_user("12345", "123456", constants.SocialProfile.GOOGLE, "Andreea")
         
         actual = get_user_info("123456")
-        print actual
-        
-        print actual['username']
         
         expected = {'username': u'Andreea', 'rating': -1.0, 'feedback': [], 'car': '', 'isSmoker': False, 'telephone': '', 'listenToMusic': False}
         self.assertEqual(actual, expected, "Wrong info about user")
