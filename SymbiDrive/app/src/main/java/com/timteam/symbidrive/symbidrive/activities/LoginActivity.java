@@ -178,9 +178,9 @@ public class LoginActivity extends ActionBarActivity implements
             socialNetworkManager
                     .setSocialNetworkID(getResources().getString(R.string.facebook_profile));
             LoginManager.getInstance().logInWithReadPermissions(this,
-                    Arrays.asList("basic_info",
-                            "user_likes",
-                            "user_birthday"));
+                    Arrays.asList("public_profile",
+                            "user_friends",
+                            "user_tagged_places"));
         }
     }
 
