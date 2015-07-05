@@ -23,18 +23,12 @@ import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zombie on 7/4/15.
  */
 public class DriverProfileActivity extends ActionBarActivity {
-
-    String username;
-    String rating;
-    String carType;
-    Boolean smoking;
-    Boolean Music;
-    ArrayList<String> feedback;
 
     TextView tv_username;
     TextView tv_rating;
@@ -52,7 +46,7 @@ public class DriverProfileActivity extends ActionBarActivity {
         String socialID = intent.getStringExtra("socialID");
 
         initInterfaceElements();
-        getUserInfoTask("CAAT1N4dqsn0BAApmgZC9HSJWtqqaL8EsvEpevDbJxTBGWqZAbODfEPmY9F4Amrv78jIUyCDulstuRhDUDHcw9ZCVxTZAP50ryCZBwjlZB5AbMkUOuAljdeJML8OxQZAdCSCZC3T5rGZAf6m3abesoJMI8Bcz225eohD6qwGbRBt3qhWbngG452TcZBKcZBiHx06lpYj5iiE9raoET041ve7WkaLYWMqAP7sdHKWs9UfiST3eAZDZD");
+        getUserInfoTask(socialID);
 
     }
 
@@ -124,22 +118,19 @@ public class DriverProfileActivity extends ActionBarActivity {
         if(response.getUsername() != null){
             tv_username.setText(response.getUsername());
         }
-        if(response.getFeedback() != null){
+        if(response.getFeedback() != null && response.getFeedback().size() > 0){
+            List<String> list = response.getFeedback();
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                     R.layout.feedback_text_view);
-            adapter.add("whatever data1");
-            adapter.add("whatever data2");
-            adapter.add("whatever data3");
-            adapter.add("whatever data3");
-            adapter.add("whatever data3");adapter.add("whatever data3");adapter.add("whatever data3");
-            adapter.add("whatever data3");
-            adapter.add("whatever data3");
-            adapter.add("whatever data3");
-            for(int i = 0; i < 20; i++){
-                adapter.add("bla bla bls ssdfsdf dfsfd sdfsd sdfsd sdf sdf sdfs sdfsdf sdfsdf " +
-                        "sdfsdf sdfs sdfsdf sdfsdf sdfs sdfsdf");
+            for(int i = 0; i < list.size(); i++){
+                adapter.add(list.get(i));
             }
-
+            l_feedback.setAdapter(adapter);
+        }
+        else {
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                    R.layout.feedback_text_view);
+            adapter.add("This driver has no feedback yet.");
             l_feedback.setAdapter(adapter);
         }
     }

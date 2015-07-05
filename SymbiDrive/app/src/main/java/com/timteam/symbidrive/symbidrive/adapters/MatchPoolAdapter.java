@@ -10,19 +10,31 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.appspot.symbidrive_997.symbidrive.Symbidrive;
 import com.appspot.symbidrive_997.symbidrive.model.SymbidriveManagePassangerRequest;
 import com.appspot.symbidrive_997.symbidrive.model.SymbidrivePoolResponse;
 
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveUserInfoRequest;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveUserInfoResponse;
+import com.google.api.client.util.DateTime;
 import com.timteam.symbidrive.symbidrive.R;
+import com.timteam.symbidrive.symbidrive.activities.DriverProfileActivity;
 import com.timteam.symbidrive.symbidrive.activities.MainActivity;
 import com.timteam.symbidrive.symbidrive.helpers.AppConstants;
+import com.timteam.symbidrive.symbidrive.helpers.DataManager;
 import com.timteam.symbidrive.symbidrive.helpers.PoolInfo;
 import com.timteam.symbidrive.symbidrive.helpers.SocialNetworkManager;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 /**
  * Created by zombie on 3/24/15.
@@ -31,10 +43,14 @@ public class MatchPoolAdapter extends ArrayAdapter<PoolInfo> {
 
     private ArrayList<PoolInfo> pools;
     private Context context;
+    private View rootView;
+    private TextView tv_username;
+    private boolean setOnce;
 
     public MatchPoolAdapter(Context context, int textViewResourceId, ArrayList<PoolInfo> objects) {
         super(context, textViewResourceId, objects);
         this.pools = objects;
+        this.setOnce = true;
         this.context = context;
     }
 
@@ -51,13 +67,33 @@ public class MatchPoolAdapter extends ArrayAdapter<PoolInfo> {
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rootView = inflater.inflate(R.layout.match_pool_adapter, parent, false);
+        this.rootView = rootView;
 
-        PoolInfo poolInfo = pools.get(position);
+        tv_username = (TextView)rootView.findViewById(R.id.tv_driver_id);
+
+        final PoolInfo poolInfo = pools.get(position);
         if(poolInfo != null){
 
-            TextView driverID = (TextView)rootView.findViewById(R.id.tv_driver_id);
-            driverID.setText("username");
+            if(setOnce){
+                getUserInfoTask(poolInfo.getDriverID());
+                setOnce = false;
+            }
 
+            tv_username.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, DriverProfileActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("socialID", poolInfo.getDriverID());
+                    context.startActivity(intent);
+                }
+            });
+
+            try {
+                updateView(rootView, poolInfo);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             final Button joinPool = (Button)rootView.findViewById(R.id.btn_join_pool);
             joinPool.setTag(poolInfo.getPoolID());
 
@@ -74,6 +110,84 @@ public class MatchPoolAdapter extends ArrayAdapter<PoolInfo> {
         }
 
         return rootView;
+    }
+
+    private void updateView(View rootView, final PoolInfo poolInfo) throws IOException {
+
+        //tv_username.setText(poolInfo.getDriverUserName());
+
+
+        TextView source = (TextView)rootView.findViewById(R.id.tv_source_addr);
+        String sourceAddress = DataManager.getAddress(poolInfo.getSourcePointLat(),
+                poolInfo.getSourcePointLon(),
+                context);
+        source.setText(sourceAddress);
+
+        TextView destination = (TextView)rootView.findViewById(R.id.tv_destination_addr);
+        String destinationAddress = DataManager.getAddress(poolInfo.getDestinationPointLat(),
+                poolInfo.getSourcePointLon(),
+                context);
+        destination.setText(destinationAddress);
+
+        TextView seats = (TextView)rootView.findViewById(R.id.tv_seats);
+        seats.setText("Seats: " + poolInfo.getSeats());
+
+        TextView similatiry = (TextView)rootView.findViewById(R.id.tv_similatiry);
+        similatiry.setText("0.666%");
+
+        TextView date = (TextView)rootView.findViewById(R.id.tv_date);
+        TextView time = (TextView)rootView.findViewById(R.id.tv_time);
+
+        try {
+//            // %Y-%m-%dT%H:%M:%S
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            sdf.setTimeZone(TimeZone.getDefault());
+            Log.v("time ", DateTime.parseRfc3339(poolInfo.getDate().toStringRfc3339()).toString());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(sdf.parse(poolInfo.getDate().toStringRfc3339()));
+
+            String day="", month="", hour="", minute="";
+            Integer i_day, i_month, i_hour, i_minute;
+//
+            i_day = calendar.get(Calendar.DAY_OF_MONTH);
+            if (i_day < 10) {
+                day = "0" + i_day;
+            }
+            else {
+                day = i_day.toString();
+            }
+
+            i_month = calendar.get(Calendar.MONTH);
+            if (i_month < 10) {
+                month = "0" + i_month;
+            }
+            else {
+                month = i_month.toString();
+            }
+
+            i_hour = calendar.get(Calendar.HOUR);
+            if (i_hour < 10) {
+                hour = "0" + i_hour;
+            }
+            else {
+                hour = i_hour.toString();
+            }
+
+            i_minute = calendar.get(Calendar.MINUTE);
+            if (i_minute < 10) {
+                minute = "0" + i_minute;
+            }
+            else {
+                minute = i_minute.toString();
+            }
+
+            date.setText(day + "/" + month + "/" + calendar.get(Calendar.YEAR));
+            time.setText(hour + " : " + minute);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void joinPool(final long poolID, final String passengerID) {
@@ -120,4 +234,52 @@ public class MatchPoolAdapter extends ArrayAdapter<PoolInfo> {
         joinPoolTask.execute((Void) null);
     }
 
+    void getUserInfoTask(final String username){
+
+        AsyncTask<Void, Void, SymbidriveUserInfoResponse> getUserInfoAsyncTask =
+                new AsyncTask<Void, Void, SymbidriveUserInfoResponse>() {
+
+                    @Override
+                    protected SymbidriveUserInfoResponse doInBackground(Void... params) {
+
+                        Symbidrive apiServiceHandle = AppConstants.getApiServiceHandle();
+
+                        try {
+
+                            SymbidriveUserInfoRequest getUserInfoRequest
+                                    = new SymbidriveUserInfoRequest();
+                            getUserInfoRequest.setSocialID(username);
+
+
+                            return apiServiceHandle.getUserInfo(getUserInfoRequest).execute();
+
+                        } catch (IOException e) {
+                            Log.e("symbi", "Exception during API call", e);
+                            //showMessage(e.getMessage());
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(SymbidriveUserInfoResponse response) {
+                        super.onPostExecute(response);
+                        if (response != null) {
+                            Log.v("---------------on post execute ", response.getUsername());
+                            setUsername(response.getUsername());
+                        } else {
+                            showMessage(context.getResources().getString(R.string.server_error_message));
+                        }
+                    }
+                };
+        getUserInfoAsyncTask.execute();
+    }
+
+    private void setUsername(String username) {
+        Log.v("-------------------------------set user name ", username);
+        tv_username.setText(username);
+    }
+
+    private void showMessage(String message){
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
 }

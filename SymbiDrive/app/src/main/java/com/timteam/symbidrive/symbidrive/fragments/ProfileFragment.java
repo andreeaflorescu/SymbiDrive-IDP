@@ -40,6 +40,7 @@ import com.facebook.login.LoginManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zombie on 3/22/15.
@@ -62,7 +63,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
     private View rootView;
 
-    private ArrayList<String> feedback;
+    private List<String> feedback;
 
     public ProfileFragment(){}
 
@@ -142,6 +143,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         if(response.getRating() != null && response.getRating() > 0){
             ((TextView)v.findViewById(R.id.tv_rating)).setText("Rating: " + response.getRating());
         }
+        if(response.getFeedback() != null){
+            feedback = response.getFeedback();
+        }
 
     }
 
@@ -202,9 +206,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
 
         if(v.getId() == R.id.btn_logout){
-            //logout();
-            Intent intent = new Intent(getActivity(), DriverProfileActivity.class);
-            getActivity().startActivity(intent);
+            logout();
         }
         if(v.getId() == R.id.btn_save){
             executeUpdateTask();
@@ -218,17 +220,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 R.layout.feedback_text_view);
-        adapter.add("whatever data1");
-        adapter.add("whatever data2");
-        adapter.add("whatever data3");
-        adapter.add("whatever data3");
-        adapter.add("whatever data3");adapter.add("whatever data3");adapter.add("whatever data3");
-        adapter.add("whatever data3");
-        adapter.add("whatever data3");
-        adapter.add("whatever data3");
-        for(int i = 0; i < 20; i++){
-            adapter.add("bla bla bls ssdfsdf dfsfd sdfsd sdfsd sdf sdf sdfs sdfsdf sdfsdf " +
-                    "sdfsdf sdfs sdfsdf sdfsdf sdfs sdfsdf");
+
+        if(feedback == null){
+            adapter.add("You did not receive any feedback yet!");
+        }
+        else {
+            for(int i = 0; i < feedback.size(); i++){
+                adapter.add(feedback.get(i));
+            }
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
