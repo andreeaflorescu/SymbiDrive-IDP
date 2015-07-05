@@ -10,11 +10,13 @@ import java.util.ArrayList;
 public class RouteInfo {
 
     private final String name;
+    private Long id;
     private final ArrayList<LatLng> route_points;
 
-    public RouteInfo(String name, ArrayList<LatLng> route_points) {
+    public RouteInfo(String name, Long id, ArrayList<LatLng> route_points) {
 
         this.name = name;
+        this.id = id;
         this.route_points = route_points;
     }
 
@@ -25,5 +27,9 @@ public class RouteInfo {
 
     public ArrayList<LatLng> getRoute_points() {
         return route_points;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

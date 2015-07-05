@@ -42,6 +42,8 @@ public class CreatePoolActivity extends FragmentActivity {
     private CreatePoolFragment createPoolFragment;
     private LatLng source;
     private LatLng destination;
+    private Long routeID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,12 +122,13 @@ public class CreatePoolActivity extends FragmentActivity {
         } else {
             postPool(source,
                     destination,
+                    routeID,
                     DataManager.getDateTime(dateValue, timeValue),
                     Long.parseLong(seats.toString()));
         }
     }
 
-    public void postPool(final LatLng source, final LatLng destination,
+    public void postPool(final LatLng source, final LatLng destination, final Long route_id,
                          final DateTime dateTime,
                          final long seats){
 
@@ -147,10 +150,14 @@ public class CreatePoolActivity extends FragmentActivity {
                                     .getInstance()
                                     .getSocialTokenID());
                             createPoolRequest.setSeats(seats);
-                            createPoolRequest.setSourcePointLat(source.latitude);
-                            createPoolRequest.setSourcePointLon(source.longitude);
-                            createPoolRequest.setDestinationPointLat(destination.latitude);
-                            createPoolRequest.setDestinationPointLon(destination.longitude);
+                            if (source != null && destination != null) {
+                                createPoolRequest.setSourcePointLat(source.latitude);
+                                createPoolRequest.setSourcePointLon(source.longitude);
+                                createPoolRequest.setDestinationPointLat(destination.latitude);
+                                createPoolRequest.setDestinationPointLon(destination.longitude);
+                            } else {
+                                createPoolRequest.setRouteId(routeID);
+                            }
 
                             return apiServiceHandle.createPool(createPoolRequest).execute();
 
@@ -177,6 +184,7 @@ public class CreatePoolActivity extends FragmentActivity {
 
     public void selectRoute(View view) {
         CreateScheduleLeaveFragment fragment = new CreateScheduleLeaveFragment();
+        routeID = createPoolFragment.getSelectedRouteID();
         if (findViewById(R.id.fragment_map_search) != null) {
             findViewById(R.id.fragment_map_search).setVisibility(View.INVISIBLE);
         }

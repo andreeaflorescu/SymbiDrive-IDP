@@ -14,6 +14,7 @@ from google.appengine.ext import ndb
 import datetime
 from controller.route_controller import create_route, get_user_routes
 from controller import user_controller, pool_controller
+from model.gps_route import GPSRoute
 
 
 symbidrive_api = endpoints.api(name='symbidrive', version='v1.1')
@@ -107,8 +108,8 @@ class CreatePoolRequest(messages.Message):
     source_point_lat = messages.FloatField(2, required=False)
     source_point_lon = messages.FloatField(3, required=False)
     route_id = messages.IntegerField(4, required=False)
-    destination_point_lat = messages.FloatField(5, required=True)
-    destination_point_lon = messages.FloatField(6, required=True)
+    destination_point_lat = messages.FloatField(5, required=False)
+    destination_point_lon = messages.FloatField(6, required=False)
     date = message_types.DateTimeField(7, required=True)
     seats = messages.IntegerField(8, required=True)
     is_weekly = messages.BooleanField(9, required=False)
@@ -218,11 +219,25 @@ class Pool_endpoint(remote.Service):
         if (pools["created"] is not None):
             for i in range(len(pools["created"])):
                 res = pools["created"][i]
+                
+                # get start and end point from route
+                
+                if (res.source_point is None or res.destination_point is None):
+                    route_points = GPSRoute.get_by_id(res.route_id).route_points
+                    dest_lat = route_points[len(route_points) - 1].lat
+                    dest_lon = route_points[len(route_points) - 1].lon
+                    start_lat = route_points[0].lat
+                    start_lon = route_points[0].lon
+                else:
+                    dest_lat = res.destination_point.lat
+                    dest_lon = res.destination_point.lon
+                    start_lat = res.source_point.lat
+                    start_lon = res.source_point.lon
                 pool = SinglePoolResponse(driver_id=res.driver_socialID,
-                                          source_point_lat=res.source_point.lat,
-                                          source_point_lon=res.source_point.lon,
-                                          destination_point_lat=res.destination_point.lat,
-                                          destination_point_lon=res.destination_point.lon,
+                                          source_point_lat=start_lat,
+                                          source_point_lon=start_lon,
+                                          destination_point_lat=dest_lat,
+                                          destination_point_lon=dest_lon,
                                           route_id= res.route_id,
                                           date=res.date,
                                           seats=res.seats,
@@ -308,9 +323,10 @@ class GetRoutesRequest(messages.Message):
 
 class SingleGetRoutesResponse(messages.Message):
     name = messages.StringField(1, required=True)
-    driver_socialID = messages.StringField(2, required=True)
-    route_points_lat = messages.FloatField(3, repeated=True)
-    route_points_long = messages.FloatField(4, repeated=True)
+    id = messages.IntegerField(2, required=True)
+    driver_socialID = messages.StringField(3, required=True)
+    route_points_lat = messages.FloatField(4, repeated=True)
+    route_points_long = messages.FloatField(5, repeated=True)
 
 
 class GetRoutesResponse(messages.Message):
@@ -347,7 +363,8 @@ class Route_endpoint(remote.Service):
             routes_response.append(SingleGetRoutesResponse(name=route.name, 
                                                            driver_socialID=route.driver_socialID, 
                                                            route_points_lat=route_points_lat,
-                                                           route_points_long=route_points_long))
+                                                           route_points_long=route_points_long,
+                                                           id=route.key.id()))
         return GetRoutesResponse(routes=routes_response)
             
 APPLICATION = endpoints.api_server([symbidrive_api])
