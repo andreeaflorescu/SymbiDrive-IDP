@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="@android:color/white">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Numele Soferului"
+        android:textColor="@android:color/holo_blue_dark"
+        android:id="@+id/tv_driver_name"
+        android:textSize="30dp"/>
+    <TextView
+        android:paddingTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rating: 6"
+        android:textSize="20dp"
+        android:id="@+id/tv_rating"
+        android:textColor="@android:color/black"/>
+    <TextView
+        android:paddingTop="10dp"
+        android:id="@+id/tv_car"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Car type: Ford Focus"
+        android:textSize="20dp"
+        android:textColor="@android:color/black"/>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="@android:color/darker_gray"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="20dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="3"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20px">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Smoking"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textSize="40px"/>
+        <Switch
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textOff="No"
+            android:textOn="Yes"
+            android:layout_weight="2"
+            android:id="@+id/sw_smoking"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="3"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20px">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Music"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textSize="40px"/>
+        <Switch
+            android:layout_width="0dp"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:textOff="No"
+            android:textOn="Yes"
+            android:layout_weight="2"
+            android:id="@+id/sw_music"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
+        android:text="Feedback"
+        android:paddingLeft="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/holo_green_dark"
+        android:textColor="@android:color/white"
+        android:textSize="20dp"/>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/list_feedback"
+        android:layout_margin="5dp">
+        </ListView>
+
+</LinearLayout>

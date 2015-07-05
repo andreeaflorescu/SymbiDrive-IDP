@@ -29,13 +29,14 @@
     <string name="title_activity_find_pool">Find Pool</string>
     <string name="title_activity_matching_pools">MatchingPools</string>
 
-    <string name="facebook_profile">facebook</string>
-    <string name="google_profile">google</string>
+    <string name="facebook_profile">Facebook</string>
+    <string name="google_profile">Google+</string>
 
     <string name="server_error_message">Seems like something went wrong on server. Please try again later!</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_pool_details">PoolDetailsActivity</string>
+
 
 </resources>
