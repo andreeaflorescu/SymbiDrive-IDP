@@ -24,29 +24,29 @@ def register_user(p_deviceID, p_socialID, p_profile, p_username):
     if (len(user) == 1):
         # check if the social profile is the same as the one already saved in db
         if (user[0].socialProfile.profile == p_profile):
-            
-            #update entities with the old socialID
-            oldSocialID = user[0].socialProfile.socialID
-            
-            pools = Pool.query(Pool.driver_socialID == oldSocialID).fetch()
-            for pool in pools:
-                pool.driver_socialID = p_socialID
-                pool.put()
-            
-            pools = Pool.query().fetch()
-            for pool in pools:
-                if oldSocialID in pool.passengers:
-                    pool.passengers.remove(oldSocialID)
-                    pool.passengers.append(p_socialID)
-            
-            routes = GPSRoute.query(GPSRoute.driver_socialID == oldSocialID).fetch()
-            for route in routes:
-                route.driver_socialID = p_socialID
-                route.put()
-            
-            user[0].socialProfile.socialID = p_socialID
-            
-            return constants.ExitCode.USER_ALREADY_REGISTERED
+            if user[0].socialProfile.socialID != p_socialID:
+                #update entities with the old socialID
+                oldSocialID = user[0].socialProfile.socialID
+                
+                pools = Pool.query(Pool.driver_socialID == oldSocialID).fetch()
+                for pool in pools:
+                    pool.driver_socialID = p_socialID
+                    pool.put()
+                
+                pools = Pool.query().fetch()
+                for pool in pools:
+                    if oldSocialID in pool.passengers:
+                        pool.passengers.remove(oldSocialID)
+                        pool.passengers.append(p_socialID)
+                
+                routes = GPSRoute.query(GPSRoute.driver_socialID == oldSocialID).fetch()
+                for route in routes:
+                    route.driver_socialID = p_socialID
+                    route.put()
+                
+                user[0].socialProfile.socialID = p_socialID
+                
+                return constants.ExitCode.USER_ALREADY_REGISTERED
         else:
             # save the new social profile
             user[0].socialProfile.socialID = p_socialID
