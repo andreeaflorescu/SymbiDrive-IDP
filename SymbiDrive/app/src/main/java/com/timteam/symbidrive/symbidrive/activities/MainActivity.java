@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,17 +19,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.appspot.symbidrive_997.symbidrive.Symbidrive;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveCreatePoolRequest;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveCreateRouteRequest;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveCreateRouteResponse;
 import com.timteam.symbidrive.symbidrive.R;
 import com.timteam.symbidrive.symbidrive.fragments.HomeFragment;
 import com.timteam.symbidrive.symbidrive.fragments.NavigationDrawerFragment;
 import com.timteam.symbidrive.symbidrive.fragments.ViewPoolsFragment;
 import com.timteam.symbidrive.symbidrive.fragments.ProfileFragment;
 import com.timteam.symbidrive.symbidrive.fragments.RegisterRouteFragment;
+import com.timteam.symbidrive.symbidrive.helpers.AppConstants;
 import com.timteam.symbidrive.symbidrive.helpers.CreateRouteTask;
 import com.timteam.symbidrive.symbidrive.helpers.SocialNetworkManager;
 import com.timteam.symbidrive.symbidrive.listeners.SaveCoordinatesListener;
 
+import java.io.IOError;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity
@@ -197,7 +206,6 @@ public class MainActivity extends ActionBarActivity
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        // TODO if save -> save to database the route;
                         ArrayList<Double> locations_lat = new ArrayList<Double>();
                         ArrayList<Double> locations_lon = new ArrayList<Double>();
                         String route_name = ((EditText) view.findViewById(R.id.et_route_name)).getText().toString();

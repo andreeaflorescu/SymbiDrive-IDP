@@ -4,7 +4,9 @@ import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveGetRoutesResponse;
 import com.appspot.symbidrive_997.symbidrive.model.SymbidrivePoolResponse;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveSingleGetRoutesResponse;
 import com.appspot.symbidrive_997.symbidrive.model.SymbidriveSinglePoolResponse;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.api.client.util.DateTime;
@@ -100,4 +102,35 @@ public class DataManager {
 
         return poolsInfo;
     }
+
+    public static ArrayList<LatLng> getPointsFromLatLon(List<Double> lat, List<Double> lon) {
+        ArrayList<LatLng> res = new ArrayList<>(lat.size());
+        for (int i = 0; i < lat.size(); i++) {
+            res.add(new LatLng(lat.get(i), lon.get(i)));
+        }
+        return res;
+    }
+
+    public static RouteInfo[] getRoutesInfoFromRouteResponse(List<SymbidriveSingleGetRoutesResponse> response) {
+        if (response != null) {
+            RouteInfo[] routeInfos = new RouteInfo[response.size()];
+            for (int i = 0; i < response.size();i++) {
+                SymbidriveSingleGetRoutesResponse routes = response.get(i);
+                routeInfos[i] = new RouteInfo(routes.getName(), getPointsFromLatLon(routes.getRoutePointsLat(),
+                        routes.getRoutePointsLong()));
+            }
+            return routeInfos;
+        }
+        return new RouteInfo[0];
+    }
+
+    public static String[] getRoutesName(RouteInfo[] routeInfos) {
+        String[] names = new String[routeInfos.length];
+        for (int i = 0; i < routeInfos.length; i++) {
+            names[i] = routeInfos[i].getName();
+        }
+
+        return names;
+    }
+
 }
