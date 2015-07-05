@@ -47,6 +47,7 @@ public class CreatePoolFragment extends Fragment{
 
     View mRootView;
     private RouteInfo[] routeInfos;
+    private Spinner spinner;
     public CreatePoolFragment(){
 
     }
@@ -62,12 +63,17 @@ public class CreatePoolFragment extends Fragment{
     }
 
     private void initSpinner(String[] route_names) {
-        Spinner spinner = (Spinner) mRootView.findViewById(R.id.spinner);
+        spinner = (Spinner) mRootView.findViewById(R.id.spinner);
 
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, route_names);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
         spinner.setAdapter(spinnerArrayAdapter);
 
+    }
+
+    public Long getSelectedRouteID() {
+        int selected = spinner.getSelectedItemPosition();
+        return routeInfos[selected].getId();
     }
 
     private void postGetRoutesRequest() {

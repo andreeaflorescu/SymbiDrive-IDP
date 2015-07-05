@@ -116,7 +116,7 @@ public class DataManager {
             RouteInfo[] routeInfos = new RouteInfo[response.size()];
             for (int i = 0; i < response.size();i++) {
                 SymbidriveSingleGetRoutesResponse routes = response.get(i);
-                routeInfos[i] = new RouteInfo(routes.getName(), getPointsFromLatLon(routes.getRoutePointsLat(),
+                routeInfos[i] = new RouteInfo(routes.getName(),routes.getId(), getPointsFromLatLon(routes.getRoutePointsLat(),
                         routes.getRoutePointsLong()));
             }
             return routeInfos;
