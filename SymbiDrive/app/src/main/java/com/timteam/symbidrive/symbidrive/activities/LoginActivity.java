@@ -255,7 +255,7 @@ public class LoginActivity extends ActionBarActivity implements
             socialNetworkManager.setSocialNetworkID(getString(R.string.facebook_profile));
             socialNetworkManager
                     .setSocialNetworkID(getResources().getString(R.string.facebook_profile));
-            openMainPage(getResources().getString(R.string.facebook_profile));
+
 
             callFacebookGraph(currentAccessToken);
         }
@@ -367,6 +367,7 @@ public class LoginActivity extends ActionBarActivity implements
                                 add("USER_REGISTER_WITH_OTHER_PROFILE");
                                 add("USER_REGISTER_ON_OTHER_DEVICE");
                                 add("USER_CREATED");
+                                add("USER_REGISTER_MODIFIED_TOKEN");
                             }};
 
                             if(userOkResponses.contains(response.getRet())){

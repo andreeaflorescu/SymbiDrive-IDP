@@ -15,16 +15,16 @@
         android:paddingTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+        android:text="Rating: -"
         android:textSize="20dp"
         android:id="@+id/tv_rating"
         android:textColor="@android:color/black"/>
     <TextView
         android:paddingTop="10dp"
         android:id="@+id/tv_car"
+        android:text="No car provided"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:textSize="20dp"
         android:textColor="@android:color/black"/>
     <View
