@@ -7,7 +7,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Numele Soferului"
+
         android:textColor="@android:color/holo_blue_dark"
         android:id="@+id/tv_driver_name"
         android:textSize="30dp"/>
@@ -15,7 +15,7 @@
         android:paddingTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Rating: 6"
+
         android:textSize="20dp"
         android:id="@+id/tv_rating"
         android:textColor="@android:color/black"/>
@@ -24,7 +24,7 @@
         android:id="@+id/tv_car"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Car type: Ford Focus"
+
         android:textSize="20dp"
         android:textColor="@android:color/black"/>
     <View
