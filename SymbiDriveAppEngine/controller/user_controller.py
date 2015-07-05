@@ -47,6 +47,8 @@ def register_user(p_deviceID, p_socialID, p_profile, p_username):
                 user[0].socialProfile.socialID = p_socialID
                 
                 return constants.ExitCode.USER_ALREADY_REGISTERED
+	    else:
+		return constants.ExitCode.USER_ALREADY_REGISTERED
         else:
             # save the new social profile
             user[0].socialProfile.socialID = p_socialID
