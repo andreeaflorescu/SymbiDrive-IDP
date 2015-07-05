@@ -112,6 +112,7 @@ public class ViewPoolsFragment extends Fragment {
 
     private void openCreatedPoolDetails(PoolInfo poolInfo) {
         Intent createPoolDetailsActivity = new Intent(this.getActivity(), CreatedPoolDetailsActivity.class);
+        createPoolDetailsActivity.putExtra("type", "created");
         createPoolDetailsActivity.putExtra("destinationPointLat", poolInfo.getDestinationPointLat());
         createPoolDetailsActivity.putExtra("destinationPointLon", poolInfo.getDestinationPointLon());
         createPoolDetailsActivity.putExtra("sourcePointLat", poolInfo.getSourcePointLat());
@@ -126,8 +127,8 @@ public class ViewPoolsFragment extends Fragment {
 
     private void openJoinedPoolDetails(PoolInfo poolInfo) {
         Intent createPoolDetailsActivity = new Intent(this.getActivity(), CreatedPoolDetailsActivity.class);
-        createPoolDetailsActivity.putExtra("poolInfo", poolInfo);
 
+        createPoolDetailsActivity.putExtra("type", "joined");
         createPoolDetailsActivity.putExtra("destinationPointLat", poolInfo.getDestinationPointLat());
         createPoolDetailsActivity.putExtra("destinationPointLon", poolInfo.getDestinationPointLon());
         createPoolDetailsActivity.putExtra("sourcePointLat", poolInfo.getSourcePointLat());
@@ -135,7 +136,7 @@ public class ViewPoolsFragment extends Fragment {
         createPoolDetailsActivity.putExtra("poolID", poolInfo.getPoolID());
         createPoolDetailsActivity.putExtra("driverUserName", poolInfo.getDriverUserName());
         createPoolDetailsActivity.putExtra("driverID", poolInfo.getDriverID());
-        createPoolDetailsActivity.putExtra("date", poolInfo.getDate());
+        createPoolDetailsActivity.putExtra("date", poolInfo.getDate().toString());
 
         startActivity(createPoolDetailsActivity);
     }

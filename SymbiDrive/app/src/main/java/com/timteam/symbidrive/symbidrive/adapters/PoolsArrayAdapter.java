@@ -1,6 +1,7 @@
 package com.timteam.symbidrive.symbidrive.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,44 +56,44 @@ public class PoolsArrayAdapter extends ArrayAdapter<PoolInfo> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+            Calendar testC = Calendar.getInstance();
+            testC.setTimeZone(TimeZone.getTimeZone("UTC"));
+            testC.setTimeInMillis(poolInfos[position].getDate().getValue());
+//            Log.v("DATA", testC.get(Calendar.HOUR) + ":" + testC.get(Calendar.MINUTE));
 
-        try {
-//            // %Y-%m-%dT%H:%M:%S
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            sdf.setTimeZone(TimeZone.getDefault());
 
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(sdf.parse(poolInfos[position].getDate().toString()));
-//            Date date = sdf.parse(poolInfos[position].getDate().toString());
+
             String day="", month="", hour="", minute="";
             Integer i_day, i_month, i_hour, i_minute;
 //
-            i_day = calendar.get(Calendar.DAY_OF_MONTH);
+            i_day = testC.get(Calendar.DAY_OF_MONTH);
             if (i_day < 10) {
                 day = "0" + i_day;
             }
 
-            i_month = calendar.get(Calendar.MONTH);
+            i_month = testC.get(Calendar.MONTH);
             if (i_month < 10) {
                 month = "0" + i_month;
             }
 
-            i_hour = calendar.get(Calendar.HOUR);
+            i_hour = testC.get(Calendar.HOUR);
             if (i_hour < 10) {
                 hour = "0" + i_hour;
-
+                Log.v("DATAAA", hour);
             }
 
-            i_minute = calendar.get(Calendar.MINUTE);
+            i_minute = testC.get(Calendar.MINUTE);
             if (i_minute < 10) {
                 minute = "0" + i_minute;
+                Log.v("DATAAA", minute);
             }
 
-            ((TextView) rowView.findViewById(R.id.tv_date)).setText(day + "/" + month + "/" + calendar.get(Calendar.YEAR));
-            ((TextView) rowView.findViewById(R.id.tv_time)).setText(hour + " : " + minute);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+            String date = day + "/" + month + "/" + testC.get(Calendar.YEAR);
+            String time = hour + " : " + minute;
+            Log.v("DATAA", date + "   " + time);
+            ((TextView) rowView.findViewById(R.id.tv_date)).setText(date);
+            ((TextView) rowView.findViewById(R.id.tv_time)).setText( testC.get(Calendar.HOUR) + ":" + testC.get(Calendar.MINUTE));
+
 
         ((TextView) rowView.findViewById(R.id.tv_source_addr)).setText(sourceAddress);
         ((TextView)rowView.findViewById(R.id.tv_destination_addr)).setText(destinationAddress);

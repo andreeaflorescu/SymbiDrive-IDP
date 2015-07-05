@@ -21,42 +21,6 @@
         android:layout_width="wrap_content"
         android:layout_height="10dp" />
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:baselineAlignBottom="true"
-            android:clickable="true"
-            android:src="@drawable/calendar_128"/>
-
-        <TextView
-            android:id="@+id/tv_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20dp"/>
-
-        <TextView
-            android:layout_width="20dp"
-            android:layout_height="10dp" />
-
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:baselineAlignBottom="true"
-            android:clickable="true"
-            android:src="@drawable/clock_128"/>
-        <TextView
-            android:id="@+id/tv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:clickable="true"/>/>
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -74,15 +38,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/driver_name"
-            android:text="Iohannis"
             android:textSize="15dp"
             android:layout_margin="10dp"
             android:layout_below="@id/driver_label"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0725310223"
-            android:id="@+id/telephone_number"
+            android:id="@+id/tv_telephone_number"
             android:textSize="15dp"
             android:layout_margin="10dp"
             android:autoLink="all"
@@ -128,6 +90,7 @@
             />
 
         <EditText
+            android:id="@+id/et_feedback"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>
@@ -147,6 +110,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/holo_orange_dark"
+            android:textColor="#ffffff"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:text="Leave Pool"/>
     </LinearLayout>
     <Space
@@ -161,6 +127,7 @@
         android:gravity="center"
         android:textColor="@android:color/white"
         android:text="Submit"
+        android:onClick="addFeedbackAndRating"
         android:layout_below="@id/rate_label"/>
 </LinearLayout>
 
