@@ -15,10 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.appspot.symbidrive_997.symbidrive.Symbidrive;
 import com.appspot.symbidrive_997.symbidrive.model.SymbidriveAddFeedbackRequest;
 import com.appspot.symbidrive_997.symbidrive.model.SymbidriveAddRatingRequest;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveDeletePoolRequest;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidrivePoolResponse;
 import com.appspot.symbidrive_997.symbidrive.model.SymbidriveUserResponse;
 import com.timteam.symbidrive.symbidrive.R;
 import com.timteam.symbidrive.symbidrive.fragments.CreatedPoolDetailsFragment;
@@ -30,12 +33,15 @@ import java.io.IOException;
 
 public class CreatedPoolDetailsActivity extends ActionBarActivity {
 
+    long poolID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_created_pool_details);
 
         String type = getIntent().getStringExtra("type");
+        poolID = getIntent().getLongExtra("poolID",(long)0);
 
         if (type.equals( "created")) {
             CreatedPoolDetailsFragment fragment = new CreatedPoolDetailsFragment();
@@ -179,5 +185,47 @@ public class CreatedPoolDetailsActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void deletePool(View view){
+        AsyncTask<Void, Void, SymbidrivePoolResponse> deletePoolTask = new AsyncTask<Void, Void, SymbidrivePoolResponse>() {
+            @Override
+            protected SymbidrivePoolResponse doInBackground(Void... params) {
+
+                Symbidrive apiServiceHandle = AppConstants.getApiServiceHandle();
+
+                SymbidriveDeletePoolRequest deletePoolRequest = new SymbidriveDeletePoolRequest();
+                deletePoolRequest.setPoolId(poolID);
+                try {
+                    return apiServiceHandle.deletePool(deletePoolRequest).execute();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(SymbidrivePoolResponse symbidrivePoolResponse) {
+                super.onPostExecute(symbidrivePoolResponse);
+                if(symbidrivePoolResponse != null){
+                    showMessage("The pool was successfully deleted!");
+                    openMainPage();
+                }
+                else {
+                    showMessage(getResources().getString(R.string.server_error_message));
+                }
+            }
+        };
+        deletePoolTask.execute();
+    }
+
+    private void showMessage(String message){
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void openMainPage(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }

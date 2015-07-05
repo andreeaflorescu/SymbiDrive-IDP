@@ -109,8 +109,11 @@ public class CreatedPoolDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_created_pool_details, container, false);
+
+
         return rootView;
     }
+
 
 
     /** A method to download json data from url */
