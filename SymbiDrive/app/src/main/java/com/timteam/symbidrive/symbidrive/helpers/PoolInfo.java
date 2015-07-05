@@ -3,9 +3,9 @@ package com.timteam.symbidrive.symbidrive.helpers;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.appspot.bustling_bay_88919.symbidrive.Symbidrive;
-import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveUserInfoRequest;
-import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveUserInfoResponse;
+import com.appspot.symbidrive_997.symbidrive.Symbidrive;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveUserInfoRequest;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveUserInfoResponse;
 import com.google.api.client.util.DateTime;
 
 import java.io.IOException;

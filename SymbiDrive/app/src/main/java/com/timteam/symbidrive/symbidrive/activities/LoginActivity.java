@@ -12,9 +12,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.appspot.bustling_bay_88919.symbidrive.Symbidrive;
-import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveRegisterUserRequest;
-import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveUserResponse;
+import com.appspot.symbidrive_997.symbidrive.Symbidrive;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveRegisterUserRequest;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveUserResponse;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;

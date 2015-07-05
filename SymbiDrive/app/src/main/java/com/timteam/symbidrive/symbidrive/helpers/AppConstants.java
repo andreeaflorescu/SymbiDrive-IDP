@@ -13,7 +13,7 @@ import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.appspot.bustling_bay_88919.symbidrive.Symbidrive;
+import com.appspot.symbidrive_997.symbidrive.Symbidrive;
 
 import java.io.IOException;
 
@@ -40,7 +40,7 @@ public class AppConstants {
 
         Symbidrive.Builder symbidrive = new Symbidrive.Builder(AppConstants.HTTP_TRANSPORT,
                 AppConstants.JSON_FACTORY, null)
-                .setRootUrl("https://bustling-bay-88919.appspot.com/_ah/api/")
+                .setRootUrl("https://1-dot-symbidrive-997.appspot.com/_ah/api/")
                 .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
 
                     @Override

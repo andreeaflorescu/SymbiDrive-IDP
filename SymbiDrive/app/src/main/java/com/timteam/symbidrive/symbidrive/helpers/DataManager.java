@@ -4,8 +4,8 @@ import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 
-import com.appspot.bustling_bay_88919.symbidrive.model.SymbidrivePoolResponse;
-import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveSinglePoolResponse;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidrivePoolResponse;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveSinglePoolResponse;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.api.client.util.DateTime;
 

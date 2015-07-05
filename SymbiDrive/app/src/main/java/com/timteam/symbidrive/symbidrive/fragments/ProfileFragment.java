@@ -17,12 +17,12 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.appspot.bustling_bay_88919.symbidrive.Symbidrive;
-import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveRegisterUserRequest;
-import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveUpdateUserInfoRequest;
-import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveUserInfoRequest;
-import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveUserInfoResponse;
-import com.appspot.bustling_bay_88919.symbidrive.model.SymbidriveUserResponse;
+import com.appspot.symbidrive_997.symbidrive.*;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveRegisterUserRequest;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveUpdateUserInfoRequest;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveUserInfoRequest;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveUserInfoResponse;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveUserResponse;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
