@@ -2,7 +2,9 @@ package com.timteam.symbidrive.symbidrive.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,8 @@ import com.timteam.symbidrive.symbidrive.activities.MainActivity;
  */
 public class RegisterRouteFragment extends Fragment {
 
+    private View mRootView;
+    private SupportMapFragment fragment;
     public RegisterRouteFragment(){
 
     }
@@ -23,14 +27,24 @@ public class RegisterRouteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
-        if(savedInstanceState == null){
+        View rootView = inflater.inflate(R.layout.fragment_navigation_register_route, container, false);
+        this.mRootView = rootView;
 
-        }
-        View rootView = inflater.inflate(R.layout.fragment_navigation_register_route,
-                container,
-                false);
         return rootView;
     }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        FragmentManager fm = getChildFragmentManager();
+        fragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
+        if (fragment == null) {
+            fragment = SupportMapFragment.newInstance();
+            fm.beginTransaction().replace(R.id.map, fragment).commit();
+        }
+    }
+
 
     @Override
     public void onAttach(Activity activity) {

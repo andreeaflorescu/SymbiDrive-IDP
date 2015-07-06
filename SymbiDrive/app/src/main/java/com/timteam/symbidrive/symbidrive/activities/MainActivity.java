@@ -23,6 +23,8 @@ import com.appspot.symbidrive_997.symbidrive.Symbidrive;
 import com.appspot.symbidrive_997.symbidrive.model.SymbidriveCreatePoolRequest;
 import com.appspot.symbidrive_997.symbidrive.model.SymbidriveCreateRouteRequest;
 import com.appspot.symbidrive_997.symbidrive.model.SymbidriveCreateRouteResponse;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.timteam.symbidrive.symbidrive.R;
 import com.timteam.symbidrive.symbidrive.fragments.HomeFragment;
 import com.timteam.symbidrive.symbidrive.fragments.NavigationDrawerFragment;
@@ -47,6 +49,7 @@ public class MainActivity extends ActionBarActivity
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
+    private         Fragment fragment;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -77,7 +80,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
 
-        Fragment fragment;
+
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         switch(position) {
@@ -168,7 +171,17 @@ public class MainActivity extends ActionBarActivity
 
 
     public void startGPSTracking(View view) {
-        saveCoordinatesListener = new SaveCoordinatesListener();
+        FragmentManager fm = fragment.getChildFragmentManager();
+        SupportMapFragment map_fragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
+        if (map_fragment == null) {
+            map_fragment = SupportMapFragment.newInstance();
+            fm.beginTransaction().replace(R.id.map, map_fragment).commit();
+        }
+
+        GoogleMap map = map_fragment.getMap();
+
+
+        saveCoordinatesListener = new SaveCoordinatesListener(map);
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, saveCoordinatesListener);
 
