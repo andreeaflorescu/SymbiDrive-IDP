@@ -114,6 +114,7 @@ def delete_passenger_from_pool(pool_id, passenger_id):
         return constants.ExitCode.INVALID_POOL
     try:
         pool.passengers.remove(passenger_id)
+        pool.put()
     except ValueError:
         return constants.ExitCode.INVALID_USER
     
@@ -140,6 +141,8 @@ def find_pool_using_start_and_end_points(socialID, start_point, end_point, date,
     entities = ndb.get_multi(keys)
     ret = []
     for entity in entities:
+        if entity is None:
+            break
         # TODO: check if the driverID != socialID -> driver cannot join his/her own pool
         if entity.driver_socialID != socialID and entity.date < date + delta and entity.date > date - delta:
             ret.append(entity)
@@ -170,6 +173,8 @@ def find_pool_using_gps_routes(socialID, start_point, end_point, date, delta, wa
     ret = []
     for entity in entities:
         # get pool that corresponds to the route
+        if entity is None:
+            break
         pool = Pool.get_by_id(entity.pool_id)
         if not pool is None:
             if pool.driver_socialID != socialID and pool.date < date + delta and pool.date > date - delta:
@@ -190,6 +195,7 @@ def find_pool(socialID, start_point, end_point, date, delta, walking_distance=10
 #     time_query = location_query.filter()
 #     return time_query.fetch()
     results_by_points = find_pool_using_start_and_end_points(socialID, start_point, end_point, date, delta, walking_distance)
+    results_by_routes = find_pool_using_gps_routes(socialID, start_point, end_point, date, delta, walking_distance)
 #     results_by_routes = []
 #     results_by_routes = find_pool_using_gps_routes(socialID, start_point, end_point, date, delta, walking_distance)
 #     return results_by_points.extend(results_by_routes)
@@ -199,8 +205,11 @@ def find_pool(socialID, start_point, end_point, date, delta, walking_distance=10
 #     final_res = {}
 #     final_res["scores"] = scores
 #     final_res["pools"] = results_by_points
-    
-    return results_by_points
+    if not results_by_points:
+        return results_by_routes
+    if not results_by_routes:
+        return results_by_points
+    return results_by_points.extend(results_by_routes)
 
 def get_pools(socialID):
     

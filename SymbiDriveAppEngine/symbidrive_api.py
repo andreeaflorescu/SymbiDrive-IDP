@@ -53,7 +53,7 @@ class AddRatingRequest(messages.Message):
     
 class AddFeedbackRequest(messages.Message):
     socialID = messages.StringField(1, required=True)
-    feedback = messages.StringField(2, repeated=True)
+    feedback = messages.StringField(2, required=True)
     
 class UserResponse(messages.Message):
     ret = messages.StringField(1, required=True)
@@ -144,7 +144,8 @@ class SinglePoolResponse(messages.Message):
     date = message_types.DateTimeField(7, required=True)
     seats = messages.IntegerField(8, required=True)
     pool_id = messages.IntegerField(9, required=True)
-    score = messages.IntegerField(10, required=False)
+    passengers_ids = messages.StringField(10, repeated=True)
+    score = messages.IntegerField(11, required=False)
 
 class FindPoolResponse(messages.Message):
     pools = messages.MessageField(SinglePoolResponse, 1, repeated=True)
@@ -242,6 +243,7 @@ class Pool_endpoint(remote.Service):
                                           date=res.date,
                                           seats=res.seats,
                                           pool_id=res.key.id(),
+                                          passengers_ids=res.passengers
                                           )
                 created_pools.append(pool)
             
@@ -258,6 +260,7 @@ class Pool_endpoint(remote.Service):
                                           date=res.date,
                                           seats=res.seats,
                                           pool_id=res.key.id(),
+                                          passengers_ids=res.passengers
                                           )
                 joined_pools.append(pool)
         return ViewPoolsResponse(created_pools=created_pools, joined_pools=joined_pools)

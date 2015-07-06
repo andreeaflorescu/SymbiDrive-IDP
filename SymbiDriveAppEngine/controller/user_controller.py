@@ -38,6 +38,7 @@ def register_user(p_deviceID, p_socialID, p_profile, p_username):
                     if oldSocialID in pool.passengers:
                         pool.passengers.remove(oldSocialID)
                         pool.passengers.append(p_socialID)
+                        pool.put()
                 
                 routes = GPSRoute.query(GPSRoute.driver_socialID == oldSocialID).fetch()
                 for route in routes:
@@ -45,10 +46,11 @@ def register_user(p_deviceID, p_socialID, p_profile, p_username):
                     route.put()
                 
                 user[0].socialProfile.socialID = p_socialID
+                user[0].put()
                 
+                return constants.ExitCode.USER_REGISTER_MODIFIED_TOKEN
+            else:
                 return constants.ExitCode.USER_ALREADY_REGISTERED
-	    else:
-		return constants.ExitCode.USER_ALREADY_REGISTERED
         else:
             # save the new social profile
             user[0].socialProfile.socialID = p_socialID
