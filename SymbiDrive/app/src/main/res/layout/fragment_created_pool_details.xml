@@ -24,43 +24,6 @@
             android:layout_height="10dp" />
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:baselineAlignBottom="true"
-                android:clickable="true"
-                android:src="@drawable/calendar_128"/>
-
-            <TextView
-                android:id="@+id/tv_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"/>
-
-            <TextView
-                android:layout_width="20dp"
-                android:layout_height="10dp" />
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:baselineAlignBottom="true"
-                android:clickable="true"
-                android:src="@drawable/clock_128"/>
-            <TextView
-                android:id="@+id/tv_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:clickable="true"/>/>
-
-        </LinearLayout>
-
-        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
@@ -156,20 +119,13 @@
                 android:paddingRight="10dp"
                 android:layout_weight="1"
                 android:background="@android:color/holo_orange_dark"
-                android:text="Delete Pool"/>
+                android:text="Delete Pool"
+                android:onClick="deletePool"
+                android:textColor="@android:color/white"/>
         </LinearLayout>
         <Space
             android:layout_width="wrap_content"
             android:layout_height="10dp" />
 
-        <Button
-            android:width="250dp"
-            android:layout_width="fill_parent"
-            android:background="@android:color/holo_green_dark"
-            android:layout_height="wrap_content"
-            android:id="@+id/submit_btn"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:text="Submit"/>
     </LinearLayout>
 </ScrollView>
