@@ -247,7 +247,7 @@ public class MatchPoolAdapter extends ArrayAdapter<PoolInfo> {
                     protected void onPostExecute(SymbidriveUserInfoResponse response) {
                         super.onPostExecute(response);
                         if (response != null) {
-                            Log.v("---------------on post execute ", response.getUsername());
+//                            Log.v("---------------on post execute ", response.getUsername());
                             setUsername(response.getUsername());
                         } else {
                             showMessage(context.getResources().getString(R.string.server_error_message));
@@ -258,7 +258,7 @@ public class MatchPoolAdapter extends ArrayAdapter<PoolInfo> {
     }
 
     private void setUsername(String username) {
-        Log.v("-------------------------------set user name ", username);
+//        Log.v("-------------------------------set user name ", username);
         tv_username.setText(username);
     }
 
