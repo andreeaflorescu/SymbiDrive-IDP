@@ -74,7 +74,8 @@ public class JoinedPoolDetailsFragment extends Fragment {
 
                             SymbidriveUserInfoRequest getUserInfoRequest
                                     = new SymbidriveUserInfoRequest();
-                            getUserInfoRequest.setSocialID(SocialNetworkManager.getInstance().getSocialTokenID());
+
+                            getUserInfoRequest.setSocialID(data.getString("driverID"));
 
 
                             return apiServiceHandle.getUserInfo(getUserInfoRequest).execute();

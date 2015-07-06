@@ -168,6 +168,7 @@ public class FindPoolActivity extends ActionBarActivity{
 
         if (response.getPools() == null) {
             Log.e("Symbidrive", "response e null");
+            createCustomAlertDialog("No pools matching your criteria were found!");
         } else {
             List<SymbidriveSinglePoolResponse> pools = response.getPools();
             ArrayList<PoolInfo> poolsInfo = new ArrayList<PoolInfo>(pools.size());

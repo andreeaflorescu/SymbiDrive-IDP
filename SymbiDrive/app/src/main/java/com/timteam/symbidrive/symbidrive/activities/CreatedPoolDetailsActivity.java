@@ -1,5 +1,6 @@
 package com.timteam.symbidrive.symbidrive.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +20,8 @@ import android.widget.TextView;
 import com.appspot.symbidrive_997.symbidrive.Symbidrive;
 import com.appspot.symbidrive_997.symbidrive.model.SymbidriveAddFeedbackRequest;
 import com.appspot.symbidrive_997.symbidrive.model.SymbidriveAddRatingRequest;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveManagePassangerRequest;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidrivePoolResponse;
 import com.appspot.symbidrive_997.symbidrive.model.SymbidriveUserResponse;
 import com.timteam.symbidrive.symbidrive.R;
 import com.timteam.symbidrive.symbidrive.fragments.CreatedPoolDetailsFragment;
@@ -56,6 +59,10 @@ public class CreatedPoolDetailsActivity extends ActionBarActivity {
         }
 
 
+    }
+
+    private Activity getActivity() {
+        return this;
     }
 
     private void postRating(final Integer rating) {
@@ -141,6 +148,39 @@ public class CreatedPoolDetailsActivity extends ActionBarActivity {
                 })
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .show();
+    }
+
+    public void leavePool(View view) {
+        AsyncTask<Void, Void, SymbidrivePoolResponse> leavePoolTask = new
+                AsyncTask<Void, Void, SymbidrivePoolResponse>(){
+
+                    @Override
+                    protected SymbidrivePoolResponse doInBackground(Void... params) {
+                        Symbidrive apiServiceHandle = AppConstants.getApiServiceHandle();
+                        try {
+                            SymbidriveManagePassangerRequest request= new SymbidriveManagePassangerRequest();
+                            request.setPoolId(getIntent().getLongExtra("poolID", -1));
+                            request.setPassengerId(SocialNetworkManager
+                                    .getInstance()
+                                    .getSocialTokenID());
+                            return apiServiceHandle.deletePassengerFromPool(request).execute();
+                        } catch (IOException e) {
+
+                        }
+
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(SymbidrivePoolResponse symbidrivePoolResponse) {
+                        if (symbidrivePoolResponse != null) {
+                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                            startActivity(intent);
+                        }
+
+                    }
+                };
+        leavePoolTask.execute();
     }
 
     public void addFeedbackAndRating(View view) {
