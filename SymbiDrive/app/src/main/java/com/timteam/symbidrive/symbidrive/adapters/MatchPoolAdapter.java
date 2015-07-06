@@ -114,9 +114,6 @@ public class MatchPoolAdapter extends ArrayAdapter<PoolInfo> {
 
     private void updateView(View rootView, final PoolInfo poolInfo) throws IOException {
 
-        //tv_username.setText(poolInfo.getDriverUserName());
-
-
         TextView source = (TextView)rootView.findViewById(R.id.tv_source_addr);
         String sourceAddress = DataManager.getAddress(poolInfo.getSourcePointLat(),
                 poolInfo.getSourcePointLon(),
@@ -135,58 +132,44 @@ public class MatchPoolAdapter extends ArrayAdapter<PoolInfo> {
         TextView similatiry = (TextView)rootView.findViewById(R.id.tv_similatiry);
         similatiry.setText("0.666%");
 
-        TextView date = (TextView)rootView.findViewById(R.id.tv_date);
-        TextView time = (TextView)rootView.findViewById(R.id.tv_time);
+        TextView tv_date = (TextView)rootView.findViewById(R.id.tv_date);
+        TextView tv_time = (TextView)rootView.findViewById(R.id.tv_time);
 
-        try {
-//            // %Y-%m-%dT%H:%M:%S
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            sdf.setTimeZone(TimeZone.getDefault());
-            Log.v("time ", DateTime.parseRfc3339(poolInfo.getDate().toStringRfc3339()).toString());
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(sdf.parse(poolInfo.getDate().toStringRfc3339()));
 
-            String day="", month="", hour="", minute="";
-            Integer i_day, i_month, i_hour, i_minute;
-//
-            i_day = calendar.get(Calendar.DAY_OF_MONTH);
-            if (i_day < 10) {
-                day = "0" + i_day;
-            }
-            else {
-                day = i_day.toString();
-            }
+        Calendar testC = Calendar.getInstance();
+        testC.setTimeZone(TimeZone.getTimeZone("UTC"));
+        testC.setTimeInMillis(poolInfo.getDate().getValue());
 
-            i_month = calendar.get(Calendar.MONTH);
-            if (i_month < 10) {
-                month = "0" + i_month;
-            }
-            else {
-                month = i_month.toString();
-            }
+        String day="", month="", hour="", minute="";
+        Integer i_day, i_month, i_hour, i_minute;
 
-            i_hour = calendar.get(Calendar.HOUR);
-            if (i_hour < 10) {
-                hour = "0" + i_hour;
-            }
-            else {
-                hour = i_hour.toString();
-            }
-
-            i_minute = calendar.get(Calendar.MINUTE);
-            if (i_minute < 10) {
-                minute = "0" + i_minute;
-            }
-            else {
-                minute = i_minute.toString();
-            }
-
-            date.setText(day + "/" + month + "/" + calendar.get(Calendar.YEAR));
-            time.setText(hour + " : " + minute);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
+        i_day = testC.get(Calendar.DAY_OF_MONTH);
+        if (i_day < 10) {
+            day = "0" + i_day;
         }
+
+        i_month = testC.get(Calendar.MONTH);
+        if (i_month < 10) {
+            month = "0" + i_month;
+        }
+
+        i_hour = testC.get(Calendar.HOUR);
+        if (i_hour < 10) {
+            hour = "0" + i_hour;
+            Log.v("DATAAA", hour);
+        }
+
+        i_minute = testC.get(Calendar.MINUTE);
+        if (i_minute < 10) {
+            minute = "0" + i_minute;
+            Log.v("DATAAA", minute);
+        }
+
+        String date = day + "/" + month + "/" + testC.get(Calendar.YEAR);
+        String time = hour + " : " + minute;
+
+        tv_date.setText(date);
+        tv_time.setText(testC.get(Calendar.HOUR) + ":" + testC.get(Calendar.MINUTE));
 
     }
 
