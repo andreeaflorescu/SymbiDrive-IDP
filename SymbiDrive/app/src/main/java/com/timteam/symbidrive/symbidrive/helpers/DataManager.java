@@ -98,6 +98,7 @@ public class DataManager {
                     pool.getSeats(),
                     pool.getPoolId(),
                     pool.getDriverId());
+            poolsInfo[i].setPassengers(pool.getPassengersIds());
         }
 
         return poolsInfo;

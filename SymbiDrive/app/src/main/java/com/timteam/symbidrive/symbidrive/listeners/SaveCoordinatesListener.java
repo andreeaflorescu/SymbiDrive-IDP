@@ -32,8 +32,6 @@ public class SaveCoordinatesListener implements LocationListener {
         map.addMarker(new MarkerOptions()
                             .position(position));
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
-//        Log.v("SymbiDrive", "Added location to the array");
-//        Log.v("SymbiDrive", location.toString());
     }
 
     @Override

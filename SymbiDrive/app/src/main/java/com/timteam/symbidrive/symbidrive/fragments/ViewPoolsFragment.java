@@ -122,6 +122,15 @@ public class ViewPoolsFragment extends Fragment {
         createPoolDetailsActivity.putExtra("driverID", poolInfo.getDriverID());
         createPoolDetailsActivity.putExtra("seats", poolInfo.getSeats());
         createPoolDetailsActivity.putExtra("date", poolInfo.getDate());
+        String[] passengers;
+        List<String> arr_passengers = poolInfo.getPassengers();
+        if (arr_passengers == null) {
+            passengers = null;
+        } else {
+            passengers = new String[arr_passengers.size()];
+            passengers = poolInfo.getPassengers().toArray(passengers);
+        }
+        createPoolDetailsActivity.putExtra("passengersIDS", passengers);
         startActivity(createPoolDetailsActivity);
     }
 

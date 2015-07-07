@@ -10,6 +10,8 @@ import com.google.api.client.util.DateTime;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zombie on 6/7/15.
@@ -38,7 +40,7 @@ public class PoolInfo implements Serializable {
     private long seats;
     private long poolID;
     private String driverID;
-
+    private List<String> passengers;
     private String driverUserName;
 
     public DateTime getDate() {
@@ -53,6 +55,12 @@ public class PoolInfo implements Serializable {
         return destinationPointLat;
     }
 
+    public void setPassengers(List<String> passengers) {
+        this.passengers = passengers;
+    }
+    public List<String> getPassengers() {
+        return this.passengers;
+    }
     public void setDestinationPointLat(double destinationPointLat) {
         this.destinationPointLat = destinationPointLat;
     }

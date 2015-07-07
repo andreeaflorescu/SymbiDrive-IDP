@@ -1,16 +1,23 @@
 package com.timteam.symbidrive.symbidrive.fragments;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.appspot.symbidrive_997.symbidrive.Symbidrive;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveUserInfoRequest;
+import com.appspot.symbidrive_997.symbidrive.model.SymbidriveUserInfoResponse;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -19,9 +26,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.timteam.symbidrive.symbidrive.R;
+import com.timteam.symbidrive.symbidrive.helpers.AppConstants;
 import com.timteam.symbidrive.symbidrive.helpers.DirectionsJSONParser;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,7 +49,7 @@ public class CreatedPoolDetailsFragment extends Fragment {
 
     private SupportMapFragment fragment;
     private GoogleMap map;
-
+    private View rootView;
     public CreatedPoolDetailsFragment() {
 
     }
@@ -88,7 +97,6 @@ public class CreatedPoolDetailsFragment extends Fragment {
             double  destinationPointLon = bundle.getDouble("destinationPointLon", 0);
             double sourcePointLat = bundle.getDouble("sourcePointLat", 0);
             double sourcePointLon = bundle.getDouble("sourcePointLon", 0);
-            // TODO add markers and draw line between them
 
             LatLng source = new LatLng(sourcePointLat, sourcePointLon);
             LatLng destination = new LatLng(destinationPointLat, destinationPointLon);
@@ -108,12 +116,94 @@ public class CreatedPoolDetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_created_pool_details, container, false);
+        rootView = inflater.inflate(R.layout.fragment_created_pool_details, container, false);
 
+        Bundle data = this.getArguments();
+        String[] passengersIDS = data.getStringArray("passengersIDS");
+        LinearLayout passengersContainer = (LinearLayout) rootView.findViewById(R.id.layout_passengers_container);
+        if (passengersIDS != null) {
+            updatePassengersInfo(passengersIDS);
+        } else {
 
+            TextView noPassengers = new TextView(this.getActivity().getApplicationContext());
+            noPassengers.setText("No passengers joined this pool");
+            noPassengers.setTextColor(Color.BLACK);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            params.setMargins(0,10,0,0);
+            noPassengers.setLayoutParams(params);
+            passengersContainer.addView(noPassengers);
+        }
         return rootView;
     }
 
+    private void updatePassengersInfo(String[] passengersIDS) {
+        for (String id : passengersIDS) {
+            getUserInfoTask(id);
+        }
+
+    }
+
+    private void addPassengerLayout(String passengerName, String passengerTelephone) {
+        LinearLayout passengersContainer = (LinearLayout) rootView.findViewById(R.id.layout_passengers_container);
+        Context context = this.getActivity().getApplicationContext();
+        LinearLayout passengerLayout = new LinearLayout(context);
+        TextView name = new TextView(context);
+        name.setText(passengerName);
+        name.setTextColor(Color.BLACK);
+
+        TextView blank = new TextView(context);
+        blank.setWidth(10);
+
+        TextView telephone = new TextView(context);
+        telephone.setText(passengerTelephone);
+        telephone.setAutoLinkMask(Linkify.PHONE_NUMBERS);
+        telephone.setClickable(true);
+
+        passengerLayout.addView(name);
+        passengerLayout.addView(blank);
+        passengerLayout.addView(telephone);
+
+        passengersContainer.addView(passengerLayout);
+
+    }
+
+    void getUserInfoTask(final String id){
+
+        AsyncTask<Void, Void, SymbidriveUserInfoResponse> getUserInfoTask =
+                new AsyncTask<Void, Void, SymbidriveUserInfoResponse>() {
+
+                    @Override
+                    protected SymbidriveUserInfoResponse doInBackground(Void... params) {
+
+                        Symbidrive apiServiceHandle = AppConstants.getApiServiceHandle();
+
+                        try {
+
+                            SymbidriveUserInfoRequest getUserInfoRequest
+                                    = new SymbidriveUserInfoRequest();
+                            getUserInfoRequest.setSocialID(id);
+
+
+                            return apiServiceHandle.getUserInfo(getUserInfoRequest).execute();
+
+                        } catch (IOException e) {
+                            Log.e("symbi", "Exception during API call", e);
+                            //showMessage(e.getMessage());
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(SymbidriveUserInfoResponse response) {
+                        if (response != null) {
+                            addPassengerLayout(response.getUsername(), response.getTelephone());
+                        } else {
+
+                        }
+                    }
+                };
+        getUserInfoTask.execute();
+    }
 
 
     /** A method to download json data from url */
